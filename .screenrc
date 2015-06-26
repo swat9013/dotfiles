@@ -1,0 +1,56 @@
+#参考
+#http://calcurio.com/wordpress/?p=181
+#
+
+startup_message off
+vbell off
+
+#下線のタブのレイアウト
+hardstatus alwayslastline "%{= rw} %H %{= wk}%-Lw%{= bw}%n%f* %t%{= wk}%+Lw %{= wk}%=%{= gk} %y/%m/%"
+
+#keybindを切り替え
+escape ^Zz
+
+#画面切り替えコマンド変更
+# bindkey "^[[C" next
+# bindkey "^[[D" prev
+# bindkey ";2C" next #shift+R
+# bindkey ";2D" prev #shift+L
+bindkey "^[[1;5C" next #ctrl+R
+bindkey "^[[1;5D" prev #ctrl+L
+
+
+# 現在の背景色で消去する
+#defbce "on"
+# 太字には明るい色を使う(^[はvimでC-v ESCで入力する)
+#attrcolor b "^["
+# 256色表示設定
+#term xterm-256color
+# スクロールバッファは最大10000行にする
+defscrollback 10000
+# 別画面サポート。Vimやless使うときに便利
+altscreen on
+# 端末が落ちたら自動的にデタッチする
+autodetach on
+
+
+# ログファイルのファイル名
+logfile "$HOME/.screen/screen-%Y%m%d-%n.log"
+# 標準でログをとる
+deflog on
+# ウィンドウのタイトル指定
+#shelltitle '$ |bash'
+
+#マウススクロールが使えるようになる？
+termcapinfo linux ti@:te@
+termcapinfo xterm ti@:te@
+termcapinfo xterm-color ti@:te@
+
+# PuTTYで接続したときにウィンドウの大きさを変更しないようにする
+termcapinfo xterm-256color 'is=^[r^[m^[2J^[H^[?7h^[?1;4;6l'
+
+#flowをoffに,emacsで挙動がおかしくなる
+defflow off
+
+# multiuser on
+# acladd appuser
