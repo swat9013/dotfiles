@@ -25,8 +25,8 @@
 (require 'auto-complete-config)
 (global-auto-complete-mode t)
 
-(require 'hlinum)
-(hlinum-activate)
+;;(require 'hlinum)
+;;(hlinum-activate)
 ;;(global-linum-mode t)
 
 (require 'rainbow-delimiters)
