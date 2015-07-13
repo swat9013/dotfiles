@@ -61,6 +61,7 @@
     ;; rbenv
     ;; recentf-ext
     ;; region-bindings-mode
+    rinari
     ruby-block
     ruby-end
     ;; ruby-electric
