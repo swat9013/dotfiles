@@ -25,8 +25,8 @@
 (require 'auto-complete-config)
 (global-auto-complete-mode t)
 
-(require 'hlinum)
-(hlinum-activate)
+;;(require 'hlinum)
+;;(hlinum-activate)
 ;;(global-linum-mode t)
 
 (require 'rainbow-delimiters)
@@ -105,7 +105,7 @@
    )
   )
 (add-hook 'scss-mode-hook
-	  '(lambda() (scss-custom)))
+          '(lambda() (scss-custom)))
 
 
 ;; Interactively Do Things (highly recommended, but not strictly required)
@@ -113,20 +113,20 @@
 (ido-mode t)
 
 
-;; ;; Rinari
-;; (add-to-list 'load-path "~/.emacs.d/elisp/rinari")
-;; (require 'rinari)
+;;;; Rinari
+(add-to-list 'load-path "rinari")
+(require 'rinari)
 
-;; ;;; rhtml-mode
-;; (add-to-list 'load-path "~/.emacs.d/elisp/rhtml")
+;;; rhtml-mode
+;; (add-to-list 'load-path "rhtml")
 ;; (require 'rhtml-mode)
 ;; (add-hook 'rhtml-mode-hook
-;; 	  (lambda () (rinari-launch)
-;; 	    (set-face-background 'erb-face "black")
-;; 	    ;;(set-face-underline-p 'erb-face t)
-;; 	    (set-face-background 'erb-exec-face "black")
-;; 	    ;;(set-face-underline-p 'erb-exec-face t)
-;; 	    ))
+;;           (lambda () (rinari-launch)
+;;             (set-face-background 'erb-face "black")
+;;             ;;(set-face-underline-p 'erb-face t)
+;;             (set-face-background 'erb-exec-face "black")
+;;             ;;(set-face-underline-p 'erb-exec-face t)
+;;             ))
 ;; (add-to-list 'auto-mode-alist '("\\.\\(erb\\|rhtml\\)$" . rhtml-mode))
 
 
