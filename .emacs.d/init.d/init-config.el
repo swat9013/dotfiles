@@ -120,3 +120,7 @@
 ;; (unless (server-running-p)
 ;;  (server-start)
 ;; )
+
+;;フルパスを表示
+(set-default 'mode-line-buffer-identification
+             '(buffer-file-name ("%f") ("%b")))
