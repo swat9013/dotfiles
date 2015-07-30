@@ -56,8 +56,16 @@
 ;;; メニューバーを消す
 (menu-bar-mode -1)
 
+
+
 ;;; 現在行を目立たせる
 ;;(global-hl-line-mode)
+
+;;; スクロールバーを右側に表示する
+(set-scroll-bar-mode 'right)
+
+;;; 行の先頭でC-kを一回押すだけで行全体を消去する
+(setq kill-whole-line t)
 
 ;;; カーソルの位置が何文字目かを表示する
 (column-number-mode t)
