@@ -159,3 +159,11 @@ function e(){
                  (echo "[$0] emacsclient -c -t $*"; emacsclient -c -t $*)) ||
             (echo "[$0] emacs $*"; emacs $*))
 }
+
+## Screenのセッション保存場所変更
+## http://rcmdnk.github.io/blog/2014/05/04/computer-screen-socket/
+export SCREENDIR=$HOME/.screens
+if [ ! -d $SCREENDIR ];then
+    mkdir -p $SCREENDIR
+fi
+chmod 700 $SCREENDIR
