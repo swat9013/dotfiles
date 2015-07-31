@@ -44,7 +44,7 @@
     ;; helm-projectile
     ;; hlinum
     ;; jade-mode
-    ;; js2-mode
+    js2-mode
     ;; magit
     markdown-mode
     ;; maxframe
@@ -92,7 +92,7 @@
   '(
     ;; 1ファイルのelispしか管理できません
     ;; パッケージ名はファイル名の.elより前の部分になります
-    "https://raw.githubusercontent.com/mooz/js2-mode/emacs23/js2-mode.el"
+    ;; "https://raw.githubusercontent.com/mooz/js2-mode/emacs23/js2-mode.el"
     "http://cx4a.org/pub/undohist.el"
     )
   )
