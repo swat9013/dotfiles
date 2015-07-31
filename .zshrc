@@ -1,22 +1,51 @@
 export EDITOR=emacs
 
+## 保管を有効化
+fpath=(~/dotfiles/zsh-completions $fpath)
 autoload -Uz compinit
 compinit
+
 HISTFILE=$HOME/.zsh-history
 HISTSIZE=100000
 SAVEHIST=100000
-setopt auto_cd
+## cd無しでディレクトリ移動
+## setopt auto_cd
+## 補完候補を詰めて表示
+setopt list_packed
+## cd -[tab]で移動の履歴を表示
 setopt auto_pushd
+## 同じディレクトリを pushd しない
+setopt pushd_ignore_dups
+## 色を使う
 setopt prompt_subst
+## カッコの対応などを自動的に補完
+setopt auto_param_keys
 setopt hist_ignore_dups
 setopt auto_param_slash
 setopt mark_dirs
+## 補完候補を一覧表示
 setopt auto_list
+## 補完候補一覧でファイルの種別をマーク表示
+setopt list_types
 bindkey "^R" history-incremental-search-backward
 bindkey "^S" history-incremental-search-forward
 setopt hist_no_store
 setopt hist_save_no_dups
 setopt hist_reduce_blanks
+## 補完候補のカーソル選択を有効に
+zstyle ':completion:*:default' menu select=1
+
+[ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
+[ -r ~/.ssh/config ] && _ssh_config=($(cat ~/.ssh/config | sed -ne 's/Host[=\t ]//p')) || _ssh_config=()
+[ -r /etc/hosts ] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
+hosts=(
+    "$_ssh_config[@]"
+    "$_ssh_hosts[@]"
+    "$_etc_hosts[@]"
+    "$HOST"
+    localhost
+)
+zstyle ':completion:*:hosts' hosts $hosts
 
 #日本語ファイルの表示
 setopt print_eight_bit
@@ -26,10 +55,10 @@ colors
 setopt share_history
 #setopt correct
 
-# zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
+## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
 
-# cdコマンド実行後、lsを実行する
+## cdコマンド実行後、lsを実行する
 function cd() {
     builtin cd $@ && ls;
 }
@@ -37,10 +66,10 @@ function cd() {
 #スクリーンロックを無効化
 stty stop undef
 
-# サスペンド無効化
+## サスペンド無効化
 stty susp undef
 
-# C-^ で一つ上のディレクトリへ
+## C-^ で一つ上のディレクトリへ
 function cdup() {
     echo
     cd .. && ls
@@ -52,26 +81,26 @@ bindkey '^^' cdup
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
-# ------------------------------
-# Look And Feel Settings
-# ------------------------------
-### Ls Color ###
-# 色の設定
+## ------------------------------
+## Look And Feel Settings
+## ------------------------------
+#### Ls Color ###
+## 色の設定
 export LSCOLORS=Exfxcxdxbxegedabagacad
-# 補完時の色の設定
+## 補完時の色の設定
 export LS_COLORS='di=01;34:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-# ZLS_COLORSとは？
+## ZLS_COLORSとは？
 export ZLS_COLORS=$LS_COLORS
-# lsコマンド時、自動で色がつく(ls -Gのようなもの？)
+## lsコマンド時、自動で色がつく(ls -Gのようなもの？)
 export CLICOLOR=true
-# 補完候補に色を付ける
+## 補完候補に色を付ける
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-### Prompt ###
-# プロンプトに色を付ける
+#### Prompt ###
+## プロンプトに色を付ける
 autoload -U colors; colors
 
-# 一般ユーザ時
+## 一般ユーザ時
 tmp_prompt="%F{cyan}[%n@%m${WINDOW:+"[$WINDOW]"}]%f-%{${fg[green]}%}[%~]%{${reset_color}%}-%F{magenta}[%D{%m/%d %T}]%f
 %#"
 #tmp_prompt="%{${fg[cyan]}%}%n%# %{${reset_color}%}"
@@ -79,7 +108,7 @@ tmp_prompt2="%{${fg[cyan]}%}%_> %{${reset_color}%}"
 tmp_rprompt="%{${fg[green]}%}[%~]%{${reset_color}%}"
 tmp_sprompt="%{${fg[yellow]}%}%r is correct? [Yes, No, Abort, Edit]:%{${reset_color}%}"
 
-# rootユーザ時(太字にし、アンダーバーをつける)
+## rootユーザ時(太字にし、アンダーバーをつける)
 if [ ${UID} -eq 0 ]; then
     tmp_prompt="%B%U${tmp_prompt}%u%b"
     tmp_prompt2="%B%U${tmp_prompt2}%u%b"
@@ -100,7 +129,7 @@ PROMPT2=$tmp_prompt2  # セカンダリのプロンプト(コマンドが2行以
 SPROMPT=$tmp_sprompt  # スペル訂正用プロンプト
 
 # ------------------------------
-# Other Settings
+## Other Settings
 # ------------------------------
 
 ### Aliases ###
@@ -110,6 +139,10 @@ alias ll='ls -l'
 alias la='ls -a'
 alias s='screen'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
+alias zshrc='$EDITOR ~/.zshrc'
+alias t='tail -f'
+
+
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
