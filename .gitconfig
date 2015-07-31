@@ -4,7 +4,33 @@
 	name = s-watanabe
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[alias]
+	alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
+	b = branch -a
+	br = browse-remote
+	cm = commit
+	cmm = commit -m
+	co = checkout
+	d = diff
+	dc = diff --cached
+	di = diff
+	dic = diff --cached
+	f = fetch --prune
+	fs = !git f && git su
+	ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >> .gitignore
+	info = remote show origin
+	l = log  --decorate --oneline --graph
+	ll = log  --decorate --stat --abbrev-commit  --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(green)- %an, %cr%Creset'
+	ls = log  --decorate --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(green)- %an, %cr%Creset'
+	s = status --short --branch
+	st = status
+	unstage    = reset HEAD --
+	cancel     = reset --soft HEAD^
+	me         = !git config --get-regexp user
+	today = log --oneline --since='12 hour ago'
+	pullrebase = pull --rebase
+	addall = add --all
