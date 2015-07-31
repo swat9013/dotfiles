@@ -141,7 +141,7 @@ alias s='screen'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
 alias zshrc='$EDITOR ~/.zshrc'
 alias t='tail -f'
-
+alias g='git'
 
 
 #colordiff設定
