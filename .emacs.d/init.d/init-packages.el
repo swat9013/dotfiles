@@ -79,7 +79,7 @@
     ;; tabbar
     ;; textmate
     undo-tree
-    ;; undohist
+    undohist
     ;; volatile-highlights
     ;; yascroll
     yasnippet
@@ -93,7 +93,7 @@
     ;; 1ファイルのelispしか管理できません
     ;; パッケージ名はファイル名の.elより前の部分になります
     ;; "https://raw.githubusercontent.com/mooz/js2-mode/emacs23/js2-mode.el"
-    "http://cx4a.org/pub/undohist.el"
+    ;; "http://cx4a.org/pub/undohist.el"
     )
   )
 
