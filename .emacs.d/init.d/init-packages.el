@@ -8,19 +8,19 @@
 
 (defvar installing-package-list
   '(
-    cl-lib ;;emacs23用
+    ;; cl-lib ;;emacs23用
     ;; ac-js2
     ;; ack-and-a-half
     ;; ag
     ;; anzu
     anything
     ;; anything-complete
-    ;;anything-config
+    ;; anything-config
     ;; anything-match-plugin
     ;; anything-obsolete
     ;; anything-show-completion
     auto-complete
-    ;; auto-complete-clang
+    auto-complete-clang
     ;; auto-async-byte-compile
     ;; benchmark-init
     ;; coffee-mode
@@ -31,9 +31,9 @@
     ;; exec-path-from-shell
     ;; expand-region
     ;; feature-mode
-    ;; flycheck
-    ;; flycheck-d-unittest
-    ;; flycheck-tip
+    flycheck
+    flycheck-d-unittest
+    flycheck-tip
     flymake-cursor
     ;; git-gutter
     ;; git-gutter-fringe
@@ -54,7 +54,7 @@
     nginx-mode
     ;; point-undo
     ;; popwin
-    ;; powerline
+    powerline
     ;; projectile
     rainbow-delimiters
     rainbow-mode
@@ -64,13 +64,14 @@
     rinari
     ruby-block
     ruby-end
-    ;; ruby-electric
+    ruby-electric
     sass-mode
     scss-mode
     ;; sequential-command
     ;; smartrep
     ;; slim-mode
     smart-compile
+    smart-mode-line
     ;; smartparens
     smooth-scroll
     ;; smooth-scrolling

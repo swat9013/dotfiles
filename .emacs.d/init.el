@@ -1,5 +1,5 @@
 (add-to-list 'load-path "~/.emacs.d/init.d")
-(add-to-list 'load-path "~/.emacs.d/vendor.d")
+;; (add-to-list 'load-path "~/.emacs.d/vendor.d")
 (load "~/.emacs.d/init.d/init-config")
 
 (require 'init-packages)
@@ -9,14 +9,14 @@
 ;; モード追加
 ;;
 
-;; (require 'anything)
-;; (require 'anything-config)
-;; (require 'anything-match-plugin)
-;; (require 'anything-complete)
-;; ;; key config
-;; (global-set-key (kbd "C-x b") 'anything-for-files)
-;; (global-set-key (kbd "M-y") 'anything-show-kill-ring)
-;; (global-set-key (kbd "C-c C-f") 'anything-filelist+)
+(require 'anything)
+(require 'anything-config)
+(require 'anything-match-plugin)
+(require 'anything-complete)
+;; key config
+(global-set-key (kbd "C-x b") 'anything-for-files)
+(global-set-key (kbd "M-y") 'anything-show-kill-ring)
+(global-set-key (kbd "C-c C-f") 'anything-filelist+)
 
 (require 'flymake)
 (add-hook 'find-file-hook 'flymake-find-file-hook)
@@ -24,6 +24,10 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (global-auto-complete-mode t)
+
+(setq sml/no-confirm-load-theme t)
+(setq sml/theme 'dark)
+(sml/setup)
 
 ;;(require 'hlinum)
 ;;(hlinum-activate)
@@ -164,8 +168,20 @@
 (yas-global-mode 1);; minor-modeもある
 ;; (define-key yas-minor-mode-map (kbd "SPC") 'yas/expand)
 ;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-(custom-set-variables '(yas-trigger-key "TAB"))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+ '(yas-trigger-key "TAB"))
 
 ;;nginx-mode
 (require 'nginx-mode)
 (add-to-list 'auto-mode-alist '("nginx\\(.*\\).conf[^/]*$" . nginx-mode))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
