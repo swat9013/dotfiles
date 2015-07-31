@@ -26,7 +26,7 @@
 (global-auto-complete-mode t)
 
 (setq sml/no-confirm-load-theme t)
-(setq sml/theme 'dark)
+(setq sml/theme 'light)
 (sml/setup)
 
 ;;(require 'hlinum)
