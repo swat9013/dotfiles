@@ -142,6 +142,8 @@ alias emacs-kill='emacsclient -e "(kill-emacs)"'
 alias zshrc='$EDITOR ~/.zshrc'
 alias t='tail -f'
 alias g='git'
+alias db_rollback='rake db:rollback'
+alias db_migrate='rake db:migrate'
 
 
 #colordiff設定
@@ -168,7 +170,7 @@ case "$TERM" in
         preexec() {
             printf "\eP\e]0;${USER}@${HOST%%.*}:${PWD}\a\e\\"
             #printf "\eP\e]0;!${1%% *}\a\e\\"
-            printf "\ek#$1\e\\"
+            printf "\ek#${1%% *}\e\\"
         }
         precmd() {
             printf "\eP\e]0;${USER}@${HOST%%.*}:${PWD}\a\e\\"
