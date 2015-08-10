@@ -2,6 +2,7 @@
 	ui = true
 [user]
 	name = s-watanabe
+	email =
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path =
@@ -24,13 +25,13 @@
 	ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >> .gitignore
 	info = remote show origin
 	l = log  --decorate --oneline --graph
-	ll = log  --decorate --stat --abbrev-commit  --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(green)- %an, %cr%Creset'
-	ls = log  --decorate --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(green)- %an, %cr%Creset'
+	ll = log  --decorate --stat --abbrev-commit
+	ls = log  --decorate --graph
 	s = status --short --branch
 	st = status
 	unstage    = reset HEAD --
 	cancel     = reset --soft HEAD^
 	me         = !git config --get-regexp user
-	today = log --oneline --since='12 hour ago'
+	today = log --decorate --oneline --since='12 hour ago' --pretty=format:'%C(yellow)%h%Creset %s %C(green)- %an, %cr%Creset'
 	pullrebase = pull --rebase
 	addall = add --all

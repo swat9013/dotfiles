@@ -61,9 +61,6 @@
 ;;; 現在行を目立たせる
 ;;(global-hl-line-mode)
 
-;;; スクロールバーを右側に表示する
-(set-scroll-bar-mode 'right)
-
 ;;; 行の先頭でC-kを一回押すだけで行全体を消去する
 (setq kill-whole-line t)
 
@@ -133,6 +130,27 @@
 ;;フルパスを表示
 ;; (set-default 'mode-line-buffer-identification
 ;;              '(buffer-file-name ("%f") ("%b")))
+
+(defun move-line-down ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines 1))
+    (forward-line)
+    (move-to-column col)))
+
+(defun move-line-up ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines -1))
+    (move-to-column col)))
+
+(global-set-key  (kbd "ESC <down>") 'move-line-down)
+(global-set-key  (kbd "ESC <up>") 'move-line-up)
+
 
 ;; メジャーモードの略称
 (defvar mode-line-cleaner-alist
