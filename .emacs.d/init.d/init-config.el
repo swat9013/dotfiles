@@ -148,8 +148,11 @@
       (transpose-lines -1))
     (move-to-column col)))
 
-(global-set-key  (kbd "ESC <down>") 'move-line-down)
-(global-set-key  (kbd "ESC <up>") 'move-line-up)
+;; (global-set-key  (kbd "ESC <down>") 'move-line-down)
+;; (global-set-key  (kbd "ESC <up>") 'move-line-up)
+;; iterm
+(global-set-key  (kbd "M-[ b") 'move-line-down)
+(global-set-key  (kbd "M-[ a") 'move-line-up)
 
 
 ;; メジャーモードの略称
