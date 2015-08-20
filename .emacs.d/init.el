@@ -9,14 +9,43 @@
 ;; モード追加
 ;;
 
-(require 'anything)
-(require 'anything-config)
-(require 'anything-match-plugin)
-(require 'anything-complete)
+;; (require 'anything)
+;; (require 'anything-config)
+;; (require 'anything-match-plugin)
+;; (require 'anything-complete)
 ;; key config
-(global-set-key (kbd "C-x b") 'anything-for-files)
-(global-set-key (kbd "M-y") 'anything-show-kill-ring)
-(global-set-key (kbd "C-c C-f") 'anything-filelist+)
+;; (global-set-key (kbd "C-x b") 'anything-for-files)
+;; (global-set-key (kbd "M-y") 'anything-show-kill-ring)
+;; (global-set-key (kbd "C-c C-f") 'anything-filelist+)
+
+;; anzu
+(require 'anzu)
+(global-anzu-mode +1)
+(custom-set-variables
+ '(anzu-mode-lighter "")
+ '(anzu-deactivate-region t)
+ '(anzu-search-threshold 100))
+(global-set-key (kbd "M-%") 'anzu-query-replace)
+(global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+
+(require 'yascroll)
+(global-yascroll-bar-mode 1)
+
+;; theme
+(load-theme 'atom-dark t)
+
+;;; smooth-scroll
+;; (require 'smooth-scroll)
+;; (smooth-scroll-mode t)
+
+(require 'projectile)
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+;; (require 'projectile-rails)
+;; (add-hook 'projectile-mode-hook 'projectile-rails-on)
+
 
 (require 'flymake)
 (add-hook 'find-file-hook 'flymake-find-file-hook)
@@ -28,6 +57,24 @@
 (setq sml/no-confirm-load-theme t)
 (setq sml/theme 'light)
 (sml/setup)
+
+(require 'ace-jump-mode)
+;; (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+(defun add-keys-to-ace-jump-mode (prefix c &optional mode)
+  (define-key global-map
+    (read-kbd-macro (concat prefix (string c)))
+    `(lambda ()
+       (interactive)
+       (funcall (if (eq ',mode 'word)
+                    #'ace-jump-word-mode
+                  #'ace-jump-char-mode) ,c))))
+
+(loop for c from ?0 to ?9 do (add-keys-to-ace-jump-mode "H-" c 'word))
+(loop for c from ?a to ?z do (add-keys-to-ace-jump-mode "H-" c 'word))
+
+(require 'helm)
+(helm-mode 1)
+(define-key global-map (kbd "C-x C-o") 'helm-mini)
 
 ;;(require 'hlinum)
 ;;(hlinum-activate)

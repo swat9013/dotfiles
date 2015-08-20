@@ -12,7 +12,9 @@
     ;; ac-js2
     ;; ack-and-a-half
     ;; ag
-    ;; anzu
+    anzu
+    ace-jump-mode
+    atom-dark-theme
     anything
     ;; anything-complete
     ;; anything-config
@@ -39,9 +41,9 @@
     ;; git-gutter-fringe
     gitconfig-mode
     ;; haml-mode
-    ;;helm
+    helm
     ;; helm-ag
-    ;; helm-projectile
+    helm-projectile
     ;; hlinum
     ;; jade-mode
     js2-mode
@@ -55,7 +57,8 @@
     ;; point-undo
     ;; popwin
     powerline
-    ;; projectile
+    projectile
+    ;; projectile-rails
     rainbow-delimiters
     rainbow-mode
     ;; rbenv
@@ -73,7 +76,7 @@
     smart-compile
     smart-mode-line
     ;; smartparens
-    smooth-scroll
+    ;; smooth-scroll
     ;; smooth-scrolling
     ;; typescript
     ;; tabbar
@@ -81,7 +84,7 @@
     undo-tree
     undohist
     ;; volatile-highlights
-    ;; yascroll
+    yascroll
     yasnippet
     yaml-mode
     web-mode
