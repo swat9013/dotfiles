@@ -1,6 +1,6 @@
 [submodule "zsh-completions"]
 	path = zsh-completions
 	url = git://github.com/zsh-users/zsh-completions.git
-[submodule "/home/vagrant/dotfiles/oh-my-zsh"]
-	path = /home/vagrant/dotfiles/oh-my-zsh
+[submodule "oh-my-zsh"]
+	path = oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
