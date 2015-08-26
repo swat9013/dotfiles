@@ -1,204 +1,85 @@
-export EDITOR=emacs
+# Path to your oh-my-zsh installation.
+export ZSH=$HOME/dotfiles/oh-my-zsh
 
-## 保管を有効化
-fpath=(~/dotfiles/zsh-completions $fpath)
-autoload -Uz compinit
-compinit
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="my-agnoster"
 
-HISTFILE=$HOME/.zsh-history
-HISTSIZE=100000
-SAVEHIST=100000
-## cd無しでディレクトリ移動
-## setopt auto_cd
-## 補完候補を詰めて表示
-setopt list_packed
-## cd -[tab]で移動の履歴を表示
-setopt auto_pushd
-## 同じディレクトリを pushd しない
-setopt pushd_ignore_dups
-## 色を使う
-setopt prompt_subst
-## カッコの対応などを自動的に補完
-setopt auto_param_keys
-setopt hist_ignore_dups
-setopt auto_param_slash
-setopt mark_dirs
-## 補完候補を一覧表示
-setopt auto_list
-## 補完候補一覧でファイルの種別をマーク表示
-setopt list_types
-bindkey "^R" history-incremental-search-backward
-bindkey "^S" history-incremental-search-forward
-setopt hist_no_store
-setopt hist_save_no_dups
-setopt hist_reduce_blanks
-## 補完候補のカーソル選択を有効に
-zstyle ':completion:*:default' menu select=1
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-[ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
-[ -r ~/.ssh/config ] && _ssh_config=($(cat ~/.ssh/config | sed -ne 's/Host[=\t ]//p')) || _ssh_config=()
-[ -r /etc/hosts ] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
-hosts=(
-    "$_ssh_config[@]"
-    "$_ssh_hosts[@]"
-    "$_etc_hosts[@]"
-    "$HOST"
-    localhost
-)
-zstyle ':completion:*:hosts' hosts $hosts
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-#日本語ファイルの表示
-setopt print_eight_bit
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
 
-autoload -Uz colors
-colors
-setopt share_history
-#setopt correct
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
 
-## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
-bindkey -e
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
-## cdコマンド実行後、lsを実行する
-function cd() {
-    builtin cd $@ && ls;
-}
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
 
-#スクリーンロックを無効化
-stty stop undef
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
 
-## サスペンド無効化
-stty susp undef
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
 
-## C-^ で一つ上のディレクトリへ
-function cdup() {
-    echo
-    cd .. && ls
-    zle reset-prompt
-}
-zle -N cdup
-bindkey '^^' cdup
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
 
-## ------------------------------
-## Look And Feel Settings
-## ------------------------------
-#### Ls Color ###
-## 色の設定
-export LSCOLORS=Exfxcxdxbxegedabagacad
-## 補完時の色の設定
-export LS_COLORS='di=01;34:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-## ZLS_COLORSとは？
-export ZLS_COLORS=$LS_COLORS
-## lsコマンド時、自動で色がつく(ls -Gのようなもの？)
-export CLICOLOR=true
-## 補完候補に色を付ける
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
-#### Prompt ###
-## プロンプトに色を付ける
-autoload -U colors; colors
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(my-env atom autojump brew brew-cask bundler cdd colored-man composer docker encode64 gem git homeshick pow rails rake rbenv tig vagrant web-search)
 
-## 一般ユーザ時
-tmp_prompt="%F{cyan}[%n@%m${WINDOW:+"[$WINDOW]"}]%f-%{${fg[green]}%}[%~]%{${reset_color}%}-%F{magenta}[%D{%m/%d %T}]%f
-%#"
-#tmp_prompt="%{${fg[cyan]}%}%n%# %{${reset_color}%}"
-tmp_prompt2="%{${fg[cyan]}%}%_> %{${reset_color}%}"
-tmp_rprompt="%{${fg[green]}%}[%~]%{${reset_color}%}"
-tmp_sprompt="%{${fg[yellow]}%}%r is correct? [Yes, No, Abort, Edit]:%{${reset_color}%}"
+# User configuration
 
-## rootユーザ時(太字にし、アンダーバーをつける)
-if [ ${UID} -eq 0 ]; then
-    tmp_prompt="%B%U${tmp_prompt}%u%b"
-    tmp_prompt2="%B%U${tmp_prompt2}%u%b"
-    tmp_rprompt="%B%U${tmp_rprompt}%u%b"
-    tmp_sprompt="%B%U${tmp_sprompt}%u%b"
-fi
+export PATH="/home/vagrant/.rbenv/shims:/home/vagrant/.rbenv/bin:/home/vagrant/.rbenv/shims:/home/vagrant/.rbenv/bin:/usr/local/bin:/usr/bin:/home/vagrant/bin:/usr/local/sbin:/usr/sbin"
+# export MANPATH="/usr/local/man:$MANPATH"
 
-#gitのブランチの表示
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' formats '(%s)-[%b]'
-zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
-RPROMPT="%1(v|%F{green}%1v%f|)"
+source $ZSH/oh-my-zsh.sh
 
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
 
-PROMPT=$tmp_prompt    # 通常のプロンプト
-PROMPT2=$tmp_prompt2  # セカンダリのプロンプト(コマンドが2行以上の時に表示される)
-#RPROMPT=$tmp_rprompt  # 右側のプロンプト
-SPROMPT=$tmp_sprompt  # スペル訂正用プロンプト
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
 
-# ------------------------------
-## Other Settings
-# ------------------------------
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
 
-### Aliases ###
-#時刻を表示させる
-alias history='history -E'
-alias ll='ls -l'
-alias la='ls -a'
-alias s='screen'
-alias emacs-kill='emacsclient -e "(kill-emacs)"'
-alias zshrc='$EDITOR ~/.zshrc'
-alias t='tail -f'
-alias g='git'
-alias db_rollback='rake db:rollback'
-alias db_migrate='rake db:migrate'
+# ssh
+# export SSH_KEY_PATH="~/.ssh/dsa_id"
 
-
-#colordiff設定
-if [[ -x `which colordiff` ]]; then
-    alias diff='colordiff -u'
-else
-    alias diff='diff -u'
-fi
-
-#lessの色設定、改行ありなし等
-export LESS='-SRnq'
-
-
-case "$TERM" in
-    kterm*|xterm*)
-        precmd() {
-            printf "\e]0;${USER}@${HOST%%.*}:${PWD}\a"
-            psvar=()
-            LANG=en_US.UTF-8 vcs_info
-            [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-        }
-        ;;
-    screen*|ansi*)
-        preexec() {
-            printf "\eP\e]0;${USER}@${HOST%%.*}:${PWD}\a\e\\"
-            #printf "\eP\e]0;!${1%% *}\a\e\\"
-            printf "\ek#${1%% *}\e\\"
-        }
-        precmd() {
-            printf "\eP\e]0;${USER}@${HOST%%.*}:${PWD}\a\e\\"
-            #printf "\eP\e]0;~$(basename $(pwd))\a\e\\"
-            printf "\ek$(basename $(pwd))\e\\"
-            psvar=()
-            LANG=en_US.UTF-8 vcs_info
-            [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-        }
-        ;;
-esac
-setopt transient_rprompt
-
-
-## emacsclient をシームレスに使うための関数
-## http://k-ui.jp/?p=243
-function e(){
-    echo "[$0] emacsclient -c -t $*";
-    (emacsclient -c -t $* ||
-            (echo "[$0] emacs --daemon"; emacs --daemon &&
-                 (echo "[$0] emacsclient -c -t $*"; emacsclient -c -t $*)) ||
-            (echo "[$0] emacs $*"; emacs $*))
-}
-
-## Screenのセッション保存場所変更
-## http://rcmdnk.github.io/blog/2014/05/04/computer-screen-socket/
-export SCREENDIR=$HOME/.screens
-if [ ! -d $SCREENDIR ];then
-    mkdir -p $SCREENDIR
-fi
-chmod 700 $SCREENDIR
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+source $HOME/dotfiles/.zshrc.mine
