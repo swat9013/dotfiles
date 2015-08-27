@@ -1,9 +1,9 @@
 export EDITOR=emacs
 
 ## 保管を有効化
-fpath=(~/dotfiles/zsh-completions $fpath)
+## fpath=(~/dotfiles/zsh-completions $fpath)
 autoload -Uz compinit
-compinit
+compinit -c
 
 HISTFILE=$HOME/.zsh-history
 HISTSIZE=100000
@@ -35,17 +35,17 @@ setopt hist_reduce_blanks
 ## 補完候補のカーソル選択を有効に
 zstyle ':completion:*:default' menu select=1
 
-[ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
-[ -r ~/.ssh/config ] && _ssh_config=($(cat ~/.ssh/config | sed -ne 's/Host[=\t ]//p')) || _ssh_config=()
-[ -r /etc/hosts ] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
-hosts=(
-    "$_ssh_config[@]"
-    "$_ssh_hosts[@]"
-    "$_etc_hosts[@]"
-    "$HOST"
-    localhost
-)
-zstyle ':completion:*:hosts' hosts $hosts
+# [ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
+# [ -r ~/.ssh/config ] && _ssh_config=($(cat ~/.ssh/config | sed -ne 's/Host[=\t ]//p')) || _ssh_config=()
+# [ -r /etc/hosts ] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
+# hosts=(
+#     "$_ssh_config[@]"
+#     "$_ssh_hosts[@]"
+#     "$_etc_hosts[@]"
+#     "$HOST"
+#     localhost
+# )
+# zstyle ':completion:*:hosts' hosts $hosts
 
 #日本語ファイルの表示
 setopt print_eight_bit
@@ -58,26 +58,42 @@ setopt share_history
 ## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
 
-## cdコマンド実行後、lsを実行する
-function cd() {
-    builtin cd $@ && ls;
-}
-
 #スクリーンロックを無効化
 stty stop undef
 
 ## サスペンド無効化
 stty susp undef
 
+#cd 後のlsの省略
+function chpwd() { ls }
+
+#
+# Goolge Search by Google Chrome
+# terminalからググったりqiita検索をできる
+#
+google() {
+    local str opt
+    if [ $# != 0 ]; then
+        for i in $*; do
+            # $strが空じゃない場合、検索ワードを+記号でつなぐ(and検索)
+            str="$str${str:++}$i"
+        done
+        opt='search?num=100'
+        opt="${opt}&q=${str}"
+    fi
+    open -a Google\ Chrome http://www.google.co.jp/$opt
+}
+
 ## C-^ で一つ上のディレクトリへ
 function cdup() {
     echo
-    cd .. && ls
+    cd ..
     zle reset-prompt
 }
 zle -N cdup
 bindkey '^^' cdup
 
+# rbenvのパスを通す
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
@@ -193,8 +209,8 @@ function e(){
 
 ## Screenのセッション保存場所変更
 ## http://rcmdnk.github.io/blog/2014/05/04/computer-screen-socket/
-export SCREENDIR=$HOME/.screens
-if [ ! -d $SCREENDIR ];then
-    mkdir -p $SCREENDIR
-fi
-chmod 700 $SCREENDIR
+## export SCREENDIR=$HOME/.screens
+## if [ ! -d $SCREENDIR ];then
+##     mkdir -p $SCREENDIR
+## fi
+## chmod 700 $SCREENDIR
