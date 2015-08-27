@@ -1,3 +1,6 @@
+## 起動速度測定用
+##zmodload zsh/zprof && zprof
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/dotfiles/oh-my-zsh
 
@@ -5,7 +8,7 @@ export ZSH=$HOME/dotfiles/oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="my-agnoster"
+ZSH_THEME="powerline"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -49,12 +52,14 @@ ZSH_THEME="my-agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(my-env atom autojump brew brew-cask bundler cdd colored-man composer docker encode64 gem git homeshick pow rails rake rbenv tig vagrant web-search)
+plugins=(bundler cdd docker encode64 gem git homeshick  rails rake vagrant zsh-syntax-highlighting)
 
 # User configuration
 
-export PATH="/home/vagrant/.rbenv/shims:/home/vagrant/.rbenv/bin:/home/vagrant/.rbenv/shims:/home/vagrant/.rbenv/bin:/usr/local/bin:/usr/bin:/home/vagrant/bin:/usr/local/sbin:/usr/sbin"
+# export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$HOME/.rbenv/shims:$HOME/.rbenv/bin:/usr/local/bin:/usr/bin:$HOME/bin:/usr/local/sbin:/usr/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
+
+source $HOME/dotfiles/.zshrc.mine
 
 source $ZSH/oh-my-zsh.sh
 
@@ -82,4 +87,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source $HOME/dotfiles/.zshrc.mine
+
+## 起動速度測定用
+# if (which zprof > /dev/null) ;then
+#     zprof | less
+# fi
