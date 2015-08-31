@@ -52,7 +52,19 @@ ZSH_THEME="powerline"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(bundler cdd docker encode64 gem git homeshick  rails rake vagrant zsh-syntax-highlighting)
+plugins=(
+     bundler
+     cdd
+     docker
+     encode64
+     gem
+     git
+     homeshick
+     rails
+     rake
+     vagrant
+   # zsh-syntax-highlighting
+)
 
 # User configuration
 
