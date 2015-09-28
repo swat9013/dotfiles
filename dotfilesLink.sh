@@ -1,5 +1,5 @@
 #!/bin/sh
-ln -sf ~/dotfiles/.emacs.d ~/.emacs.d
+ln -snf ~/dotfiles/.emacs.d ~/.emacs.d
 ln -sf ~/dotfiles/.colordiffrc ~/.colordiffrc
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 ln -sf ~/dotfiles/.rspec ~/.rspec
