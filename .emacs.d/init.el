@@ -18,6 +18,15 @@
 ;; (global-set-key (kbd "M-y") 'anything-show-kill-ring)
 ;; (global-set-key (kbd "C-c C-f") 'anything-filelist+)
 
+;;csv-mode
+(require 'csv-mode)
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+(autoload 'csv-mode "csv-mode"
+  "Major mode for editing comma-separated value files." t)
+
+;; git-gutter
+(global-git-gutter-mode +1)
+
 ;; anzu
 (require 'anzu)
 (global-anzu-mode +1)
@@ -32,7 +41,7 @@
 (global-yascroll-bar-mode 1)
 
 ;; theme
-(load-theme 'atom-dark t)
+;;(load-theme 'atom-dark t)
 
 ;;; smooth-scroll
 ;; (require 'smooth-scroll)
@@ -75,6 +84,14 @@
 (require 'helm)
 (helm-mode 1)
 (define-key global-map (kbd "C-x C-o") 'helm-mini)
+
+(require 'helm-config)
+(require 'helm-files)
+(require 'helm-ag)
+(setq helm-ag-base-command "ag --nocolor --nogrou")
+(global-set-key (kbd "M-s") 'helm-ag)
+(global-set-key (kbd "M-p") 'helm-ag-pop-stack)
+(global-set-key (kbd "C-M-s") 'helm-ag-this-file)
 
 ;;(require 'hlinum)
 ;;(hlinum-activate)
@@ -126,8 +143,10 @@
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Gemfile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("[Ra]kefile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Berksfile$" . ruby-mode))
+
 ;; (setq load-path (cons "~/.emacs.d/elisp" load-path))
 
 
