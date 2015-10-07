@@ -26,6 +26,7 @@
     ;; auto-async-byte-compile
     ;; benchmark-init
     ;; coffee-mode
+    csv-mode
     ;; d-mode
     ;; direx
     ;; diminish
@@ -37,13 +38,14 @@
     flycheck-d-unittest
     flycheck-tip
     flymake-cursor
-    ;; git-gutter
+    git-gutter
     ;; git-gutter-fringe
     gitconfig-mode
     ;; haml-mode
     helm
-    ;; helm-ag
+    helm-ag
     helm-projectile
+    ;; helm-ls-git
     ;; hlinum
     ;; jade-mode
     js2-mode
@@ -57,7 +59,7 @@
     ;; point-undo
     ;; popwin
     powerline
-    projectile
+    ;; projectile
     ;; projectile-rails
     rainbow-delimiters
     rainbow-mode
