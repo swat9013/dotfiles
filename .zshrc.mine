@@ -166,6 +166,7 @@ alias g='git'
 alias db_rollback='rake db:rollback'
 alias db_migrate='rake db:migrate'
 alias tail_log='tail -f *.log'
+alias ssh-aa='eval `ssh-agent -s` ; ssh-add'
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
@@ -219,7 +220,3 @@ function e(){
 ##     mkdir -p $SCREENDIR
 ## fi
 ## chmod 700 $SCREENDIR
-
-## ssh-agent
-eval `ssh-agent`
-ssh-add
