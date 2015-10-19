@@ -155,7 +155,6 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 # ------------------------------
 
 ### Aliases ###
-#時刻を表示させる
 alias history='history -E'
 alias ll='ls -l'
 alias la='ls -a'
@@ -166,7 +165,7 @@ alias t='tail -f'
 alias g='git'
 alias db_rollback='rake db:rollback'
 alias db_migrate='rake db:migrate'
-
+alias tail_log='tail -f *.log'
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
@@ -220,3 +219,7 @@ function e(){
 ##     mkdir -p $SCREENDIR
 ## fi
 ## chmod 700 $SCREENDIR
+
+## ssh-agent
+eval `ssh-agent`
+ssh-add
