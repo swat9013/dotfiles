@@ -2,9 +2,36 @@
 	ui = true
 [user]
 	name = s-watanabe
+	email =
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[alias]
+	alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
+	b = branch -a
+	br = browse-remote
+	cm = commit
+	cmm = commit -m
+	co = checkout
+	d = diff
+	dc = diff --cached
+	di = diff
+	dic = diff --cached
+	f = fetch --prune
+	fs = !git f && git su
+	ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >> .gitignore
+	info = remote show origin
+	l = log  --decorate --oneline --graph
+	ll = log  --decorate --stat --abbrev-commit
+	ls = log  --decorate --graph
+	s = status --short --branch
+	st = status
+	unstage    = reset HEAD --
+	cancel     = reset --soft HEAD^
+	me         = !git config --get-regexp user
+	today = log --decorate --oneline --since='12 hour ago' --pretty=format:'%C(yellow)%h%Creset %s %C(green)- %an, %cr%Creset'
+	pullrebase = pull --rebase
+	addall = add --all

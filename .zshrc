@@ -1,9 +1,14 @@
 export EDITOR=emacs
+if [ "$EDITOR" = "emacs" ]; then
+    EDITOR_CMD="e"
+else
+    EDITOR_CMD="$EDITOR"
+fi
 
 ## 保管を有効化
-fpath=(~/dotfiles/zsh-completions $fpath)
+## fpath=(~/dotfiles/zsh-completions $fpath)
 autoload -Uz compinit
-compinit
+compinit -c
 
 HISTFILE=$HOME/.zsh-history
 HISTSIZE=100000
@@ -58,26 +63,43 @@ setopt share_history
 ## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
 
-## cdコマンド実行後、lsを実行する
-function cd() {
-    builtin cd $@ && ls;
-}
-
 #スクリーンロックを無効化
 stty stop undef
 
 ## サスペンド無効化
 stty susp undef
 
+#cd 後のlsの省略
+function chpwd() { ls }
+
+#
+# Goolge Search by Google Chrome
+# terminalからググったりqiita検索をできる
+#
+google() {
+    local str opt
+    if [ $# != 0 ]; then
+        for i in $*; do
+            # $strが空じゃない場合、検索ワードを+記号でつなぐ(and検索)
+            str="$str${str:++}$i"
+        done
+        opt='search?num=100'
+        opt="${opt}&q=${str}"
+    fi
+    open -a Google\ Chrome http://www.google.co.jp/$opt
+}
+
 ## C-^ で一つ上のディレクトリへ
 function cdup() {
     echo
-    cd .. && ls
+    cd ..
+    echo
     zle reset-prompt
 }
 zle -N cdup
 bindkey '^^' cdup
 
+# rbenvのパスを通す
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
@@ -133,16 +155,17 @@ SPROMPT=$tmp_sprompt  # スペル訂正用プロンプト
 # ------------------------------
 
 ### Aliases ###
-#時刻を表示させる
 alias history='history -E'
 alias ll='ls -l'
 alias la='ls -a'
 alias s='screen'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
-alias zshrc='$EDITOR ~/.zshrc'
+alias zshrc='$EDITOR_CMD ~/.zshrc'
 alias t='tail -f'
-
-
+alias g='git'
+alias db_rollback='rake db:rollback'
+alias db_migrate='rake db:migrate'
+alias tail_log='tail -f *.log'
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
@@ -160,23 +183,19 @@ case "$TERM" in
         precmd() {
             printf "\e]0;${USER}@${HOST%%.*}:${PWD}\a"
             psvar=()
-            LANG=en_US.UTF-8 vcs_info
-            [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
         }
         ;;
     screen*|ansi*)
         preexec() {
             printf "\eP\e]0;${USER}@${HOST%%.*}:${PWD}\a\e\\"
             #printf "\eP\e]0;!${1%% *}\a\e\\"
-            printf "\ek#$1\e\\"
+            printf "\ek#${1%% *}\e\\"
         }
         precmd() {
             printf "\eP\e]0;${USER}@${HOST%%.*}:${PWD}\a\e\\"
             #printf "\eP\e]0;~$(basename $(pwd))\a\e\\"
             printf "\ek$(basename $(pwd))\e\\"
             psvar=()
-            LANG=en_US.UTF-8 vcs_info
-            [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
         }
         ;;
 esac
@@ -195,8 +214,12 @@ function e(){
 
 ## Screenのセッション保存場所変更
 ## http://rcmdnk.github.io/blog/2014/05/04/computer-screen-socket/
-export SCREENDIR=$HOME/.screens
-if [ ! -d $SCREENDIR ];then
-    mkdir -p $SCREENDIR
-fi
-chmod 700 $SCREENDIR
+## export SCREENDIR=$HOME/.screens
+## if [ ! -d $SCREENDIR ];then
+##     mkdir -p $SCREENDIR
+## fi
+## chmod 700 $SCREENDIR
+
+## ssh-agent
+eval `ssh-agent`
+ssh-add
