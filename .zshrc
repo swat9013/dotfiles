@@ -63,6 +63,7 @@ plugins=(
      rails
      rake
      vagrant
+     knife
    # zsh-syntax-highlighting
 )
 

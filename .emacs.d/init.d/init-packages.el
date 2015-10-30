@@ -80,6 +80,7 @@
     ;; smartparens
     ;; smooth-scroll
     ;; smooth-scrolling
+    ssh-config-mode
     ;; typescript
     ;; tabbar
     ;; textmate
