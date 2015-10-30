@@ -119,6 +119,9 @@
 (set-face-foreground 'font-lock-comment-face "red")
 (set-face-foreground 'font-lock-comment-delimiter-face "red")
 
+;;; 画像ファイルを表示
+(auto-image-file-mode t)
+
 ;;emacs serverの設定 現在はzshに記載
 ;; server start for emacs-client
 ;; (require 'server)
