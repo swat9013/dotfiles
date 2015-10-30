@@ -35,3 +35,7 @@
 	today = log --decorate --oneline --since='12 hour ago' --pretty=format:'%C(yellow)%h%Creset %s %C(green)- %an, %cr%Creset'
 	pullrebase = pull --rebase
 	addall = add --all
+	subadd = "!f () { git subtree add --prefix=${1}  --squash ${2}  ${3} ;};f"
+	subpush = "!f () { git subtree push --prefix=${1}  --squash ${2}  ${3} ;};f"
+	subpull = "!f () { git subtree pull --prefix=${1}  --squash ${2}  ${3} ;};f"
+	rc = rm --cached

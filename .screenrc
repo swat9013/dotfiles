@@ -2,6 +2,10 @@
 #http://calcurio.com/wordpress/?p=181
 #
 
+#文字コードの指定
+defencoding utf8
+encoding utf8 utf8
+
 startup_message off
 vbell off
 
