@@ -220,3 +220,23 @@ function e(){
 ##     mkdir -p $SCREENDIR
 ## fi
 ## chmod 700 $SCREENDIR
+
+function do_enter() {
+    if [ -n "$BUFFER" ]; then
+        zle accept-line
+        return 0
+    fi
+    echo
+    ls
+    # ↓おすすめ
+    # ls_abbrev
+    if [ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" = 'true' ]; then
+        echo -e "\e[0;33m--- git status ---\e[0m"
+        git status --short --branch
+        echo
+    fi
+    zle reset-prompt
+    return 0
+}
+zle -N do_enter
+bindkey '^m' do_enter
