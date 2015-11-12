@@ -1,8 +1,7 @@
+[include]
+	path = ~/.gitconfig.local
 [color]
 	ui = true
-[user]
-	name = s-watanabe
-	email =
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path =
@@ -35,3 +34,5 @@
 	today = log --decorate --oneline --since='12 hour ago' --pretty=format:'%C(yellow)%h%Creset %s %C(green)- %an, %cr%Creset'
 	pullrebase = pull --rebase
 	addall = add --all
+[push]
+	default = simple
