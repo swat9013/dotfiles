@@ -18,6 +18,8 @@ plugins=(
     rake
     vagrant
     knife
+    tmux
+    tmuxinator
     # zsh-syntax-highlighting
 )
 
