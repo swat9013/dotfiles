@@ -157,6 +157,8 @@
 
 ;; (setq load-path (cons "~/.emacs.d/elisp" load-path))
 
+(add-to-list 'auto-mode-alist '("\\.zsh" . shell-script-mode))
+
 
 (require 'ruby-block)
 (ruby-block-mode t)
