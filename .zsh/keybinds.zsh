@@ -1,5 +1,5 @@
-bindkey "^R" history-incremental-search-backward
-bindkey "^S" history-incremental-search-forward
+# bindkey "^R" history-incremental-search-backward
+# bindkey "^S" history-incremental-search-forward
 
 ## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
@@ -43,9 +43,10 @@ function peco-select-history() {
     else
         tac="tail -r"
     fi
-    BUFFER=$(\history -n 1 | eval $tac | awk '!a[$0]++' | peco --query "$LBUFFER")
-    CURSOR=$BUFFER
+    BUFFER=$(\history -n 1 | eval $tac | awk '!a[$0]++'| peco --query "$LBUFFER")
+    CURSOR=$#BUFFER
     zle clear-screen
+    #zle reset-screen
 }
 zle -N peco-select-history
 bindkey '^r' peco-select-history
