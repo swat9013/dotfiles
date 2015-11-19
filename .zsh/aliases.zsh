@@ -5,13 +5,15 @@ alias la='ls -a'
 alias s='screen'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
 alias zshrc='$EDITOR_CMD ~/.zshrc'
-alias t='tail -f'
+alias tf='tail -f'
 alias g='git'
 alias db_rollback='rake db:rollback'
 alias db_migrate='rake db:migrate'
 alias tail_log='tail -f *.log'
 alias ssh-aa='eval `ssh-agent -s` ; ssh-add'
 alias less="less -qnR"
+alias tm="tmux"
+alias m="mux"
 
 #colordiff設定
 if [[ -x `which git` ]]; then
