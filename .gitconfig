@@ -34,5 +34,6 @@
 	today = log --decorate --oneline --since='12 hour ago' --pretty=format:'%C(yellow)%h%Creset %s %C(green)- %an, %cr%Creset'
 	pullrebase = pull --rebase
 	addall = add --all
+	sed =  "!f () { git grep -l $1 | xargs sed -i s/$1/$2/g; }; f"
 [push]
 	default = simple
