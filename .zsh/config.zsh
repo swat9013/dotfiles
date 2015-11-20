@@ -1,14 +1,22 @@
 ## 保管を有効化
 ## fpath=(~/dotfiles/zsh-completions $fpath)
 autoload -Uz compinit; compinit -c
+autoload -Uz colors; colors
 
-HISTFILE=$HOME/.zsh-history
-HISTSIZE=100000
-SAVEHIST=100000
+## cdr
+if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+  add-zsh-hook chpwd chpwd_recent_dirs
+  zstyle ':completion:*:*:cdr:*:*' menu selection
+  zstyle ':completion:*' recent-dirs-insert both
+  zstyle ':chpwd:*' recent-dirs-max 500
+  zstyle ':chpwd:*' recent-dirs-default true
+  # zstyle ':chpwd:*' recent-dirs-file "${XDG_CACHE_HOME:-$HOME/.cache}/shell/chpwd-recent-dirs"
+  zstyle ':chpwd:*' recent-dirs-pushd true
+fi
+
 ## 補完候補のカーソル選択を有効に
 zstyle ':completion:*:default' menu select=1
-
-autoload -Uz colors; colors
 
 #スクリーンロックを無効化
 stty stop undef
@@ -19,31 +27,10 @@ stty susp undef
 #cd 後のlsの省略
 function chpwd() { ls }
 
-#
-# Goolge Search by Google Chrome
-# terminalからググったりqiita検索をできる
-#
-google() {
-    local str opt
-    if [ $# != 0 ]; then
-        for i in $*; do
-            # $strが空じゃない場合、検索ワードを+記号でつなぐ(and検索)
-            str="$str${str:++}$i"
-        done
-        opt='search?num=100'
-        opt="${opt}&q=${str}"
-    fi
-    open -a Google\ Chrome http://www.google.co.jp/$opt
-}
-
 ## 補完候補に色を付ける
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-
-# ------------------------------
-## Other Settings
-# ------------------------------
-
+## title
 case "$TERM" in
     kterm*|xterm*)
         precmd() {
