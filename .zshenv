@@ -19,6 +19,9 @@ export ZLS_COLORS=$LS_COLORS
 ## lsコマンド時、自動で色がつく(ls -Gのようなもの？)
 export CLICOLOR=true
 
+export HISTFILE=$HOME/.zsh-history
+export HISTSIZE=100000
+export SAVEHIST=100000
 
 PATH=$PATH:~/local/bin/
 export PATH=$PATH:~/local/bin/
