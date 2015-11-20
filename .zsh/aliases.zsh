@@ -16,8 +16,8 @@ alias tm="tmux"
 alias m="mux"
 
 #colordiff設定
-if [[ -x `which git` ]]; then
-    alias diff='git diff --no-index'
+if [[ -x `which colordiff` ]]; then
+    alias diff='colordiff -u'
 else
     alias diff='diff -u'
 fi
