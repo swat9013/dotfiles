@@ -21,7 +21,7 @@ zle -N peco-select-history
 bindkey '^r' peco-select-history
 
 
-if [ "${OS}" != "darwin" ]; then
+if [ "$(uname)" != "Darwin" ]; then
     ## C-^ で一つ上のディレクトリへ
     function cdup() {
         echo
