@@ -74,7 +74,7 @@
     scss-mode
     ;; sequential-command
     ;; smartrep
-    ;; slim-mode
+    slim-mode
     smart-compile
     smart-mode-line
     ;; smartparens
