@@ -26,6 +26,9 @@
 	l = log  --decorate --oneline --graph
 	ll = log  --decorate --stat --abbrev-commit
 	ls = log  --decorate --graph
+	la = log  --decorate --oneline --graph --all
+	lla = log  --decorate --stat --abbrev-commit --all
+	lsa = log  --decorate --graph --all
 	s = status --short --branch
 	st = status
 	unstage    = reset HEAD --
@@ -35,5 +38,9 @@
 	pullrebase = pull --rebase
 	addall = add --all
 	sed =  "!f () { git grep -l $1 | xargs sed -i s/$1/$2/g; }; f"
+	subadd = "!f () { git subtree add --prefix=${1}  --squash ${2}  ${3} ;};f"
+	subpush = "!f () { git subtree push --prefix=${1}  --squash ${2}  ${3} ;};f"
+	subpull = "!f () { git subtree pull --prefix=${1}  --squash ${2}  ${3} ;};f"
+	rc = rm --cached
 [push]
 	default = simple
