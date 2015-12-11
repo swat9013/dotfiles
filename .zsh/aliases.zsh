@@ -26,6 +26,9 @@ alias less="less -qnR"
 alias tm="tmux"
 alias m="mux"
 alias relogin='exec $SHELL -l'
+alias -g C='`git log --decorate --oneline | peco | cut -d" " -f1`'
+alias -g Ca='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
+alias -g R='`git reflog | peco | cut -d" " -f1`'
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
