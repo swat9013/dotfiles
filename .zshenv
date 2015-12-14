@@ -7,7 +7,8 @@ fi
 
 # rbenvのパスを通す
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+eval "$(rbenv init - zsh)"
+
 
 #### Ls Color ###
 ## 色の設定
