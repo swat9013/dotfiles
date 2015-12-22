@@ -4,25 +4,27 @@
 ## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
 
-function peco-select-history() {
-    local tac
-    if which tac > /dev/null; then
-        tac="tac"
-    else
-        tac="tail -r"
-    fi
-    BUFFER=$(\history -n 1 | eval $tac | awk '!a[$0]++'| peco --query "$LBUFFER")
-    CURSOR=$#BUFFER
-    # zle clear-screen
-    # zle reset-screen
-    zle reset-prompt
-}
-zle -N peco-select-history
-bindkey '^r' peco-select-history
+if which peco > /dev/null 2>&1; then
 
-function peco-go-to-dir () {
-    local line
-    local selected="$(
+    function peco-select-history() {
+        local tac
+        if which tac > /dev/null; then
+            tac="tac"
+        else
+            tac="tail -r"
+        fi
+        BUFFER=$(\history -n 1 | eval $tac | awk '!a[$0]++'| peco --query "$LBUFFER")
+        CURSOR=$#BUFFER
+        # zle clear-screen
+        # zle reset-screen
+        zle reset-prompt
+    }
+    zle -N peco-select-history
+    bindkey '^r' peco-select-history
+
+    function peco-go-to-dir () {
+        local line
+        local selected="$(
       {
         (
           autoload -Uz chpwd_recent_filehandler
@@ -36,15 +38,15 @@ function peco-go-to-dir () {
         for line in *(-/) ${^cdpath}/*(N-/); do echo "$line"; done | sort -u
       } | peco --query "$LBUFFER"
     )"
-    if [ -n "$selected" ]; then
-        BUFFER="cd ${(q)selected}"
-        zle accept-line
-    fi
-    zle reset-prompt
-}
-zle -N peco-go-to-dir
-bindkey '^f' peco-go-to-dir
-
+        if [ -n "$selected" ]; then
+            BUFFER="cd ${(q)selected}"
+            zle accept-line
+        fi
+        zle reset-prompt
+    }
+    zle -N peco-go-to-dir
+    bindkey '^f' peco-go-to-dir
+fi
 
 if [ "$(uname)" != "Darwin" ]; then
     ## C-^ で一つ上のディレクトリへ
