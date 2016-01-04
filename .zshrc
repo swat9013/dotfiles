@@ -20,6 +20,7 @@ plugins=(
     knife
     tmux
     tmuxinator
+    rbenv
     # zsh-syntax-highlighting
 )
 
