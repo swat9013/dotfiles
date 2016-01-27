@@ -20,6 +20,10 @@
 	dc = diff --cached
 	di = diff
 	dic = diff --cached
+	dw = diff --word-diff
+	dcw = diff --cached --word-diff
+	diw = diff --word-diff
+	dicw = diff --cached --word-diff
 	f = fetch --prune
 	fs = !git f && git su
 	ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >> .gitignore
