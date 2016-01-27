@@ -1,3 +1,9 @@
+# LANGUAGE must be set by en_US
+export LANGUAGE="ja_JP.UTF-8"
+export LANG="${LANGUAGE}"
+export LC_ALL="${LANGUAGE}"
+export LC_CTYPE="${LANGUAGE}"
+
 export EDITOR=emacs
 if [ "$EDITOR" = "emacs" ]; then
     EDITOR_CMD="e"
