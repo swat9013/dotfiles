@@ -11,11 +11,6 @@ else
     EDITOR_CMD="$EDITOR"
 fi
 
-# rbenvのパスを通す
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init - zsh)"
-
-
 #### Ls Color ###
 ## 色の設定
 export LSCOLORS=Exfxcxdxbxegedabagacad
@@ -29,6 +24,3 @@ export CLICOLOR=true
 export HISTFILE=$HOME/.zsh-history
 export HISTSIZE=100000
 export SAVEHIST=100000
-
-PATH=$PATH:~/local/bin/
-export PATH=$PATH:~/local/bin/
