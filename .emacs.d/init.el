@@ -64,8 +64,8 @@
 ;; (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
 
-(require 'flymake)
-(add-hook 'find-file-hook 'flymake-find-file-hook)
+;; (require 'flymake)
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
 
 (require 'auto-complete)
 (require 'auto-complete-config)
