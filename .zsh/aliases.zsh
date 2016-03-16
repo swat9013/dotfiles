@@ -28,8 +28,8 @@ alias tmkss="tmux kill-session"
 alias tmksr="tmux kill-server"
 alias m="mux"
 alias relogin='exec $SHELL -l'
-alias -g C='`git log --decorate --oneline | peco | cut -d" " -f1`'
-alias -g Ca='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
+alias -g L='`git log --decorate --oneline | peco | cut -d" " -f1`'
+alias -g LA='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
 alias -g R='`git reflog | peco | cut -d" " -f1`'
 
 #colordiff設定
@@ -48,3 +48,15 @@ function e(){
                  (echo "[$0] emacsclient -c -t $*"; emacsclient -c -t $*)) ||
             (echo "[$0] emacs $*"; emacs $*))
 }
+
+# 標準出力をクリップボードにコピー
+if which pbcopy >/dev/null 2>&1 ; then
+    # Mac
+    alias -g C='| pbcopy'
+elif which xsel >/dev/null 2>&1 ; then
+    # Linux
+    alias -g C='| xsel --input --clipboard'
+elif which putclip >/dev/null 2>&1 ; then
+    # Cygwin
+    alias -g C='| putclip'
+fi
