@@ -56,7 +56,7 @@
     ;; move-text
     ;; multiple-cursors
     nginx-mode
-    ;; point-undo
+    point-undo
     ;; popwin
     powerline
     ;; projectile
@@ -70,6 +70,7 @@
     ruby-block
     ruby-end
     ruby-electric
+    robe
     sass-mode
     scss-mode
     ;; sequential-command
