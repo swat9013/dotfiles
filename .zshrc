@@ -1,6 +1,9 @@
 ## 起動速度測定用
 ##zmodload zsh/zprof && zprof
 
+## 重複パスを登録しない
+typeset -U path cdpath fpath manpath
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/dotfiles/oh-my-zsh
 
@@ -24,10 +27,12 @@ plugins=(
     # zsh-syntax-highlighting
 )
 
+export PATH=$HOME/local/bin:$PATH
 source $ZSH/oh-my-zsh.sh
 for conf in $HOME/dotfiles/.zsh/*.zsh; do
     source ${conf};
 done
+
 
 ## 起動速度測定用
 # if (which zprof > /dev/null) ;then
