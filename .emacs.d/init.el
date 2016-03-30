@@ -154,6 +154,7 @@
 (add-to-list 'auto-mode-alist '("[Ra]kefile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Berksfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rabl$" . ruby-mode))
 ;; indent
 (setq ruby-deep-indent-paren-style nil)
 (defadvice ruby-indent-line (after unindent-closing-paren activate)
@@ -176,7 +177,14 @@
 
 (add-to-list 'auto-mode-alist '("\\.zsh" . shell-script-mode))
 
+; robe
+(autoload 'robe-mode "robe" "Code navigation, documentation lookup and completion for Ruby" t nil)
+(autoload 'ac-robe-setup "ac-robe" "auto-complete robe" nil nil)
+(add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'robe-mode-hook 'ac-robe-setup)
 
+
+; ruby-block
 (require 'ruby-block)
 (ruby-block-mode t)
 (setq ruby-block-highlight-toggle t)
@@ -238,6 +246,11 @@
 (defalias 'redo 'undo-tree-redo)
 ;;(global-set-key (kbd "C-z") 'undo);; 【Ctrl+z】
 ;;(global-set-key (kbd "C-\\") 'redo)
+
+;; point-undo
+(require 'point-undo)
+  (global-set-key (kbd "M-[") 'point-undo)
+  (global-set-key (kbd "M-]") 'point-redo))
 
 ;;;; el-get
 ;; (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
