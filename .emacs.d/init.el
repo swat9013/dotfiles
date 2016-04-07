@@ -248,9 +248,9 @@
 ;;(global-set-key (kbd "C-\\") 'redo)
 
 ;; point-undo
-(require 'point-undo)
-  (global-set-key (kbd "M-[") 'point-undo)
-  (global-set-key (kbd "M-]") 'point-redo))
+;; (require 'point-undo)
+;;   (global-set-key (kbd "M-[") 'point-undo)
+;;   (global-set-key (kbd "M-]") 'point-redo))
 
 ;;;; el-get
 ;; (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
