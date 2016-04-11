@@ -7,6 +7,7 @@ do
     [ "$f" = ".gitignore" ] && continue
     [ "$f" = ".gitmodule" ] && continue
     [ "$f" = ".gitconfig.local.sample" ] && continue
+    [ "$f" = ".zshrc.template" ] && continue
 
     ln -snfv "$HOME"/.dotfiles/"$f" "$HOME"/"$f"
 done
