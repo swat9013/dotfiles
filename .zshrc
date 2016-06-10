@@ -5,7 +5,7 @@
 typeset -U path cdpath fpath manpath
 
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/dotfiles/oh-my-zsh
+export ZSH=$HOME/.dotfiles/oh-my-zsh
 
 ZSH_THEME="powerline"
 
@@ -29,7 +29,7 @@ plugins=(
 
 export PATH=$HOME/local/bin:$PATH
 source $ZSH/oh-my-zsh.sh
-for conf in $HOME/dotfiles/.zsh/*.zsh; do
+for conf in $HOME/.dotfiles/.zsh/*.zsh; do
     source ${conf};
 done
 
