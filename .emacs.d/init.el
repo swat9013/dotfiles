@@ -100,6 +100,8 @@
 (global-set-key (kbd "M-s") 'helm-ag)
 (global-set-key (kbd "M-p") 'helm-ag-pop-stack)
 (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 ;;(require 'hlinum)
 ;;(hlinum-activate)
