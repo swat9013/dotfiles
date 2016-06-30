@@ -6,7 +6,7 @@ GITHUB_URL=https://github.com/swat9013/dotfiles.git
 if  [ `which git` ]; then
     git clone --recursive "$GITHUB_URL" "$DOTPATH"
 else
-    echo "git requred"
+    echo "git requrired"
     exit 1
 fi
 
