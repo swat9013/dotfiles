@@ -39,9 +39,15 @@
 (require 'anzu)
 (global-anzu-mode +1)
 (custom-set-variables
- '(anzu-mode-lighter "")
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(anzu-deactivate-region t)
- '(anzu-search-threshold 100))
+ '(anzu-mode-lighter "")
+ '(anzu-search-threshold 100)
+ '(custom-safe-themes (quote ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+ '(yas-trigger-key "TAB"))
 (global-set-key (kbd "M-%") 'anzu-query-replace)
 (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
 
@@ -276,13 +282,7 @@
 (yas-global-mode 1);; minor-modeもある
 ;; (define-key yas-minor-mode-map (kbd "SPC") 'yas/expand)
 ;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
- '(yas-trigger-key "TAB"))
+
 
 ;;nginx-mode
 (require 'nginx-mode)
@@ -292,4 +292,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(custom-comment-tag ((t (:foreground "brightblue"))))
+ '(font-lock-function-name-face ((t (:foreground "color-33")))))
