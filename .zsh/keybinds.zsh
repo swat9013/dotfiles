@@ -48,36 +48,33 @@ if which peco > /dev/null 2>&1; then
     bindkey '^f' peco-go-to-dir
 fi
 
-if [ "$(uname)" != "Darwin" ]; then
-    ## C-^ で一つ上のディレクトリへ
-    function cdup() {
-        echo
-        cd ..
-        echo
-        zle reset-prompt
-    }
-    zle -N cdup
-    bindkey '^^' cdup
+## C-^ で一つ上のディレクトリへ
+function cdup() {
+    echo
+    cd ..
+    echo
+    zle reset-prompt
+}
+zle -N cdup
+bindkey '^^' cdup
 
-
-    function do_enter() {
-        if [ -n "$BUFFER" ]; then
-            zle accept-line
-            return 0
-        fi
-        echo
-        ls
-        # ↓おすすめ
-        # ls_abbrev
-        if [ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" = 'true' ]; then
-            # echo -e "\e[0;33m--- git status ---\e[0m"
-            echo
-            git status --short --branch
-        fi
-        echo
-        zle reset-prompt
+function do_enter() {
+    if [ -n "$BUFFER" ]; then
+        zle accept-line
         return 0
-    }
-    zle -N do_enter
-    bindkey '^m' do_enter
-fi
+    fi
+    echo
+    ls
+    # ↓おすすめ
+    # ls_abbrev
+    if [ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" = 'true' ]; then
+        # echo -e "\e[0;33m--- git status ---\e[0m"
+        echo
+        git status --short --branch
+    fi
+    echo
+    zle reset-prompt
+    return 0
+}
+zle -N do_enter
+bindkey '^m' do_enter

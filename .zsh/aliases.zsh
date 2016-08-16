@@ -31,6 +31,8 @@ alias relogin='exec $SHELL -l'
 alias -g L='`git log --decorate --oneline | peco | cut -d" " -f1`'
 alias -g LA='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
 alias -g R='`git reflog | peco | cut -d" " -f1`'
+alias dotfiles='cd ~/.dotfiles'
+alias sshdir='cd ~/.ssh'
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
