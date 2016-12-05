@@ -1,3 +1,10 @@
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (add-to-list 'load-path "~/.emacs.d/init.d")
 ;; (add-to-list 'load-path "~/.emacs.d/vendor.d")
 (load "~/.emacs.d/init.d/init-config")
@@ -46,7 +53,12 @@
  '(anzu-deactivate-region t)
  '(anzu-mode-lighter "")
  '(anzu-search-threshold 100)
- '(custom-safe-themes (quote ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+ '(custom-safe-themes
+   (quote
+    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+ '(package-selected-packages
+   (quote
+    (web-mode yaml-mode yasnippet yascroll undohist undo-tree ssh-config-mode smart-mode-line smart-compile slim-mode scss-mode sass-mode robe ruby-electric ruby-end ruby-block rinari rainbow-mode rainbow-delimiters powerline point-undo nginx-mode markdown-mode js2-mode helm-projectile helm-ag helm gitconfig-mode git-gutter flymake-cursor flycheck-tip flycheck-d-unittest flycheck csv-mode auto-complete-clang auto-complete anything atom-dark-theme ace-jump-mode anzu)))
  '(yas-trigger-key "TAB"))
 (global-set-key (kbd "M-%") 'anzu-query-replace)
 (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
@@ -294,3 +306,4 @@
  ;; If there is more than one, they won't work right.
  '(custom-comment-tag ((t (:foreground "brightblue"))))
  '(font-lock-function-name-face ((t (:foreground "color-33")))))
+ '(web-mode-html-tag-bracket-face ((t (:foreground "cyan")))))
