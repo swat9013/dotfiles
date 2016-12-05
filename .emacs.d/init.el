@@ -305,5 +305,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-comment-tag ((t (:foreground "brightblue"))))
- '(font-lock-function-name-face ((t (:foreground "color-33")))))
+ '(font-lock-function-name-face ((t (:foreground "color-33"))))
  '(web-mode-html-tag-bracket-face ((t (:foreground "cyan")))))
