@@ -33,6 +33,9 @@ for conf in $HOME/.dotfiles/.zsh/*.zsh; do
     source ${conf};
 done
 
+export PYENV_ROOT="${HOME}/.pyenv"
+export PATH="${PYENV_ROOT}/bin:$PATH"
+eval "$(pyenv init -)"
 
 ## 起動速度測定用
 # if (which zprof > /dev/null) ;then
