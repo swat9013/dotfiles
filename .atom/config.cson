@@ -1,0 +1,28 @@
+"*":
+  "atom-beautify":
+    general:
+      _analyticsUserId: "172af0c7-b706-46c7-ac12-eb3c1a9e1560"
+  core:
+    audioBeep: false
+    disabledPackages: [
+      "json-schema"
+    ]
+    themes: [
+      "atom-dark-ui"
+      "monokai"
+    ]
+  editor:
+    fontSize: 13
+    invisibles: {}
+    showIndentGuide: true
+    softWrap: true
+    zoomFontWhenCtrlScrolling: true
+  "exception-reporting":
+    userId: "93efebea-833e-998b-1fd5-15c4fafa3968"
+  linter: {}
+  localization:
+    CurrentLanguage: "Japanese"
+  minimap: {}
+  "one-dark-ui": {}
+  welcome:
+    showOnStartup: false

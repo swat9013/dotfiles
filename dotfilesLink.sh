@@ -19,3 +19,8 @@ ln -snf ~/.dotfiles/zsh-syntax-highlighting ~/.dotfiles/oh-my-zsh/custom/plugins
 if [ ! -e "$HOME"/.gitconfig.local ]; then
     cp .gitconfig.local.sample "$HOME"/.gitconfig.local
 fi
+
+for f in .atom/??*
+do
+    ln -snfv "$HOME"/.dotfiles/"$f" "$HOME"/"$f"
+done
