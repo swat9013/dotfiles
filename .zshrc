@@ -35,7 +35,9 @@ done
 
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PYENV_ROOT}/bin:$PATH"
-eval "$(pyenv init -)"
+if [[ -x `which pyenv` ]]; then
+    eval "$(pyenv init -)"
+fi
 
 ## 起動速度測定用
 # if (which zprof > /dev/null) ;then
