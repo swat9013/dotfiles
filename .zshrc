@@ -10,6 +10,7 @@ export ZSH=$HOME/.dotfiles/oh-my-zsh
 ZSH_THEME="powerline"
 
 plugins=(
+    react-native
     bundler
     cdd
     docker

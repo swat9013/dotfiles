@@ -24,3 +24,7 @@ export CLICOLOR=true
 export HISTFILE=$HOME/.zsh-history
 export HISTSIZE=100000
 export SAVEHIST=100000
+
+export ANDROID_HOME=~/Library/Android/sdk
+export PATH=${PATH}:${ANDROID_HOME}/tools
+export PATH=${PATH}:${ANDROID_HOME}/platform-tools
