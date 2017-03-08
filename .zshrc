@@ -14,6 +14,7 @@ plugins=(
     bundler
     cdd
     docker
+    docker-compose
     encode64
     gem
     git
