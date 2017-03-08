@@ -26,13 +26,14 @@ alias less="less -qnR"
 alias tm="tmux"
 alias tmkss="tmux kill-session"
 alias tmksr="tmux kill-server"
-alias m="mux"
+alias m="tmuxinator"
 alias relogin='exec $SHELL -l'
 alias -g L='`git log --decorate --oneline | peco | cut -d" " -f1`'
 alias -g LA='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
 alias -g R='`git reflog | peco | cut -d" " -f1`'
 alias dotfiles='cd ~/.dotfiles'
 alias sshdir='cd ~/.ssh'
+alias p='python'
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
