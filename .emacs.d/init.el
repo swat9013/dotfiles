@@ -305,5 +305,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-comment-tag ((t (:foreground "brightblue"))))
+ '(diff-added ((t (:background "yellow" :foreground "black"))))
+ '(diff-hunk-header ((t (:background "brightred" :foreground "black"))))
+ '(diff-removed ((t (:background "color-22" :foreground "brightred"))))
  '(font-lock-function-name-face ((t (:foreground "color-33"))))
- '(web-mode-html-tag-bracket-face ((t (:foreground "cyan")))))
+ '(helm-selection ((t (:background "brightblue" :distant-foreground "black")))))
