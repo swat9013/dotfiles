@@ -77,6 +77,8 @@
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
+(global-set-key (kbd "C-c C-f") 'helm-projectile-find-file)
+(global-set-key (kbd "C-c C-g") 'helm-projectile-grep)
 
 ;; (require 'projectile-rails)
 ;; (add-hook 'projectile-mode-hook 'projectile-rails-on)
