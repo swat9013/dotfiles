@@ -132,7 +132,7 @@
 (require 'markdown-mode)
 (require 'gitconfig-mode)
 
-;;(require 'magit)
+(require 'magit)
 
 ;;webmodの設定
 (require 'web-mode)

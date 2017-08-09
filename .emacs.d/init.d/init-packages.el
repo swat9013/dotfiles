@@ -49,7 +49,7 @@
     ;; hlinum
     ;; jade-mode
     js2-mode
-    ;; magit
+    magit
     markdown-mode
     ;; maxframe
     ;; minor-mode-hack
