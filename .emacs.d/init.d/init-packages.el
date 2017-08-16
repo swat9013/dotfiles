@@ -1,144 +1,49 @@
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
 (package-initialize)
+(package-refresh-contents)
 
-(require 'cl)
-
-(defvar installing-package-list
-  '(
-    ;; cl-lib ;;emacs23用
-    ;; ac-js2
-    ;; ack-and-a-half
-    ;; ag
-    anzu
-    ace-jump-mode
-    atom-dark-theme
-    anything
-    ;; anything-complete
-    ;; anything-config
-    ;; anything-match-plugin
-    ;; anything-obsolete
-    ;; anything-show-completion
-    auto-complete
-    auto-complete-clang
-    ;; auto-async-byte-compile
-    ;; benchmark-init
-    ;; coffee-mode
-    csv-mode
-    ;; d-mode
-    ;; direx
-    ;; diminish
-    ;; editorconfig
-    ;; exec-path-from-shell
-    ;; expand-region
-    ;; feature-mode
-    flycheck
-    flycheck-d-unittest
-    flycheck-tip
-    flymake-cursor
-    git-gutter
-    ;; git-gutter-fringe
-    gitconfig-mode
-    ;; haml-mode
-    helm
-    helm-ag
-    helm-projectile
-    ;; helm-ls-git
-    ;; hlinum
-    ;; jade-mode
-    js2-mode
-    magit
-    markdown-mode
-    ;; maxframe
-    ;; minor-mode-hack
-    ;; move-text
-    ;; multiple-cursors
-    nginx-mode
-    point-undo
-    ;; popwin
-    powerline
-    ;; projectile
-    ;; projectile-rails
-    rainbow-delimiters
-    rainbow-mode
-    ;; rbenv
-    ;; recentf-ext
-    ;; region-bindings-mode
-    rinari
-    ruby-block
-    ruby-end
-    ruby-electric
-    robe
-    sass-mode
-    scss-mode
-    ;; sequential-command
-    ;; smartrep
-    slim-mode
-    smart-compile
-    smart-mode-line
-    ;; smartparens
-    ;; smooth-scroll
-    ;; smooth-scrolling
-    ssh-config-mode
-    ;; typescript
-    ;; tabbar
-    ;; textmate
-    undo-tree
-    undohist
-    ;; volatile-highlights
-    yascroll
-    yasnippet
-    yaml-mode
-    web-mode
-    ;; zenburn-theme
-    ))
-
-(defvar package-urls
-  '(
-    ;; 1ファイルのelispしか管理できません
-    ;; パッケージ名はファイル名の.elより前の部分になります
-    ;; "https://raw.githubusercontent.com/mooz/js2-mode/emacs23/js2-mode.el"
-    ;; "http://cx4a.org/pub/undohist.el"
-    )
-  )
-
-
-(defun package-install-from-url (url)
-  "URLを指定してパッケージをインストールする"
-  (interactive "sURL: ")
-  (let ((file (and (string-match "\\([a-z0-9-]+\\)\\.el" url) (match-string-no-properties 1 url))))
-    (with-current-buffer (url-retrieve-synchronously url)
-      (goto-char (point-min))
-      (delete-region (point-min) (search-forward "\n\n"))
-      (goto-char (point-min))
-      (setq info (cond ((condition-case nil (package-buffer-info) (error nil)))
-                       ((re-search-forward "[$]Id: .+,v \\([0-9.]+\\) .*[$]" nil t)
-                        (vector file nil (concat "[my:package-install-from-url]") (match-string-no-properties 1) ""))
-                       (t (vector file nil (concat file "[my:package-install-from-url]") (format-time-string "%Y%m%d") ""))))
-      (package-install-from-buffer info 'single)
-      (kill-buffer)
-      )))
-(defun package-url-installed-p (url)
-  "指定されたURLに対応するパッケージがインストールされているか調べる"
-  (interactive "sURL: ")
-  (let ((pkg-name (and (string-match "\\([a-z0-9-]+\\)\\.el" url) (match-string-no-properties 1 url))))
-    (package-installed-p (intern pkg-name))))
-
-
-(let ((not-installed (loop for x in installing-package-list
-                           when (not (package-installed-p x))
-                           collect x)))
-  (when not-installed
-    (package-refresh-contents)
-    (dolist (pkg not-installed)
-      (package-install pkg))))
-
-(let ((urls (loop for url in package-urls
-                  unless (package-url-installed-p url)
-                  collect url)))
-  (dolist (url urls)
-    (package-install-from-url url)))
-
-(provide 'init-packages)
+(package-install 'anzu)
+(package-install 'ace-jump-mode)
+(package-install 'atom-dark-theme)
+(package-install 'anything)
+(package-install 'auto-complete)
+(package-install 'auto-complete-clang)
+(package-install 'csv-mode)
+(package-install 'flycheck)
+(package-install 'flycheck-d-unittest)
+(package-install 'flycheck-tip)
+(package-install 'flymake-cursor)
+(package-install 'git-gutter)
+(package-install 'gitconfig-mode)
+(package-install 'helm)
+(package-install 'helm-ag)
+(package-install 'helm-projectile)
+(package-install 'js2-mode)
+(package-install 'magit)
+(package-install 'markdown-mode)
+(package-install 'nginx-mode)
+(package-install 'point-undo)
+(package-install 'powerline)
+(package-install 'rainbow-delimiters)
+(package-install 'rainbow-mode)
+(package-install 'ruby-block)
+(package-install 'ruby-end)
+(package-install 'ruby-electric)
+(package-install 'sass-mode)
+(package-install 'scss-mode)
+(package-install 'slim-mode)
+(package-install 'smart-compile)
+(package-install 'smart-mode-line)
+(package-install 'ssh-config-mode)
+(package-install 'use-package)
+(package-install 'undo-tree)
+(package-install 'undohist)
+(package-install 'yascroll)
+(package-install 'yasnippet)
+(package-install 'yaml-mode)
+(package-install 'web-mode)
