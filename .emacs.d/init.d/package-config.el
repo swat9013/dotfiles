@@ -20,20 +20,12 @@
    '(anzu-mode-lighter "")
    '(anzu-search-threshold 100))
   :bind (("M-%" . anzu-query-replace)
-         ("C-M-%" . anzu-query-replace-regexp)))
+         ("M-$" . anzu-query-replace-regexp)))
 
 (use-package yascroll
   :diminish yascroll-bar-mode
   :config
   (global-yascroll-bar-mode 1))
-
-(use-package projectile
-  :config
-  (projemctile-global-ode)
-  (setq (point)rojectile-completion-system 'helm)
-  (helm-projectile-on)
-  :bind(("C-c C-f" . helm-projectile-find-file)
-        ("C-c C-g" . helm-projectile-grep)))
 
 (use-package auto-complete
   :diminish auto-complete-mode)
@@ -49,23 +41,6 @@
 
 (use-package ace-jump-mode
   :bind(("C-c SPC" . ace-jump-mode)))
-
-(use-package helm
-  :diminish helm-mode
-  :config
-  (helm-mode 1)
-  :bind(("C-x C-o" . helm-mini)))
-
-(use-package helm-config)
-(use-package helm-files)
-(use-package helm-ag
-  :config
-  (setq helm-ag-base-command "ag --nocolor --nogrou")
-  :bind(("M-s" . helm-ag)
-        ("M-p" . helm-ag-pop-stack)
-        ("C-M-s" . helm-ag-this-file)
-        ("M-x" . helm-M-x)
-        ("C-x C-f" . helm-find-files)))
 
 (use-package rainbow-delimiters)
 (use-package magit)
@@ -84,6 +59,40 @@
   :diminish yas-minor-mode
   :config
   (yas-global-mode 1))
+
+;;
+;; helm projectile
+;;
+(use-package helm
+  :diminish helm-mode
+  :config
+  (helm-mode 1)
+  :bind(("C-x C-o" . helm-mini)))
+
+(use-package helm-config)
+(use-package helm-files)
+(use-package helm-ag
+  :config
+  (setq helm-ag-base-command "rg --vimgrep --no-heading")
+  (setq helm-ag-insert-at-point 'symbol)
+  :bind(("M-s" . helm-ag)
+        ("M-p" . helm-ag-pop-stack)
+        ("C-M-s" . helm-ag-this-file)
+        ("M-x" . helm-M-x)
+        ("C-x C-f" . helm-find-files)))
+
+(use-package projectile
+  :diminish projectile-mode
+  :init
+  (defun helm-projectile-ag ()
+    (interactive)
+    (helm-ag (projectile-project-root)))
+  :config
+  (projectile-global-mode t)
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on)
+  :bind(("C-c C-f" . helm-projectile-find-file)
+        ("C-c C-g" . helm-projectile-ag)))
 
 ;;
 ;; Ruby on Rails
