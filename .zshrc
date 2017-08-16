@@ -19,14 +19,12 @@ plugins=(
     gem
     git
     homeshick
-    rails
     rake
     vagrant
     knife
     tmux
     tmuxinator
     rbenv
-    # zsh-syntax-highlighting
 )
 
 export PATH=$HOME/local/bin:$PATH
