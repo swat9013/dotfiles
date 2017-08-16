@@ -29,6 +29,7 @@
  '(diff-removed ((t (:background "color-22" :foreground "brightred"))))
  '(font-lock-function-name-face ((t (:foreground "color-33"))))
  '(helm-selection ((t (:background "brightblue" :distant-foreground "black")))))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
