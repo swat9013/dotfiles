@@ -84,15 +84,16 @@
 (use-package projectile
   :diminish projectile-mode
   :init
-  (defun helm-projectile-ag ()
+  (defun helm-projectile-rg ()
     (interactive)
     (helm-ag (projectile-project-root)))
   :config
   (projectile-global-mode t)
   (setq projectile-completion-system 'helm)
   (helm-projectile-on)
+  (set-variable 'projectile-enable-caching t)
   :bind(("C-c C-f" . helm-projectile-find-file)
-        ("C-c C-g" . helm-projectile-ag)))
+        ("C-c C-g" . helm-projectile-rg)))
 
 ;;
 ;; Ruby on Rails
