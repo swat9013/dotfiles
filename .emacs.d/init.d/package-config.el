@@ -67,7 +67,17 @@
   :diminish helm-mode
   :config
   (helm-mode 1)
-  :bind(("C-x C-o" . helm-mini)))
+  (setq helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match    t)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+  :bind(("C-x C-o" . helm-mini)
+        ("M-y" . helm-show-kill-ring)
+        ("M-x" . helm-M-x)
+        ("C-x C-f" . helm-find-files)
+        ("C-x C-t" . helm-recentf)))
+
 
 (use-package helm-config)
 (use-package helm-files)
@@ -77,9 +87,7 @@
   (setq helm-ag-insert-at-point 'symbol)
   :bind(("M-s" . helm-ag)
         ("M-p" . helm-ag-pop-stack)
-        ("C-M-s" . helm-ag-this-file)
-        ("M-x" . helm-M-x)
-        ("C-x C-f" . helm-find-files)))
+        ("C-M-s" . helm-ag-this-file)))
 
 (use-package projectile
   :diminish projectile-mode
@@ -93,6 +101,14 @@
     (helm-ag (projectile-project-root)))
   :bind(("C-c C-f" . helm-projectile-find-file)
         ("C-c C-g" . helm-projectile-rg)))
+
+(use-package recentf
+  :config
+  (recentf-mode)
+  (set-variable 'recentf-max-saved-items 100)
+  (set-variable 'recentf-exclude '(".recentf"))
+  (set-variable 'recentf-auto-cleanup 10)
+  (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list)))
 
 ;;
 ;; Ruby on Rails
