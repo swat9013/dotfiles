@@ -156,3 +156,5 @@
 ;; iterm
 (global-set-key  (kbd "M-[ b") 'move-line-down)
 (global-set-key  (kbd "M-[ a") 'move-line-up)
+
+(global-set-key  (kbd "C-M-v") 'scroll-down-command)
