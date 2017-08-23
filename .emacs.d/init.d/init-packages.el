@@ -5,7 +5,7 @@
 ;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
 (package-initialize)
-(package-refresh-contents)
+;; (package-refresh-contents)
 
 (package-install 'anzu)
 (package-install 'ace-jump-mode)
