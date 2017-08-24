@@ -18,9 +18,9 @@
   (custom-set-variables
    '(anzu-deactivate-region t)
    '(anzu-mode-lighter "")
-   '(anzu-search-threshold 100))
-  :bind (("M-%" . anzu-query-replace)
-         ("M-$" . anzu-query-replace-regexp)))
+   '(anzu-search-threshold 100)))
+(bind-key* "M-%" 'anzu-query-replace)
+(bind-key* "M-$" 'anzu-query-replace-regexp)
 
 (use-package yascroll
   :diminish yascroll-bar-mode
@@ -98,9 +98,10 @@
   (set-variable 'projectile-enable-caching t)
   (defun helm-projectile-rg ()
     (interactive)
-    (helm-ag (projectile-project-root)))
-  :bind(("C-c C-f" . helm-projectile-find-file)
-        ("C-c C-g" . helm-projectile-rg)))
+    (helm-ag (projectile-project-root))))
+(bind-key* "C-c C-f" 'helm-projectile-find-file)
+(bind-key* "C-c C-g" 'helm-projectile-rg)
+(bind-key* "C-c C-t" 'projectile-recentf)
 
 (use-package recentf
   :config
@@ -163,19 +164,9 @@
          ("\\.erb$"       . web-mode)
          ("\\.html?$"     . web-mode))
   :config
-  (setq web-mode-html-offset   2)
-  (setq web-ode-markup-indent-offset   2)
-  (setq web-mode-css-offset    2)
-  (setq web-mode-script-offset 2)
-  (setq web-mode-php-offset    2)
-  (setq web-mode-java-offset   2)
-  (setq web-mode-asp-offset    2)
-  (setq web-mode-extra-snippets
-        '(("erb" . (("name" . ("beg" . "end"))))
-          ("html" . (("name" . ("beg" . "end"))))
-          ("php" . (("name" . ("beg" . "end"))
-                    ("name" . ("beg" . "end"))))
-          )))
+  (set-variable 'web-mode-markup-indent-offset 2)
+  (add-hook 'web-mode-hook
+            (lambda () (set-variable 'tab-width 2))))
 
 (use-package shell-script-mode
   :mode (("\\.zsh" . shell-script-mode)))
