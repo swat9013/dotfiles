@@ -35,6 +35,10 @@ alias dotfiles='cd ~/.dotfiles'
 alias sshdir='cd ~/.ssh'
 alias p='python'
 alias ps-grep="ps aux | grep"
+alias dcr='docker-compose run'
+alias dcrw='docker-compose run web'
+alias dcud='docker-compose up -d'
+alias dclog='COMPOSE_HTTP_TIMEOUT=30000 docker-compose logs -f'
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
