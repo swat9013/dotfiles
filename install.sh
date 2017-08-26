@@ -16,4 +16,21 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+if [ "$(uname)" == 'Darwin' ]; then
+    echo "=== Mac OS==="
+    if  [ `which brew` ]; then
+        brew install peco
+    else
+        echo "home brew requrired"
+        echo "https://brew.sh/index_ja.html"
+        exit 1
+    fi
+elif [ "$(expr substr $(uname -s) 1 5)" == 'Linux' ]; then
+    echo "=== Linux OS ==="
+elif [ "$(expr substr $(uname -s) 1 10)" == 'MINGW32_NT' ]; then
+    echo "=== Cygwin OS ==="
+else
+    echo "Your platform ($(uname -a))"
+fi
+
 sh dotfilesLink.sh
