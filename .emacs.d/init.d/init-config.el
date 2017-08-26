@@ -159,5 +159,5 @@
 
 (global-set-key  (kbd "M-p") 'scroll-down-command)
 (global-set-key  (kbd "M-n") 'scroll-up-command)
-(global-set-key  (kbd "M-[") 'next-buffer)
-(global-set-key  (kbd "M-]") 'previous-buffer)
+(global-set-key  (kbd "M-}") 'next-buffer)
+(global-set-key  (kbd "M-{") 'previous-buffer)
