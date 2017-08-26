@@ -18,18 +18,19 @@ fi
 
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
-    if  [ `which brew` ]; then
-        brew install peco ripgrep
-    else
-        echo "home brew requrired"
-        echo "https://brew.sh/index_ja.html"
-        exit 1
-    fi
-
     if  [ `which pip` ]; then
         pip install powerline-status
     else
         echo "pip requrired"
+        exit 1
+    fi
+
+    if  [ `which brew` ]; then
+        brew install peco ripgrep
+        brew install global --with-exuberant-ctags --with-pygments
+    else
+        echo "home brew requrired"
+        echo "https://brew.sh/index_ja.html"
         exit 1
     fi
 
