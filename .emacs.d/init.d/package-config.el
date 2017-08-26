@@ -85,9 +85,7 @@
   :config
   (setq helm-ag-base-command "rg --vimgrep --no-heading")
   (setq helm-ag-insert-at-point 'symbol)
-  :bind(("M-s" . helm-ag)
-        ("M-p" . helm-ag-pop-stack)
-        ("C-M-s" . helm-ag-this-file)))
+  :bind(("C-M-s" . helm-ag-this-file)))
 
 (use-package helm-gtags
   :init
