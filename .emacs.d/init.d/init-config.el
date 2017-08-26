@@ -157,4 +157,5 @@
 (global-set-key  (kbd "M-[ b") 'move-line-down)
 (global-set-key  (kbd "M-[ a") 'move-line-up)
 
-(global-set-key  (kbd "C-M-v") 'scroll-down-command)
+(global-set-key  (kbd "M-p") 'scroll-down-command)
+(global-set-key  (kbd "M-n") 'scroll-up-command)
