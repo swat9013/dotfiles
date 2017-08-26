@@ -34,6 +34,7 @@ alias -g R='`git reflog | peco | cut -d" " -f1`'
 alias dotfiles='cd ~/.dotfiles'
 alias sshdir='cd ~/.ssh'
 alias p='python'
+alias ps-grep="ps aux | grep"
 
 #colordiff設定
 if [[ -x `which colordiff` ]]; then
