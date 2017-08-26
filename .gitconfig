@@ -2,6 +2,10 @@
 	path = ~/.gitconfig.local
 [color]
 	ui = true
+[push]
+	default = simple
+[core]
+	excludesfile = ~/.gitignore_global
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path =
@@ -54,5 +58,3 @@
 	delete-merged-branch = "!f () { git fetch --prune; git checkout $1; git branch --merged|egrep -v '\\*|develop|master|pre-release|release'|xargs git branch -d; };f"
 	cofeature = "!f () { git checkout -b feature/$1 origin/master;};f"
 	cofix = "!f () { git checkout -b fix/$1 origin/master;};f"
-[push]
-	default = simple
