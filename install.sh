@@ -19,7 +19,7 @@ fi
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
     if  [ `which brew` ]; then
-        brew install peco
+        brew install peco ripgrep
     else
         echo "home brew requrired"
         echo "https://brew.sh/index_ja.html"
