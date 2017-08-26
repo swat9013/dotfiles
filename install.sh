@@ -25,6 +25,19 @@ if [ "$(uname)" == 'Darwin' ]; then
         echo "https://brew.sh/index_ja.html"
         exit 1
     fi
+
+    if  [ `which pip` ]; then
+        pip install powerline-status
+    else
+        echo "pip requrired"
+        exit 1
+    fi
+
+    if  [ `which gem` ]; then
+        gem install tmuxinator
+    else
+        echo "gem requrired"
+    fi
 elif [ "$(expr substr $(uname -s) 1 5)" == 'Linux' ]; then
     echo "=== Linux OS ==="
 elif [ "$(expr substr $(uname -s) 1 10)" == 'MINGW32_NT' ]; then
