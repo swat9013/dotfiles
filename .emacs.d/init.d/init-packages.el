@@ -23,6 +23,7 @@
 (package-install 'helm)
 (package-install 'helm-ag)
 (package-install 'helm-projectile)
+(package-install 'helm-gtags)
 (package-install 'js2-mode)
 (package-install 'magit)
 (package-install 'markdown-mode)
