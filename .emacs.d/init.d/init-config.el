@@ -153,10 +153,8 @@
 
 ;; (global-set-key  (kbd "ESC <down>") 'move-line-down)
 ;; (global-set-key  (kbd "ESC <up>") 'move-line-up)
-;; iterm
 (global-set-key  (kbd "M-[ b") 'move-line-down)
 (global-set-key  (kbd "M-[ a") 'move-line-up)
-
 (global-set-key  (kbd "M-p") 'scroll-down-command)
 (global-set-key  (kbd "M-n") 'scroll-up-command)
 (global-set-key  (kbd "M-}") 'next-buffer)
