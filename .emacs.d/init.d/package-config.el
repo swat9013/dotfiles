@@ -1,15 +1,22 @@
+(use-package desktop
+  :init
+  (setq desktop-base-file-name ".emacs.desktop")
+  (desktop-save-mode 1)
+  (setq history-length 250)
+  (add-to-list 'desktop-globals-to-save 'extended-command-history)
+  (add-to-list 'desktop-globals-to-save 'kill-ring)
+  (setq desktop-files-not-to-save "")
+  (defun my-desktop-save ()
+    (interactive)
+    ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
+    (if (eq (desktop-owner) (emacs-pid))
+        (desktop-save desktop-dirname)))
+  (add-hook 'auto-save-hook 'my-desktop-save))
+
 (use-package git-gutter
   :diminish git-gutter-mode
   :config
   (global-git-gutter-mode 1))
-
-(use-package ssh-config-mode
-  :mode ((".ssh/config\\'"       . ssh-config-mode)
-         ("sshd?_config\\'"      . ssh-config-mode)
-         ("known_hosts\\'"       . ssh-known-hosts-mode)
-         ("authorized_keys2?\\'" . ssh-authorized-keys-mode))
-  :init
-  (add-hook 'ssh-config-mode-hook 'turn-on-font-lock))
 
 (use-package anzu
   :diminish anzu-mode
@@ -104,7 +111,6 @@
   (projectile-global-mode t)
   (setq projectile-completion-system 'helm)
   (helm-projectile-on)
-  (set-variable 'projectile-enable-caching t)
   (defun helm-projectile-rg ()
     (interactive)
     (helm-ag (projectile-project-root))))
@@ -162,6 +168,12 @@
         (indent-line-to indent)
         (when (> offset 0) (forward-char offset))))))
 
+(use-package projectile-rails
+  :diminish projectile-rails-global-mode
+  :config
+  (projectile-rails-global-mode))
+
+
 ;;
 ;; file mode
 ;;
@@ -197,6 +209,14 @@
 
 (use-package nginx-mode
   :mode (("nginx\\(.*\\).conf[^/]*$" . nginx-mode)))
+
+(use-package ssh-config-mode
+  :mode ((".ssh/config\\'"       . ssh-config-mode)
+         ("sshd?_config\\'"      . ssh-config-mode)
+         ("known_hosts\\'"       . ssh-known-hosts-mode)
+         ("authorized_keys2?\\'" . ssh-authorized-keys-mode))
+  :init
+  (add-hook 'ssh-config-mode-hook 'turn-on-font-lock))
 
 ;;
 ;; safe-diminish
