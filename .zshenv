@@ -25,6 +25,12 @@ export HISTFILE=$HOME/.zsh-history
 export HISTSIZE=100000
 export SAVEHIST=100000
 
-export ANDROID_HOME=~/Library/Android/sdk
-export PATH=${PATH}:${ANDROID_HOME}/tools
-export PATH=${PATH}:${ANDROID_HOME}/platform-tools
+if [ "$(uname)" = 'Darwin' ]; then
+    export ANDROID_HOME=~/Library/Android/sdk
+    # export PATH=${PATH}:${ANDROID_HOME}/tools
+    # export PATH=${PATH}:${ANDROID_HOME}/platform-tools
+elif [ "$(expr substr $(uname -s) 1 5)" = 'Linux' ]; then
+    export PATH=$HOME/.emacsenv/bin:$PATH
+elif [ "$(expr substr $(uname -s) 1 10)" = 'MINGW32_NT' ]; then
+else
+fi
