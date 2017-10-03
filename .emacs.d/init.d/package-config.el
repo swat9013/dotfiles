@@ -13,7 +13,7 @@
         (desktop-save desktop-dirname)))
   (add-hook 'auto-save-hook 'my-desktop-save))
 
-(use-package git-gutter
+(use-package git-gutter+
   :diminish git-gutter-mode
   :config
   (global-git-gutter-mode 1))
@@ -117,6 +117,7 @@
 (bind-key* "C-c C-f" 'helm-projectile-find-file)
 (bind-key* "C-c C-g" 'helm-projectile-rg)
 (bind-key* "C-c C-t" 'projectile-recentf)
+(bind-key* "C-c C-r" 'projectile-replace)
 
 (use-package recentf
   :config
@@ -204,7 +205,10 @@
 (use-package yaml-mode
   :mode (("¥¥.yml$" . yaml-mode)))
 
-(use-package markdown-mode)
+(use-package markdown-mode
+  :config
+  (add-hook 'markdown-mode-hook '(lambda () (set (make-local-variable 'delete-trailing-whitespece-before-save) nil))))
+
 (use-package gitconfig-mode)
 
 (use-package nginx-mode

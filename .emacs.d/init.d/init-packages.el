@@ -18,7 +18,7 @@
 (package-install 'flycheck-d-unittest)
 (package-install 'flycheck-tip)
 (package-install 'flymake-cursor)
-(package-install 'git-gutter)
+(package-install 'git-gutter+)
 (package-install 'gitconfig-mode)
 (package-install 'helm)
 (package-install 'helm-ag)
