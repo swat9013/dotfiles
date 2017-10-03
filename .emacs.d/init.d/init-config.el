@@ -92,7 +92,15 @@
 (global-set-key (kbd "C-c <right>") 'windmove-right)
 
 ;;保存時に行末空白を削除
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(defvar delete-trailing-whitespece-before-save t)
+(defun my-delete-trailing-whitespace ()
+  (if delete-trailing-whitespece-before-save
+      (delete-trailing-whitespace)))
+(add-hook 'before-save-hook 'my-delete-trailing-whitespace)
+;; 無効にしたいモードのhook
+;; (add-hook 'markdown-mode-hook
+;;           '(lambda ()
+;;              (set (make-local-variable 'delete-trailing-whitespece-before-save) nil)))
 
 ;; 全角スペースとタブを強調表示
 (setq whitespace-style
@@ -159,3 +167,17 @@
 (global-set-key  (kbd "M-n") 'scroll-up-command)
 (global-set-key  (kbd "M-}") 'next-buffer)
 (global-set-key  (kbd "M-{") 'previous-buffer)
+
+
+;; ファイル再読込
+(defun revert-buffer-no-confirm (&optional force-reverting)
+  "Interactive call to revert-buffer. Ignoring the auto-save
+ file and not requesting for confirmation. When the current buffer
+ is modified, the command refuses to revert it, unless you specify
+ the optional argument: force-reverting to true."
+  (interactive "P")
+  ;;(message "force-reverting value is %s" force-reverting)
+  (if (or force-reverting (not (buffer-modified-p)))
+      (revert-buffer :ignore-auto :noconfirm)
+    (error "The buffer has been modified")))
+(global-set-key (kbd "C-c C-r") 'revert-buffer-no-confirm)
