@@ -47,7 +47,7 @@ alias tmkss="tmux kill-session"
 alias zshrc='$EDITOR_CMD ~/.zshrc'
 
 #colordiff設定
-if [[ -x `which colordiff` ]]; then
+if which colordiff >/dev/null 2>&1 ;then
     alias diff='colordiff -u'
 else
     alias diff='diff -u'
