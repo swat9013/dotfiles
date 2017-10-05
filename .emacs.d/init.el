@@ -17,6 +17,7 @@
 (require 'bind-key)    ;; if you use any :bind variant
 (setq use-package-verbose t)
 (setq use-package-minimum-reported-time 0.001)
+(setq frame-background-mode 'dark)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
