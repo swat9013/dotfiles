@@ -1,3 +1,9 @@
+(use-package flycheck
+  :init
+  (add-hook 'ruby-mode-hook 'flycheck-mode)
+  :config
+  (setq flycheck-check-syntax-automatically '(idle-change mode-enabled new-line save)))
+
 (use-package desktop
   :init
   (setq desktop-base-file-name ".emacs.desktop")
@@ -14,9 +20,9 @@
   (add-hook 'auto-save-hook 'my-desktop-save))
 
 (use-package git-gutter+
-  :diminish git-gutter-mode
+  :diminish git-gutter+-mode
   :config
-  (global-git-gutter-mode 1))
+  (global-git-gutter+-mode 1))
 
 (use-package anzu
   :diminish anzu-mode
@@ -134,7 +140,6 @@
   :init
   (add-hook 'ruby-mode-hook 'robe-mode)
   (add-hook 'robe-mode-hook 'ac-robe-setup))
-
 
 (use-package ruby-block
   :config
