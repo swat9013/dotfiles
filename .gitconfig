@@ -6,12 +6,6 @@
 	default = simple
 [core]
 	excludesfile = ~/.gitignore_global
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [alias]
 	alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
 	b = branch -a
@@ -55,6 +49,6 @@
 	rc = rm --cached
 	pushf = push --force-with-lease
 	pushu = !git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\"
-	delete-merged-branch = "!f () { git fetch --prune; git checkout $1; git branch --merged|egrep -v '\\*|develop|master|pre-release|release'|xargs git branch -d; };f"
+	delete-merged-branch = "!f () { git fetch --prune; git checkout $1; git branch --merged|egrep -v '\\*|develop|master|pre-release|release|development|staging|production'|xargs git branch -d; };f"
 	cofeature = "!f () { git checkout -b feature/$1 origin/master;};f"
 	cofix = "!f () { git checkout -b fix/$1 origin/master;};f"
