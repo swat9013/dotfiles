@@ -55,3 +55,7 @@ case "$TERM" in
         }
         ;;
 esac
+
+# http://hoppsjots.org/?p=177
+# Fix Underline + Color in TMUX (TERM=screen-256color)
+$({ infocmp -x screen-256color; printf '\t%s\n' 'ncv@,'; } > /tmp/t && tic -x /tmp/t)
