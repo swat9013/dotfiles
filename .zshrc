@@ -25,6 +25,7 @@ plugins=(
     tmux
     tmuxinator
     rbenv
+    zsh-notify
 )
 
 export PATH=$HOME/local/bin:$PATH
