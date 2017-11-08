@@ -1,6 +1,6 @@
 ## 保管を有効化
 ## fpath=(~/dotfiles/zsh-completions $fpath)
-autoload -Uz compinit; compinit -c
+# autoload -Uz compinit; compinit -c
 autoload -Uz colors; colors
 
 ## cdr
