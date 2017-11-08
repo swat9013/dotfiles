@@ -57,6 +57,7 @@
 
 (use-package rainbow-delimiters)
 (use-package magit)
+(bind-key* "C-x m" 'magit-status)
 
 (use-package ido
   :config
