@@ -45,7 +45,7 @@ if which peco > /dev/null 2>&1; then
         zle reset-prompt
     }
     zle -N peco-go-to-dir
-    bindkey '^f' peco-go-to-dir
+    bindkey '^s' peco-go-to-dir
 fi
 
 ## C-^ で一つ上のディレクトリへ

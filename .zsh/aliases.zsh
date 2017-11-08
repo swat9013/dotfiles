@@ -7,8 +7,9 @@ alias db_migrate='rake db:migrate'
 alias db_rollback='rake db:rollback'
 alias dclog='COMPOSE_HTTP_TIMEOUT=30000 docker-compose logs -f'
 alias dcr='docker-compose run'
+alias dcew='docker-compose exec web'
 alias dcrw='docker-compose run web'
-alias dcrwrubo-branch='docker-compose run web rubocop -a --force-exclusion $( git diff --name-only origin/master)'
+alias dcrwrubo-branch='docker-compose run web rubocop -a --force-exclusion $(echo $(git diff --name-only --cached --diff-filter=AMRC origin/master) $(git diff --name-only --diff-filter=AMRC))'
 alias dcrwrubo-cache='docker-compose run web rubocop -a --force-exclusion $( git diff --cached --name-only)'
 alias dcrwrubo-diff='docker-compose run web rubocop -a --force-exclusion $( git diff --name-only --diff-filter=AMRC)'
 alias dcrwrubo-status='docker-compose run web rubocop -a --force-exclusion $( git status --porcelain | grep -v "^ D " | sed s/^...// | paste -s -)'
@@ -17,6 +18,7 @@ alias dcud='docker-compose up -d'
 alias dotfiles='cd ~/.dotfiles'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
 alias g='git'
+alias gsed='(){ git grep -l $1 | xargs sed -i "" -e "s/$1/$2/g" }'
 alias grep='grep --color=auto'
 alias gtags-setup='gtags --gtagslabel=pygments'
 alias history='history -E'
@@ -45,6 +47,10 @@ alias tm="tmux"
 alias tmksr="tmux kill-server"
 alias tmkss="tmux kill-session"
 alias zshrc='$EDITOR_CMD ~/.zshrc'
+alias up='docker-compose up -d'
+alias stop='docker-compose stop'
+alias con='docker-compose run web rails c'
+alias attach='docker attach webapplication_web_1'
 
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then

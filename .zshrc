@@ -1,6 +1,3 @@
-## 起動速度測定用
-##zmodload zsh/zprof && zprof
-
 ## 重複パスを登録しない
 typeset -U path cdpath fpath manpath
 
@@ -25,7 +22,7 @@ plugins=(
     tmux
     tmuxinator
     rbenv
-    zsh-notify
+    notify
 )
 
 export PATH=$HOME/local/bin:$PATH
@@ -40,7 +37,7 @@ if which pyenv >/dev/null 2>&1 ; then
     eval "$(pyenv init -)"
 fi
 
-## 起動速度測定用
-# if (which zprof > /dev/null) ;then
-#     zprof | less
-# fi
+# 起動速度測定用
+if (which zprof > /dev/null) ;then
+    zprof | less
+fi
