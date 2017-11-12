@@ -1,5 +1,5 @@
 # 起動速度測定用
-zmodload zsh/zprof && zprof
+# zmodload zsh/zprof && zprof
 
 # LANGUAGE must be set by en_US
 export LANGUAGE="ja_JP.UTF-8"
