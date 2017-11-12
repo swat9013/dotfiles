@@ -1,6 +1,8 @@
-home下で実行して下さい
+# require
+- git
 
+# Install
 ```
-ワンライナー
+$ cd ~
 $ curl -L raw.github.com/swat9013/dotfiles/master/install.sh | sh
 ```
