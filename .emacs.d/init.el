@@ -43,3 +43,4 @@
    (quote
     (helm flycheck auto-complete yasnippet yascroll yaml-mode web-mode use-package undohist undo-tree ssh-config-mode smart-mode-line smart-compile slim-mode scss-mode sass-mode ruby-end ruby-electric ruby-block robe rinari rainbow-mode rainbow-delimiters powerline point-undo nginx-mode markdown-mode magit js2-mode helm-projectile helm-ag gitconfig-mode git-gutter flymake-cursor flycheck-tip flycheck-d-unittest csv-mode auto-complete-clang atom-dark-theme anzu anything ace-jump-mode))))
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
