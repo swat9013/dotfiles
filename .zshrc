@@ -7,18 +7,18 @@ export ZSH=$HOME/.dotfiles/oh-my-zsh
 ZSH_THEME="powerline"
 
 plugins=(
-    react-native
+    # react-native
     bundler
-    cdd
+    # cdd
     docker
     docker-compose
-    encode64
+    # encode64
     gem
-    git
-    homeshick
+    # git
+    # homeshick
     rake
-    vagrant
-    knife
+    # vagrant
+    # knife
     tmux
     tmuxinator
     rbenv

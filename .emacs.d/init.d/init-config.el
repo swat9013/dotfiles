@@ -181,3 +181,9 @@
       (revert-buffer :ignore-auto :noconfirm)
     (error "The buffer has been modified")))
 (global-set-key (kbd "C-c C-r") 'revert-buffer-no-confirm)
+
+;; macのclipboardへのcopy
+(defun copy-to-osx ()
+  (interactive)
+  (call-process-region (point) (mark) "pbcopy")
+  (setq deactivate-mark t))
