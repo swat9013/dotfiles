@@ -29,6 +29,7 @@ if [ "$(uname)" == 'Darwin' ]; then
         brew install peco ripgrep
         brew install global --with-exuberant-ctags --with-pygments
         brew install terminal-notifier
+        brew install reattach-to-user-namespace
     else
         echo "home brew requrired"
         echo "https://brew.sh/index_ja.html"
