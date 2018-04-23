@@ -1,3 +1,13 @@
+(use-package smartrep)
+(smartrep-define-key
+    global-map "C-c" '(("-" . 'goto-last-change)
+                       ("+" . 'goto-last-change-reverse)))
+
+(use-package which-key)
+(use-package company
+  :config
+  (global-company-mode 1))
+
 (use-package flycheck
   :init
   (add-hook 'ruby-mode-hook 'flycheck-mode)
@@ -97,6 +107,9 @@
 
 (use-package helm-config)
 (use-package helm-files)
+(use-package helm-descbinds
+  :config
+  (helm-descbinds-mode))
 (use-package helm-ag
   :config
   (setq helm-ag-base-command "rg --vimgrep --no-heading")
