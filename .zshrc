@@ -26,6 +26,7 @@ plugins=(
 )
 
 export PATH=$HOME/local/bin:$PATH
+export PATH="$HOME/.evm/bin:$PATH"
 source $ZSH/oh-my-zsh.sh
 for conf in $HOME/.dotfiles/.zsh/*.zsh; do
     source ${conf};
@@ -38,6 +39,6 @@ if which pyenv >/dev/null 2>&1 ; then
 fi
 
 # 起動速度測定用
-if (which zprof > /dev/null) ;then
+if (which zprof >/dev/null 2>&1) ;then
     zprof | less
 fi
