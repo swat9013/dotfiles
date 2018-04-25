@@ -14,7 +14,7 @@ plugins=(
     docker-compose
     # encode64
     gem
-    # git
+    git
     # homeshick
     rake
     # vagrant
