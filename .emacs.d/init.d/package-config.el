@@ -1,3 +1,13 @@
+(use-package wgrep
+  :ensure t)
+(use-package wgrep-ag
+  :ensure t)
+(use-package wgrep-helm
+  :ensure t)
+(setq wgrep-enable-key "e")
+(setq wgrep-auto-save-buffer t)
+(setq wgrep-change-readonly-file t)
+
 (use-package smartrep)
 (smartrep-define-key
     global-map "C-c" '(("-" . 'goto-last-change)
