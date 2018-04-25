@@ -60,12 +60,12 @@
   :config
   (global-yascroll-bar-mode 1))
 
-(use-package auto-complete
-  :diminish auto-complete-mode)
+;; (use-package auto-complete
+;;   :diminish auto-complete-mode)
 
-(use-package auto-complete-config
-  :config
-  (global-auto-complete-mode t))
+;; (use-package auto-complete-config
+;;   :config
+;;   (global-auto-complete-mode t))
 (use-package smart-mode-line
   :config
   (setq sml/no-confirm-load-theme t)
