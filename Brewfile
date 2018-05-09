@@ -1,7 +1,6 @@
 tap "homebrew/core"
 tap "homebrew/bundle"
 tap "caskroom/cask"
-tap "peco/peco"
 brew "amazon-ecs-cli"
 brew "autoconf"
 brew "boost"
