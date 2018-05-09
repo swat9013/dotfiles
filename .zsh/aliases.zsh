@@ -54,6 +54,7 @@ alias up='docker-compose up -d'
 alias stop='docker-compose stop'
 alias con='docker-compose run web rails c'
 alias attach='docker attach webapplication_web_1'
+alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin brew"
 
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then

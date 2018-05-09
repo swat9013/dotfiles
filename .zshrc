@@ -38,6 +38,10 @@ if which pyenv >/dev/null 2>&1 ; then
     eval "$(pyenv init -)"
 fi
 
+if [[ `uname` == 'Darwin' ]]; then
+    export PATH="/usr/local/sbin:$PATH"
+fi
+
 # 起動速度測定用
 if (which zprof >/dev/null 2>&1) ;then
     zprof | less
