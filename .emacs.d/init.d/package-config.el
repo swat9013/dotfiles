@@ -126,17 +126,6 @@
   (setq helm-ag-insert-at-point 'symbol)
   :bind(("C-M-s" . helm-ag-this-file)))
 
-(use-package helm-gtags
-  :init
-  (add-hook 'ruby-mode-hook (lambda () (helm-gtags-mode)))
-  :config
-  (setq helm-gtags-path-style 'root)
-  (setq helm-gtags-auto-update t))
-(bind-key* "M-." 'helm-gtags-find-tag)
-(bind-key* "M-," 'helm-gtags-pop-stack)
-(bind-key* "M-r" 'helm-gtags-find-rtag)
-
-
 (use-package projectile
   :diminish projectile-mode
   :config
