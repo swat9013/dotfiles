@@ -12,6 +12,9 @@
 (load "init-packages")
 (load "package-config")
 
+(when (equal system-type 'darwin)
+  (load "mac-config"))
+
 (eval-when-compile  (require 'use-package))
 (require 'diminish)    ;; if you use :diminish
 (require 'bind-key)    ;; if you use any :bind variant
