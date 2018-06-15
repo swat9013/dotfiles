@@ -4,12 +4,15 @@ alias -g L='`git log --decorate --oneline | peco | cut -d" " -f1`'
 alias -g LA='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
 alias -g R='`git reflog | peco | cut -d" " -f1`'
 alias ..='cd ..'
+alias attach='docker attach webapplication_web_1'
+alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin brew"
+alias con='docker-compose run web rails c'
 alias db_migrate='rake db:migrate'
 alias db_rollback='rake db:rollback'
-alias dclog='COMPOSE_HTTP_TIMEOUT=30000 docker-compose logs -f'
-alias dcr='docker-compose run'
 alias dcew='docker-compose exec web'
 alias dcewtest='docker-compose exec web rails test'
+alias dclog='COMPOSE_HTTP_TIMEOUT=30000 docker-compose logs -f'
+alias dcr='docker-compose run'
 alias dcrw='docker-compose run web'
 alias dcrwrubo-branch='docker-compose run web rubocop -a --force-exclusion $(git diff --name-only --diff-filter=AMRC origin/master HEAD) $(git status --porcelain | grep -v "^ D " | sed s/^...//)'
 alias dcrwrubo-cache='docker-compose run web rubocop -a --force-exclusion $( git diff --cached --name-only)'
@@ -21,8 +24,8 @@ alias dcud='docker-compose up -d'
 alias dotfiles='cd ~/.dotfiles'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
 alias g='git'
-alias gsed='(){ git grep -l $1 | xargs sed -i "" -e "s/$1/$2/g" }'
 alias grep='grep --color=auto'
+alias gsed='(){ git grep -l $1 | xargs sed -i "" -e "s/$1/$2/g" }'
 alias gtags-setup='gtags --gtagslabel=pygments'
 alias history='history -E'
 alias l='ls -1F'           # Show long file information
@@ -41,20 +44,18 @@ alias m="tmuxinator"
 alias p='python'
 alias ps-grep="ps aux | grep"
 alias relogin='exec $SHELL -l'
+alias rubo-branch='rubocop -a --force-exclusion $(git diff --name-only --diff-filter=AMRC origin/master HEAD) $(git status --porcelain | grep -v "^ D " | sed s/^...//)'
 alias s='screen'
 alias ssh-aa='eval `ssh-agent -s` ; ssh-add'
 alias sshdir='cd ~/.ssh'
 alias sshdir='cd ~/.ssh'
+alias stop='docker-compose stop'
 alias tf='tail -f'
 alias tm="tmux"
 alias tmksr="tmux kill-server"
 alias tmkss="tmux kill-session"
-alias zshrc='$EDITOR_CMD ~/.zshrc'
 alias up='docker-compose up -d'
-alias stop='docker-compose stop'
-alias con='docker-compose run web rails c'
-alias attach='docker attach webapplication_web_1'
-alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin brew"
+alias zshrc='$EDITOR_CMD ~/.zshrc'
 
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then
