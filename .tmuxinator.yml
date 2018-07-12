@@ -1,5 +1,5 @@
 name: local
-root: ~/
+root: ./
 tmux_options: -2
 
 windows:
