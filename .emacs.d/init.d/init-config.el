@@ -22,9 +22,9 @@
 
 ;;(setq show-paren-style 'expression)
 (setq show-paren-style 'mixed)
-(set-face-attribute 'show-paren-match-face nil
-                    :background nil :foreground nil
-                    :underline "#ffff00" :weight 'extra-bold)
+;;(set-face-attribute 'show-paren-match-face nil
+;;                    :background nil :foreground nil
+;;                    :underline "#ffff00" :weight 'extra-bold)
 
 ;;マジックコメントを無効化
 (setq ruby-insert-encoding-magic-comment nil)
