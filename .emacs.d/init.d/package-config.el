@@ -206,7 +206,11 @@
          ("\\.erb$"       . web-mode)
          ("\\.html?$"     . web-mode))
   :config
-  (set-variable 'web-mode-markup-indent-offset 2)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-style-padding 0)
+  (setq web-mode-script-padding 0)
   (add-hook 'web-mode-hook
             (lambda () (set-variable 'tab-width 2))))
 
@@ -241,6 +245,9 @@
          ("authorized_keys2?\\'" . ssh-authorized-keys-mode))
   :init
   (add-hook 'ssh-config-mode-hook 'turn-on-font-lock))
+
+(use-package dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode))
 
 ;;
 ;; safe-diminish

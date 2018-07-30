@@ -58,6 +58,7 @@
 (package-install 'yaml-mode)
 (package-install 'yascroll)
 (package-install 'yasnippet)
+(package-install 'dockerfile-mode)
 ;; (Package-install 'anything)
 ;; (package-install 'auto-complete)
 ;; (package-install 'auto-complete-clang)
