@@ -85,3 +85,8 @@ elif which putclip >/dev/null 2>&1 ; then
     # Cygwin
     alias -g C='| putclip'
 fi
+
+#rmtrash
+if which colordiff >/dev/null 2>&1 ;then
+    alias rm='rmtrash'
+fi
