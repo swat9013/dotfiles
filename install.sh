@@ -30,6 +30,7 @@ if [ "$(uname)" == 'Darwin' ]; then
         brew install global --with-exuberant-ctags --with-pygments
         brew install terminal-notifier
         brew install reattach-to-user-namespace
+        brew install rmtrash
     else
         echo "home brew requrired"
         echo "https://brew.sh/index_ja.html"
