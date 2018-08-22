@@ -218,7 +218,11 @@
   :mode (("\\.zsh" . shell-script-mode)))
 
 (use-package js2-mode
-  :mode (("\\.\\(js\\|json\\)$" . js2-mode)))
+  :mode (("\\.\\(js\\|json\\)$" . js2-mode))
+  :config
+  (setq my-js-mode-indent-num 2)
+  (setq js2-basic-offset my-js-mode-indent-num)
+  (setq js-switch-indent-offset my-js-mode-indent-num))
 
 
 (use-package scss-mode
