@@ -13,6 +13,9 @@
     global-map "C-c" '(("-" . 'goto-last-change)
                        ("+" . 'goto-last-change-reverse)))
 
+(use-package auto-package-update)
+(auto-package-update-maybe)
+
 (use-package which-key)
 (use-package company
   :config
