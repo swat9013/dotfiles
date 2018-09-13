@@ -32,9 +32,12 @@
   (setq desktop-base-file-name ".emacs.desktop")
   (desktop-save-mode 1)
   (setq history-length 250)
-  (add-to-list 'desktop-globals-to-save 'extended-command-history)
-  (add-to-list 'desktop-globals-to-save 'kill-ring)
   (setq desktop-files-not-to-save "")
+  ;; 他のemacs processでdesktopを使用中の場合はconflictするので使わない。
+  (setq desktop-save 'if-exists) ; save only if desktop file exists
+  (setq desktop-load-locked-desktop nil) ; don't load if the desktop is locked.
+  ;; don't save if not loaded.
+  (add-hook 'desktop-not-loaded-hook '(lambda() (desktop-save-mode -1)))
   (defun my-desktop-save ()
     (interactive)
     ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
@@ -225,8 +228,9 @@
   :config
   (setq my-js-mode-indent-num 2)
   (setq js2-basic-offset my-js-mode-indent-num)
-  (setq js-switch-indent-offset my-js-mode-indent-num))
-
+  (setq js-switch-indent-offset my-js-mode-indent-num)
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-missing-semi-one-line-override nil))
 
 (use-package scss-mode
   :mode (("\\.scss$" . scss-mode))
