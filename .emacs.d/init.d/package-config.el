@@ -162,10 +162,10 @@
   (add-hook 'ruby-mode-hook 'robe-mode)
   (add-hook 'robe-mode-hook 'ac-robe-setup))
 
-(use-package ruby-block
-  :config
-  (ruby-block-mode t)
-  (setq ruby-block-highlight-toggle t))
+;;(use-package ruby-block
+;;  :config
+;;  (ruby-block-mode t)
+;;  (setq ruby-block-highlight-toggle t))
 
 (use-package rinari :disabled t)
 
