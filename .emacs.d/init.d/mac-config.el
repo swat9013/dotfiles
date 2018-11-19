@@ -1,12 +1,12 @@
-(use-package helm-gtags
-  :init
-  (add-hook 'ruby-mode-hook (lambda () (helm-gtags-mode)))
-  :config
-  (setq helm-gtags-path-style 'root)
-  (setq helm-gtags-auto-update t))
-(bind-key* "M-." 'helm-gtags-find-tag)
-(bind-key* "M-," 'helm-gtags-pop-stack)
-(bind-key* "M-r" 'helm-gtags-find-rtag)
+;; (use-package helm-gtags
+;;   :init
+;;   (add-hook 'ruby-mode-hook (lambda () (helm-gtags-mode)))
+;;   :config
+;;   (setq helm-gtags-path-style 'root)
+;;   (setq helm-gtags-auto-update t))
+;; (bind-key* "M-." 'helm-gtags-find-tag)
+;; (bind-key* "M-," 'helm-gtags-pop-stack)
+;; (bind-key* "M-r" 'helm-gtags-find-rtag)
 
 (use-package migemo
   :config

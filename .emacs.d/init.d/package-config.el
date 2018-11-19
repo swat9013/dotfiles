@@ -18,6 +18,8 @@
 
 (use-package which-key)
 (use-package company
+  :init
+  (eval-after-load 'company '(push 'company-robe company-backends))
   :config
   (global-company-mode 1))
 
@@ -123,9 +125,9 @@
 
 (use-package helm-config)
 (use-package helm-files)
-(use-package helm-descbinds
-  :config
-  (helm-descbinds-mode))
+;; (use-package helm-descbinds
+;;   :config
+;;   (helm-descbinds-mode))
 (use-package helm-ag
   :config
   (setq helm-ag-base-command "rg --vimgrep --no-heading")
@@ -157,10 +159,12 @@
 ;;
 ;; Ruby on Rails
 ;;
-(use-package robe :disabled t
+(use-package robe
   :init
   (add-hook 'ruby-mode-hook 'robe-mode)
-  (add-hook 'robe-mode-hook 'ac-robe-setup))
+  (custom-set-variables '(robe-completing-read-func 'helm-robe-completing-read))
+  ;; (add-hook 'robe-mode-hook 'ac-robe-setup)
+  )
 
 ;;(use-package ruby-block
 ;;  :config
@@ -238,7 +242,9 @@
   (setq scss-compile-at-save nil))
 
 (use-package yaml-mode
-  :mode (("¥¥.yml$" . yaml-mode)))
+  :mode (("¥¥.yml$" . yaml-mode)
+         ("\\.dig" . yaml-mode)
+         ("\\.yml.liquid" . yaml-mode)))
 
 (use-package markdown-mode
   :config
