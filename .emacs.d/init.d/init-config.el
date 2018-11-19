@@ -48,7 +48,7 @@
 (setq inhibit-startup-message t)
 
 ;;削除のショートカットキー
-;; (global-set-key "\C-h" 'backward-delete-char)
+(global-set-key "\C-h" 'backward-delete-char)
 
 ;;行末の空白を表示
 (setq-default show-trailing-whitespace t)
