@@ -9,7 +9,7 @@
 (setq load-path (append '("~/.emacs.d/init.d") load-path))
 
 (load "init-config")
-(load "init-packages")
+(load "install-packages")
 (load "package-config")
 
 (when (equal system-type 'darwin)
