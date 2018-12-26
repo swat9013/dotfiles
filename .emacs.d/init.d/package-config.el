@@ -108,8 +108,9 @@
 ;; helm projectile
 ;;
 (use-package helm
-  :diminish helm-mode
+  ;; :diminish helm-mode
   :config
+  (ido-mode -1)
   (helm-mode 1)
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match    t)
@@ -132,6 +133,8 @@
   :config
   (setq helm-ag-base-command "rg --vimgrep --no-heading")
   (setq helm-ag-insert-at-point 'symbol)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
   :bind(("C-M-s" . helm-ag-this-file)))
 
 (use-package projectile
