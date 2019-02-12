@@ -42,6 +42,14 @@
  '(anzu-deactivate-region t)
  '(anzu-mode-lighter "")
  '(anzu-search-threshold 100)
+ '(avy-migemo-function-names
+   (quote
+    (swiper--add-overlays-migemo
+     (swiper--re-builder :around swiper--re-builder-migemo-around)
+     (ivy--regex :around ivy--regex-migemo-around)
+     (ivy--regex-ignore-order :around ivy--regex-ignore-order-migemo-around)
+     (ivy--regex-plus :around ivy--regex-plus-migemo-around)
+     ivy--highlight-default-migemo ivy-occur-revert-buffer-migemo ivy-occur-press-migemo avy-migemo-goto-char avy-migemo-goto-char-2 avy-migemo-goto-char-in-line avy-migemo-goto-char-timer avy-migemo-goto-subword-1 avy-migemo-goto-word-1 avy-migemo-isearch avy-migemo-org-goto-heading-timer avy-migemo--overlay-at avy-migemo--overlay-at-full)))
  '(package-selected-packages
    (quote
     (helm-robe helm flycheck auto-complete yasnippet yascroll yaml-mode web-mode use-package undohist undo-tree ssh-config-mode smart-mode-line smart-compile slim-mode scss-mode sass-mode ruby-end ruby-electric ruby-block robe rinari rainbow-mode rainbow-delimiters powerline point-undo nginx-mode markdown-mode magit js2-mode helm-projectile helm-ag gitconfig-mode git-gutter flymake-cursor flycheck-tip flycheck-d-unittest csv-mode auto-complete-clang atom-dark-theme anzu anything ace-jump-mode)))
