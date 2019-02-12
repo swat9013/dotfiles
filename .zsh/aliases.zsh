@@ -1,5 +1,6 @@
 
 ### Aliases ###
+alias nuget="mono /usr/local/bin/nuget.exe"
 alias -g L='`git log --decorate --oneline | peco | cut -d" " -f1`'
 alias -g LA='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
 alias -g R='`git reflog | peco | cut -d" " -f1`'
