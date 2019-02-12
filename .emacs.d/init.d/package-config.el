@@ -1,3 +1,7 @@
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1))
+
 (use-package wgrep
   :ensure t)
 (use-package wgrep-ag

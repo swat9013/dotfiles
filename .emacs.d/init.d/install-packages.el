@@ -31,6 +31,7 @@
 (require-package 'csv-mode)
 (require-package 'diminish)
 (require-package 'dockerfile-mode)
+(require-package 'editorconfig)
 (require-package 'flycheck)
 (require-package 'flycheck-d-unittest)
 (require-package 'flycheck-tip)
