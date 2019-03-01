@@ -18,3 +18,8 @@
   (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
   (migemo-init)
 )
+
+(use-package avy-migemo
+  :config
+  (avy-migemo-mode 1)
+  (require 'avy-migemo-e.g.swiper))

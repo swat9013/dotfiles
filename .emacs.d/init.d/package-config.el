@@ -200,11 +200,6 @@
   )
 (bind-key* "C-s" 'swiper)
 
-(use-package avy-migemo
-  :config
-  (avy-migemo-mode 1)
-  (require 'avy-migemo-e.g.swiper))
-
 (use-package counsel
   :ensure t
   :config
