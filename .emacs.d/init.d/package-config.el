@@ -210,7 +210,10 @@
   (setq ivy-height 20) ;; minibufferのサイズを拡大
   (setq ivy-extra-directories nil)
   (setq ivy-re-builders-alist
-    '((t . ivy--regex-plus))))
+    '((t . ivy--regex-plus)))
+  :custom
+  (ivy-format-function 'ivy-format-function-arrow)
+  (counsel-yank-pop-separator "\n-------\n"))
 (bind-key* "M-x" 'counsel-M-x)
 (bind-key* "C-x C-f" 'counsel-find-file)
 (bind-key* "C-x C-t" 'counsel-recentf)
