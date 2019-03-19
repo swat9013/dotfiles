@@ -259,6 +259,7 @@
           ("[Ra]kefile$" . ruby-mode)
           ("\\.rake$" . ruby-mode)
           ("Berksfile$" . ruby-mode)
+          ("Schemafile$" . ruby-mode)
           ("\\.rabl$" . ruby-mode))
   :config
   (defun ruby-mode-set-encoding () nil)
