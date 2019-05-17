@@ -193,10 +193,15 @@
 ;; counsel
 ;;
 
+(use-package smex
+  :ensure t
+  :config
+  (setq smex-completion-method 'ivy))
+
 (use-package swiper
   :ensure t
   :config
-  (defvar swiper-include-line-number-in-search t)
+  (setq swiper-include-line-number-in-search t)
   )
 (bind-key* "C-s" 'swiper)
 
@@ -205,12 +210,13 @@
   :config
   (defvar counsel-find-file-ignore-regexp (regexp-opt '("./" "../")))
   (ivy-mode 1)
-  (setq qivy-use-virtual-buffers t)
+  (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   (setq ivy-height 20) ;; minibufferのサイズを拡大
   (setq ivy-extra-directories nil)
   (setq ivy-re-builders-alist
     '((t . ivy--regex-plus)))
+  (setq ivy-initial-inputs-alist nil)
   :custom
   (ivy-format-function 'ivy-format-function-arrow)
   (counsel-yank-pop-separator "\n-------\n"))

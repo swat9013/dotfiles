@@ -5,7 +5,8 @@
      ("melpa" . "https://melpa.org/packages/")
      ("org" . "http://orgmode.org/elpa/")
      ("melpa" . "http://melpa.org/packages/")
-     ))
+     ("melpa-stable" . "http://stable.melpa.org/packages/")
+  ))
 (package-initialize)
 
 (defun require-package (package &optional min-version no-refresh)
@@ -53,6 +54,7 @@
 (require-package 'smart-jump)
 (require-package 'smart-mode-line) ;;Mode-Lineの視認性を変更
 (require-package 'smartrep) ;;複数回実行が簡単になるキーバインドをせっていできる
+(require-package 'smex)
 (require-package 'string-inflection)
 (require-package 'symbol-overlay)
 (require-package 'undo-tree)
