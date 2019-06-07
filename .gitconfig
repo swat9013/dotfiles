@@ -43,6 +43,7 @@
 	pullrebase = pull --rebase
 	addall = add --all
 	sed =  "!f () { git grep -l $1 | xargs sed -i '' -e \"s/$1/$2/g\" ; }; f"
+	sed-filename =  "!f () { git ls-files | grep $1 | sed \"p;s/$1/$2/g\" | xargs -n2 mv ; }; f"
 	subadd = "!f () { git subtree add --prefix=${1}  --squash ${2}  ${3} ;};f"
 	subpush = "!f () { git subtree push --prefix=${1}  --squash ${2}  ${3} ;};f"
 	subpull = "!f () { git subtree pull --prefix=${1}  --squash ${2}  ${3} ;};f"
