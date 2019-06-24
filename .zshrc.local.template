@@ -1,0 +1,24 @@
+# template
+ZSH_THEME="powerline"
+
+plugins=(
+    # react-native
+    bundler
+    # cdd
+    docker
+    docker-compose
+    # encode64
+    embulk
+    gem
+    # git
+    helm
+    # homeshick
+    kubectl
+    rake
+    # vagrant
+    # knife
+    tmux
+    tmuxinator
+    rbenv
+    notify
+)
