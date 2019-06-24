@@ -49,7 +49,6 @@ alias rubo-branch='rubocop -a --force-exclusion $(git diff --name-only --diff-fi
 alias s='screen'
 alias ssh-aa='eval `ssh-agent -s` ; ssh-add'
 alias sshdir='cd ~/.ssh'
-alias sshdir='cd ~/.ssh'
 alias stop='docker-compose stop'
 alias tf='tail -f'
 alias tm="tmux"

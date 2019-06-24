@@ -4,27 +4,7 @@ typeset -U path cdpath fpath manpath
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.dotfiles/oh-my-zsh
 
-ZSH_THEME="powerline"
-
-plugins=(
-    # react-native
-    bundler
-    # cdd
-    docker
-    docker-compose
-    # encode64
-    embulk
-    gem
-    # git
-    # homeshick
-    rake
-    # vagrant
-    # knife
-    tmux
-    tmuxinator
-    rbenv
-    notify
-)
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 export PATH=$HOME/local/bin:$PATH
 export PATH="$HOME/.evm/bin:$PATH"
