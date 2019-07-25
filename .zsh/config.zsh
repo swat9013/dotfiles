@@ -15,8 +15,8 @@ autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
   zstyle ':chpwd:*' recent-dirs-pushd true
 fi
 
-hosts=( ${(@)${${(M)${(s:# :)${(zj:# :)${(Lf)"$([[ -f ~/.ssh/config ]] && < ~/.ssh/config)"}%%\#*}}##host(|name) *}#host(|name) }/\*} )
-zstyle ':completion:*:hosts' hosts $hosts
+# hosts=( ${(@)${${(M)${(s:# :)${(zj:# :)${(Lf)"$([[ -f ~/.ssh/config ]] && < ~/.ssh/config)"}%%\#*}}##host(|name) *}#host(|name) }/\*} )
+# zstyle ':completion:*:hosts' hosts $hosts
 
 ## 補完候補のカーソル選択を有効に
 zstyle ':completion:*:default' menu select=1
