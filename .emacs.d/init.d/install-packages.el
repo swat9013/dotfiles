@@ -93,3 +93,4 @@
 (require-package 'ssh-config-mode)
 (require-package 'web-mode)
 (require-package 'yaml-mode)
+(require-package 'omnisharp)
