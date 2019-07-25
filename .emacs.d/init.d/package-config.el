@@ -212,6 +212,7 @@
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
+  (setq search-default-mode #'char-fold-to-regexp)
   (setq ivy-height 20) ;; minibufferのサイズを拡大
   (setq ivy-extra-directories nil)
   (setq ivy-re-builders-alist
@@ -351,6 +352,9 @@
 
 (use-package dockerfile-mode
   :mode ("Dockerfile\\'" . dockerfile-mode))
+
+(use-package csharp-mode
+  :mode (("\\.cs" . csharp-mode)))
 
 ;;
 ;; safe-diminish
