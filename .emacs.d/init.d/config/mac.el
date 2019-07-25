@@ -1,3 +1,9 @@
+;; macのclipboardへのcopy
+(defun copy-to-osx ()
+  (interactive)
+  (call-process-region (point) (mark) "pbcopy")
+  (setq deactivate-mark t))
+
 ;; (use-package helm-gtags
 ;;   :init
 ;;   (add-hook 'ruby-mode-hook (lambda () (helm-gtags-mode)))

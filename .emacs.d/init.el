@@ -8,12 +8,12 @@
 (require 'cl)
 (setq load-path (append '("~/.emacs.d/init.d") load-path))
 
-(load "init-config")
+(load "config/common")
 (load "install-packages")
-(load "package-config")
+(load "config/package")
 
 (when (equal system-type 'darwin)
-  (load "mac-config"))
+  (load "config/mac"))
 
 (eval-when-compile  (require 'use-package))
 (require 'diminish)    ;; if you use :diminish
