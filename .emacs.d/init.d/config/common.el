@@ -14,8 +14,8 @@
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-conservatively 35
-      scroll-margin 0
-      scroll-step 3);;３行ずつ画面がスクロール
+  scroll-margin 0
+  scroll-step 3);;３行ずつ画面がスクロール
 
 ;;対応する括弧内を表示
 (show-paren-mode 1)
@@ -56,8 +56,6 @@
 ;;; メニューバーを消す
 (menu-bar-mode -1)
 
-
-
 ;;; 現在行を目立たせる
 ;;(global-hl-line-mode)
 
@@ -83,7 +81,7 @@
 (setq auto-save-default nil)
 
 ;;選択範囲自動インデントのキーバインドを変更
-(global-set-key (kbd "M-?") 'indent-region )
+;;(global-set-key (kbd "M-?") 'indent-region )
 
 ;;分割表示した時の移動を簡単に
 (global-set-key (kbd "C-c <left>")  'windmove-left)
@@ -95,7 +93,7 @@
 (defvar delete-trailing-whitespece-before-save t)
 (defun my-delete-trailing-whitespace ()
   (if delete-trailing-whitespece-before-save
-      (delete-trailing-whitespace)))
+    (delete-trailing-whitespace)))
 (add-hook 'before-save-hook 'my-delete-trailing-whitespace)
 ;; 無効にしたいモードのhook
 ;; (add-hook 'markdown-mode-hook
@@ -104,12 +102,12 @@
 
 ;; 全角スペースとタブを強調表示
 (setq whitespace-style
-      '(tabs tab-mark spaces space-mark))
+  '(tabs tab-mark spaces space-mark))
 (setq whitespace-space-regexp "\\(\x3000+\\)")
 (setq whitespace-display-mappings
-      '((space-mark ?\x3000 [?\〼])
-        (tab-mark   ?\t   [?\xBB ?\t])
-        ))
+  '((space-mark ?\x3000 [?\〼])
+     (tab-mark   ?\t   [?\xBB ?\t])
+     ))
 (require 'whitespace)
 (global-whitespace-mode 1)
 ;; (set-face-foreground 'whitespace-space "LightSlateGray")
@@ -178,6 +176,22 @@
   (interactive "P")
   ;;(message "force-reverting value is %s" force-reverting)
   (if (or force-reverting (not (buffer-modified-p)))
-      (revert-buffer :ignore-auto :noconfirm)
+    (revert-buffer :ignore-auto :noconfirm)
     (error "The buffer has been modified")))
 (global-set-key (kbd "C-c C-r") 'revert-buffer-no-confirm)
+
+;; リージョンが選択されていたらそのリージョンを、そうでなければバッファ全体をインデントする
+(defun all-indent ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max))))
+
+(defun electric-indent ()
+  "Indent specified region.
+When resion is active, indent region.
+Otherwise indent whole buffer."
+  (interactive)
+  (if (use-region-p)
+    (indent-region (region-beginning) (region-end))
+    (all-indent)))
+(global-set-key (kbd "C-x C-i") 'electric-indent)
