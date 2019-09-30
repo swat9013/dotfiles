@@ -53,3 +53,4 @@
 	delete-merged-branch = "!f () { git fetch --prune; git checkout master; git pull; git branch --merged|egrep -v '\\*|develop|master|pre-release|release|development|staging|production'|xargs git branch -d; };f"
 	cofeature = "!f () { git checkout -b feature/$1 origin/master;};f"
 	cofix = "!f () { git checkout -b fix/$1 origin/master;};f"
+  comaster = "!f () { git fetch --prune; git branch -f master origin/master; git checkout master;};f"
