@@ -87,6 +87,6 @@ elif which putclip >/dev/null 2>&1 ; then
 fi
 
 #rmtrash
-if which colordiff >/dev/null 2>&1 ;then
+if which rmtrash >/dev/null 2>&1 ;then
     alias rm='rmtrash'
 fi
