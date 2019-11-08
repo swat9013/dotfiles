@@ -56,6 +56,9 @@ alias tmksr="tmux kill-server"
 alias tmkss="tmux kill-session"
 alias up='docker-compose up -d'
 alias zshrc='$EDITOR_CMD ~/.zshrc'
+alias marp-w='docker run --rm --init -v $PWD:/home/marp/app/ -e LANG=$LANG -p 37717:37717 marpteam/marp-cli -w --html $*'
+alias marp-convert-pdf='docker run --rm --init -v $PWD:/home/marp/app/ -e LANG=$LANG marpteam/marp-cli --allow-local-files --html --pdf $*'
+alias log-start='now=`date +%Y%m%d%H%M%S`;dirpath=~/scriptlogs; logpath=${dirpath}/script_${now}.log; mkdir -p ${dirpath}; script ${logpath}'
 
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then
