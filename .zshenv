@@ -39,3 +39,7 @@ else
 fi
 
 export POWERLINE_HIDE_HOST_NAME=true
+
+## zsh
+export DISABLE_UPDATE_PROMPT=true
+export UPDATE_ZSH_DAYS=13
