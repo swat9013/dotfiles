@@ -237,12 +237,13 @@
 ;;
 ;; Ruby on Rails
 ;;
-(use-package robe
-  :init
-  (add-hook 'ruby-mode-hook 'robe-mode)
-  ;; (custom-set-variables '(robe-completing-read-func 'helm-robe-completing-read))
-  ;; (add-hook 'robe-mode-hook 'ac-robe-setup)
-  )
+
+;; (use-package robe
+;;   :init
+;;   (add-hook 'ruby-mode-hook 'robe-mode)
+;;   ;; (custom-set-variables '(robe-completing-read-func 'helm-robe-completing-read))
+;;   ;; (add-hook 'robe-mode-hook 'ac-robe-setup)
+;;   )
 
 (use-package symbol-overlay
   :ensure t
