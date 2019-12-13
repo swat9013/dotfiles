@@ -27,20 +27,19 @@
   :config
   (global-company-mode 1)
   (setq company-idle-delay 0) ; デフォルトは0.5
-  (setq company-minimum-prefix-length 3) ; デフォルトは4
+  (setq company-minimum-prefix-length 2) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
   (setq completion-ignore-case t)
   (setq company-dabbrev-downcase nil)
   (global-set-key (kbd "C-M-i") 'company-complete)
   (define-key company-active-map (kbd "C-n") 'company-select-next) ;; C-n, C-pで補完候補を次/前の候補を選択
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  (define-key company-search-map (kbd "C-n") 'company-select-next)
-  (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map (kbd "C-s") 'company-filter-candidates) ;; C-sで絞り込む
   (define-key company-active-map (kbd "C-i") 'company-complete-selection) ;; TABで候補を設定
   (define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
   (define-key company-active-map (kbd "C-f") 'company-complete-selection) ;; C-fで候補を設定
   (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete) ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
+  (define-key company-active-map (kbd "C-h") nil) ;;; C-hのドキュメント表示を無効
   ;; yasnippetとの連携
   (defvar company-mode/enable-yas t
     "Enable yasnippet for all backends.")
@@ -291,6 +290,15 @@
   :config
   (projectile-rails-global-mode))
 
+;;
+;; typescript
+;;
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
 
 ;;
 ;; file mode
@@ -355,6 +363,9 @@
 
 (use-package csharp-mode
   :mode (("\\.cs" . csharp-mode)))
+
+(use-package typescript-mode
+  :mode (("\\.ts" . typescript-mode)))
 
 ;;
 ;; safe-diminish
