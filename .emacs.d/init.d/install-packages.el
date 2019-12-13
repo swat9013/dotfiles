@@ -40,22 +40,20 @@
 (require-package 'flycheck-tip)
 (require-package 'flymake-cursor)
 (require-package 'git-gutter+)
-(require-package 'goto-chg)
+(require-package 'goto-chg) ;;過去に編集した位置に戻る
 (require-package 'magit)
 (require-package 'migemo)
 (require-package 'powerline)
-(require-package 'presentation)
 (require-package 'projectile-rails)
-(require-package 'rainbow-delimiters)
-(require-package 'rainbow-mode)
-(require-package 'robe)
-(require-package 'ruby-electric)
-(require-package 'ruby-end)
-(require-package 'smart-jump)
+(require-package 'rainbow-delimiters) ;;カッコの色をわかりやすくする
+(require-package 'rainbow-mode) ;;色文字列を可視化
+(require-package 'ruby-electric);;rubyのコード補助
+(require-package 'ruby-end) ;;endを挿入してくれる
+(require-package 'smart-jump) ;;定義ジャンプ
 (require-package 'smart-mode-line) ;;Mode-Lineの視認性を変更
 (require-package 'smartrep) ;;複数回実行が簡単になるキーバインドをせっていできる
-(require-package 'smex)
-(require-package 'string-inflection)
+(require-package 'smex) ;;曖昧検索
+(require-package 'string-inflection) ;;文字の記法の変換
 (require-package 'symbol-overlay)
 (require-package 'tide)
 (require-package 'undo-tree)
@@ -75,6 +73,8 @@
 ;; (require-package 'helm-projectile)
 ;; (require-package 'helm-robe)
 ;; (require-package 'point-undo)
+;; (require-package 'presentation) ;;文字の拡縮ができる
+;; (require-package 'robe) ;; Rubyのコード補完
 ;; (require-package 'ruby-block)
 ;; (require-package 'smart-compile) ;;コンパイルを好きなキーバインドで実行できる
 ;; (require-package 'wgrep)
