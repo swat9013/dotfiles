@@ -33,7 +33,8 @@
 	ls = log  --decorate --graph
 	la = log  --decorate --oneline --graph --all
 	lla = log  --decorate --stat --abbrev-commit --all
-	lsa = log  --decorate --graph --all
+  lsa = log  --decorate --graph --all
+  list = log --date=short --no-merges --pretty=format:"%s"
 	s = status --short --branch
 	st = status
 	unstage    = reset HEAD --
