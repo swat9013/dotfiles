@@ -286,10 +286,10 @@
         (indent-line-to indent)
         (when (> offset 0) (forward-char offset))))))
 
-(use-package projectile-rails
-  :diminish projectile-rails-global-mode
-  :config
-  (projectile-rails-global-mode))
+;;(use-package projectile-rails
+;;  :diminish projectile-rails-global-mode
+;;  :config
+;;  (projectile-rails-global-mode))
 
 ;;
 ;; typescript
