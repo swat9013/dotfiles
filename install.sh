@@ -37,12 +37,6 @@ if [ "$(uname)" == 'Darwin' ]; then
         exit 1
     fi
 
-    if  [ `which gem` ]; then
-        gem install tmuxinator
-    else
-        echo "gem requrired"
-    fi
-
     # http://hoppsjots.org/?p=177
     # Fix Underline + Color in TMUX (TERM=screen-256color)
     $({ infocmp -x screen-256color; printf '\t%s\n' 'ncv@,'; } > /tmp/t && tic -x /tmp/t)
