@@ -18,7 +18,6 @@ plugins=(
     # vagrant
     # knife
     tmux
-    tmuxinator
     rbenv
     notify
 )

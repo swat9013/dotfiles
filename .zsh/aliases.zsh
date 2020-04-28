@@ -41,7 +41,6 @@ alias lr='ls -lR'          # Recursive ls
 alias lt='ls -ltr'         # Sort by date, most recent last
 alias lu='ls -ltur'        # Sort by and show access time, most recent last
 alias lx='ls -lXB'         # Sort by extension
-alias m="tmuxinator"
 alias p='python'
 alias ps-grep="ps aux | grep"
 alias relogin='exec $SHELL -l'
