@@ -12,8 +12,8 @@ do
     ln -snfv "$HOME"/.dotfiles/"$f" "$HOME"/"$f"
 done
 
-ln -f ~/.dotfiles/my-agnoster.zsh-theme ~/.dotfiles/oh-my-zsh/themes/my-agnoster.zsh-theme
-ln -f ~/.dotfiles/powerline.zsh-theme ~/.dotfiles/oh-my-zsh/themes/powerline.zsh-theme
+ln -f ~/.dotfiles/oh-my-zsh_plugins/my-agnoster.zsh-theme ~/.dotfiles/oh-my-zsh/themes/my-agnoster.zsh-theme
+ln -f ~/.dotfiles/oh-my-zsh_plugins/powerline.zsh-theme ~/.dotfiles/oh-my-zsh/themes/powerline.zsh-theme
 ln -snf ~/.dotfiles/zsh-syntax-highlighting ~/.dotfiles/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 ln -snf ~/.dotfiles/zsh-notify ~/.dotfiles/oh-my-zsh/custom/plugins/notify
 
