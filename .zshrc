@@ -1,6 +1,8 @@
 ## 重複パスを登録しない
 typeset -U path cdpath fpath manpath
 
+$HOME/.dotfiles/lib/auto_update.sh
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.dotfiles/oh-my-zsh
 
