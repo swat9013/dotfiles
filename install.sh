@@ -19,7 +19,7 @@ fi
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
     if  [ `which pip` ]; then
-        pip install powerline-status
+        pip install powerline-status sqlfluff
     else
         echo "pip requrired"
         exit 1
