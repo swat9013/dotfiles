@@ -52,8 +52,10 @@
 	rc = rm --cached
 	pushf = push --force-with-lease
 	pushu = !git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\"
-	delete-merged-branch = "!f () { git fetch --prune; git checkout $1; git pull; git branch --merged|egrep -v '\\*|develop|master|pre-release|release|development|staging|production'|xargs git branch -d; };f"
+	delete-merged-branch = "!f () { git fetch --prune; git checkout $1; git pull; git branch --merged|egrep -v '\\*|develop|master|main|pre-release|release|development|staging|production'|xargs git branch -d; };f"
 	cofeature = "!f () { git checkout -b feature/$2 origin/$1;};f"
 	cofix = "!f () { git checkout -b fix/$2 origin/$1;};f"
   log-messages = "log --pretty=format:\"%s\""
 	amcm = commit --amend --no-edit
+[init]
+	defaultBranch = main
