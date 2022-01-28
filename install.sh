@@ -10,7 +10,7 @@ else
     exit 1
 fi
 
-cd ~/.dotfiles
+cd $DOTPATH
 if [ $? -ne 0 ]; then
     echo "not found: $DOTPATH"
     exit 1
@@ -19,7 +19,7 @@ fi
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
     if  [ `which brew` ]; then
-        brew install asdf peco ripgrep terminal-notifier reattach-to-user-namespace rmtrash
+        brew bundle
     else
         echo "home brew requrired"
         echo "https://brew.sh/index_ja.html"
