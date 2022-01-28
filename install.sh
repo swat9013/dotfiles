@@ -4,7 +4,7 @@ GITHUB_URL=https://github.com/swat9013/dotfiles.git
 
 # git が使えるなら git
 if  [ `which git` ]; then
-    git clone --recursive "$GITHUB_URL" "$DOTPATH"
+    git clone "$GITHUB_URL" "$DOTPATH"
 else
     echo "git requrired"
     exit 1
@@ -16,7 +16,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-sh dotfilesLink.sh
+git clone --depth 1 https://github.com/ohmyzsh/ohmyzsh.git oh-my-zsh
+git clone --depth 1 https://github.com/marzocchi/zsh-notify.git oh-my-zsh/custom/plugins/notify
+git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting.git oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+sh lib/dotfilesLink.sh
 
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
