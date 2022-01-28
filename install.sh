@@ -18,19 +18,8 @@ fi
 
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
-    if  [ `which pip` ]; then
-        pip install powerline-status sqlfluff
-    else
-        echo "pip requrired"
-        exit 1
-    fi
-
     if  [ `which brew` ]; then
-        brew install peco ripgrep
-        brew install global --with-exuberant-ctags --with-pygments
-        brew install terminal-notifier
-        brew install reattach-to-user-namespace
-        brew install rmtrash
+        brew install asdf peco ripgrep terminal-notifier reattach-to-user-namespace rmtrash
     else
         echo "home brew requrired"
         echo "https://brew.sh/index_ja.html"
