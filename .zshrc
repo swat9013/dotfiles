@@ -17,6 +17,11 @@ if [[ `uname` == 'Darwin' ]]; then
     export PATH="/usr/local/sbin:$PATH"
 fi
 
+if  [ `which go` ]; then
+    export PATH="$(go env GOPATH)/bin:$PATH"
+fi
+
+
 # 起動速度測定用
 if (which zprof >/dev/null 2>&1) ;then
     zprof | less

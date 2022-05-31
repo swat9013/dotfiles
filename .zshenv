@@ -39,6 +39,7 @@ else
 fi
 
 export POWERLINE_HIDE_HOST_NAME=true
+export POWERLINE_HIDE_USER_NAME=true
 
 ## zsh
 export DISABLE_UPDATE_PROMPT=true

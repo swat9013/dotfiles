@@ -8,6 +8,7 @@ alias ..='cd ..'
 alias attach='docker attach webapplication_web_1'
 alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin brew"
 alias con='docker-compose run --rm web bundle exec rails c'
+alias c='code'
 alias db_migrate='rake db:migrate'
 alias db_rollback='rake db:rollback'
 alias dcew='docker-compose exec web'
@@ -62,6 +63,11 @@ alias marp-convert-pdf='docker run --rm --init -v $PWD:/home/marp/app/ -e LANG=$
 alias log-start='now=`date +%Y%m%d%H%M%S`;dirpath=~/scriptlogs; logpath=${dirpath}/script_${now}.log; mkdir -p ${dirpath}; script ${logpath}'
 alias ide="~/.dotfiles/lib/ide.sh"
 alias pip-upgrade-all="pip list -o | tail -n +3 | awk '{ print \$1 }' | xargs pip install -U"
+
+# repository scripts
+alias lint="./script/lint.sh"
+alias build="./script/build.sh"
+alias setup="./script/setup.sh"
 
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then
