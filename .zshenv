@@ -30,6 +30,7 @@ export SAVEHIST=100000
 
 if [ "$(uname)" = 'Darwin' ]; then
     export ANDROID_HOME=~/Library/Android/sdk
+    eval "$(/opt/homebrew/bin/brew shellenv)"
     # export PATH=${PATH}:${ANDROID_HOME}/tools
     # export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 elif [ "$(expr substr $(uname -s) 1 5)" = 'Linux' ]; then

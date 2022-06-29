@@ -17,7 +17,7 @@ if [[ `uname` == 'Darwin' ]]; then
     export PATH="/usr/local/sbin:$PATH"
 fi
 
-if  [ `which go` ]; then
+if  (which go >/dev/null 2>&1) ; then
     export PATH="$(go env GOPATH)/bin:$PATH"
 fi
 

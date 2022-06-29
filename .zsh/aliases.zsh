@@ -6,7 +6,6 @@ alias -g LA='`git log --decorate --oneline --all | peco | cut -d" " -f1`'
 alias -g R='`git reflog | peco | cut -d" " -f1`'
 alias ..='cd ..'
 alias attach='docker attach webapplication_web_1'
-alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin brew"
 alias con='docker-compose run --rm web bundle exec rails c'
 alias c='code'
 alias db_migrate='rake db:migrate'
