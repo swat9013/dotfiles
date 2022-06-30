@@ -16,10 +16,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-git clone --depth 1 https://github.com/ohmyzsh/ohmyzsh.git oh-my-zsh
-git clone --depth 1 https://github.com/marzocchi/zsh-notify.git oh-my-zsh/custom/plugins/notify
-git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting.git oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-
 sh lib/dotfilesLink.sh
 
 if [ "$(uname)" == 'Darwin' ]; then

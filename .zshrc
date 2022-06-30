@@ -6,11 +6,6 @@ export DISABLE_UPDATE_PROMPT=true
 export UPDATE_ZSH_DAYS=13
 $HOME/.dotfiles/lib/auto_update.sh
 
-# oh-my-zsh
-# export ZSH=$HOME/.dotfiles/oh-my-zsh
-# [ -f ~/.zshrc.local ] && source ~/.zshrc.local
-# source $ZSH/oh-my-zsh.sh
-
 # sheldon
 eval "$(sheldon source)"
 
