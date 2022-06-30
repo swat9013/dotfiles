@@ -2,3 +2,5 @@
 !.emacs.d/init.el
 !.emacs.d/init.d
 oh-my-zsh
+.sheldon/repos
+.sheldon/plugins.lock

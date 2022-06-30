@@ -1,6 +1,3 @@
-# bindkey "^R" history-incremental-search-backward
-# bindkey "^S" history-incremental-search-forward
-
 ## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
 
@@ -78,3 +75,12 @@ function do_enter() {
 }
 zle -N do_enter
 bindkey '^m' do_enter
+
+#cd 後のlsの省略
+function chpwd() { ls }
+
+#スクリーンロックを無効化
+stty stop undef
+
+## サスペンド無効化
+stty susp undef
