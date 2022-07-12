@@ -9,14 +9,12 @@ apply = ["source"]
 [templates]
 defer = { value = 'zsh-defer source "{{ file }}"', each = true }
 
-[plugins.zsh-autosuggestions]
-github = 'zsh-users/zsh-autosuggestions'
-
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
 
 [plugins.zsh-completions]
 github = "zsh-users/zsh-completions"
+apply = ["source"]
 
 [plugins.ohmyzsh-lib]
 github = "ohmyzsh/ohmyzsh"
@@ -30,4 +28,4 @@ apply = ["source"]
 
 [plugins.asdf]
 github = "asdf-vm/asdf"
-
+apply = ["source"]
