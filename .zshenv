@@ -22,7 +22,9 @@ export CLICOLOR=true # lsコマンド時、自動で色がつく
 # 環境別設定
 if [ "$(uname)" = 'Darwin' ]; then
     export ANDROID_HOME=~/Library/Android/sdk
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+    if [ -e /opt/homebrew/bin/brew ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
 elif [ "$(expr substr $(uname -s) 1 5)" = 'Linux' ]; then
     export PATH=$HOME/.emacsenv/bin:$PATH
 elif [ "$(expr substr $(uname -s) 1 10)" = 'MINGW32_NT' ]; then
