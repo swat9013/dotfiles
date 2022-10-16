@@ -14,3 +14,7 @@ done
 if [ ! -e "$HOME"/.gitconfig.local ]; then
     cp .gitconfig.local.sample "$HOME"/.gitconfig.local
 fi
+
+if [ ! -e "$HOME"/.config/sheldon/plugins.toml ]; then
+    ln -snfv "$HOME"/.dotfiles/sheldon "$HOME"/.config/sheldon
+fi
