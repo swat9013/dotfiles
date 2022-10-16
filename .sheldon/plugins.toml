@@ -1,13 +1,13 @@
 shell = "zsh"
 
-apply = ["defer"]
+# apply = ["defer"]
 
 [plugins.zsh-defer]
 github = "romkatv/zsh-defer"
 apply = ["source"]
 
-[templates]
-defer = { value = 'zsh-defer source "{{ file }}"', each = true }
+# [templates.defer]
+# defer = { value = 'zsh-defer source "{{ file }}"', each = true }
 
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
