@@ -53,7 +53,8 @@ function e(){
 # ssh
 #
 alias ssh-aa='eval `ssh-agent -s` ; ssh-add'
-alias ssh='~/.dotfiles/lib/ssh_host_color.sh'
+# 補完が効かないので一時的に無効にする
+# alias sshc='~/.dotfiles/lib/ssh_host_color.sh'
 alias sshdir='cd ~/.ssh'
 
 #

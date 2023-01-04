@@ -31,6 +31,6 @@ elif [ "$(expr substr $(uname -s) 1 10)" = 'MINGW32_NT' ]; then
 else
 fi
 
-## 保管を有効化
+## 補完を有効化
 autoload -Uz compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
