@@ -1,11 +1,11 @@
 (require 'package)
 (setq package-archives
   '(
-     ("gnu" . "http://elpa.gnu.org/packages/")
+    ;;  ("gnu" . "http://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/")
-     ("org" . "http://orgmode.org/elpa/")
-     ("melpa" . "http://melpa.org/packages/")
-     ("melpa-stable" . "http://stable.melpa.org/packages/")
+    ;;  ("org" . "http://orgmode.org/elpa/")
+    ;;  ("melpa" . "http://melpa.org/packages/")
+    ;;  ("melpa-stable" . "http://stable.melpa.org/packages/")
   ))
 (package-initialize)
 
