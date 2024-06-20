@@ -21,6 +21,8 @@ if  (which go >/dev/null 2>&1) ; then
     export PATH="$(go env GOPATH)/bin:$PATH"
 fi
 
+export PATH="$HOME/.local/bin/:$PATH"
+
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/Users/s-watanabe/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
