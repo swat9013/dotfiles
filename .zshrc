@@ -21,6 +21,10 @@ if  (which go >/dev/null 2>&1) ; then
     export PATH="$(go env GOPATH)/bin:$PATH"
 fi
 
+if  (which asdf >/dev/null 2>&1) ; then
+    export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+fi
+
 export PATH="$HOME/.local/bin/:$PATH"
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
