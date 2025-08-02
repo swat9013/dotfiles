@@ -58,8 +58,9 @@
 	cofeature = "!f () { git checkout -b feature/$2 origin/$1;};f"
 	cofix = "!f () { git checkout -b fix/$2 origin/$1;};f"
   log-messages = "log --pretty=format:\"%s\""
-	amcm = commit --amend --no-edit
+	cmam = commit --amend --no-edit
   lmr = "log --reverse --pretty=format:'- %s%C(auto)%n%w(0,2,2)%b%-'"
   lmr-with-hash = "log --reverse --pretty=format:'- %C(reset)%h%C(reset) %s%C(auto)%n%w(0,2,2)%b%-'"
+  cmfix = '!f() { git commit --fixup=$1 && git rebase -i --autosquash $1^; }; f'
 [init]
 	defaultBranch = main
