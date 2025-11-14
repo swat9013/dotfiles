@@ -138,3 +138,8 @@ alias setup="./script/setup.sh"
 # python
 #
 alias pip-upgrade-all="pip list -o | tail -n +3 | awk '{ print \$1 }' | xargs pip install -U"
+
+#
+# vibe-kanban
+#
+alias vk="~/.dotfiles/scripts/vibe-kanban.sh"
