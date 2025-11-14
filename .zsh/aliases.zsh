@@ -143,3 +143,8 @@ alias pip-upgrade-all="pip list -o | tail -n +3 | awk '{ print \$1 }' | xargs pi
 # vibe-kanban
 #
 alias vk="~/.dotfiles/scripts/vibe-kanban.sh"
+
+#
+# vpn (OpenFortiVPN)
+#
+alias fvpn="~/.dotfiles/scripts/fortivpn.sh"
