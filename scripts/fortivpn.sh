@@ -40,6 +40,22 @@
 # - OpenFortiVPNのインストール確認
 # - 接続前の対話的確認プロンプト
 # - レガシーTLS対応 (SHA-1証明書サポート)
+# - パフォーマンス最適化 (DNS高速化、スプリットトンネリング、MTU最適化)
+#
+# 【パフォーマンス最適化】
+# このスクリプトは以下の最適化を自動的に適用します：
+#
+# 1. DNS高速化
+#    - VPN経由でDNSを設定 (--set-dns=1, --pppd-use-peerdns=1)
+#    - 内部ホスト名の解決が高速化され、DNS失敗による遅延を防止
+#
+# 2. スプリットトンネリング
+#    - VPN不要な通信は直接ルーティング (--half-internet-routes=1)
+#    - VPN必要な通信のみトンネル経由とすることで全体的なパフォーマンスが向上
+#
+# 3. MTU最適化
+#    - パケット断片化を防止 (--pppd-ipparam="mtu 1400 mru 1400")
+#    - VPNオーバーヘッドを考慮したMTU設定で通信効率が向上
 #
 # 【終了方法】
 # Ctrl+C で接続を終了
@@ -103,6 +119,15 @@ password = YOUR_PASSWORD_HERE
 # 注意: 絶対パスで指定してください
 # user-cert = $HOME/.config/fortivpn/certs/client.crt
 # user-key = $HOME/.config/fortivpn/certs/client.key
+
+# === パフォーマンス最適化設定 (推奨) ===
+# DNS設定: VPN経由でDNSを解決（内部ホスト名の高速解決）
+set-dns = 1
+pppd-use-peerdns = 1
+
+# ルーティング設定: スプリットトンネリング（VPN不要な通信は直接ルーティング）
+set-routes = 1
+half-internet-routes = 1
 EOF
     echo "  ✓ $CONFIG_FILE"
     echo ""
@@ -212,7 +237,18 @@ echo ""
 
 # VPN接続を開始（sudoが必要）
 # cipher-listオプションを使用してSHA-1証明書に対応
-sudo openfortivpn -c "$CONFIG_FILE" --cipher-list=DEFAULT:@SECLEVEL=0 --min-tls=1.0
+# パフォーマンス最適化オプション:
+# --set-dns=1: VPN経由でDNSを設定（内部ホスト名解決の高速化）
+# --pppd-use-peerdns=1: VPNサーバーから提供されるDNSを使用
+# --half-internet-routes=1: スプリットトンネリング（VPN不要な通信は直接ルーティング）
+# --pppd-ipparam: MTU最適化でパケット断片化を防止（通信効率向上）
+sudo openfortivpn -c "$CONFIG_FILE" \
+    --cipher-list=DEFAULT:@SECLEVEL=0 \
+    --min-tls=1.0 \
+    --set-dns=1 \
+    --pppd-use-peerdns=1 \
+    --half-internet-routes=1 \
+    --pppd-ipparam="mtu 1400 mru 1400"
 
 # 接続終了後
 echo ""
