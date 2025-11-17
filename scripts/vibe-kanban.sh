@@ -18,7 +18,7 @@
 #
 # 【設定】
 #   PORT: 33333
-#   ログファイル: work/logs/vibe_kanban.log
+#   ログファイル: $HOME/.dotfiles/logs/vibe_kanban.log
 #
 # 【動作】
 #   - プロセス検出: pgrep で vibe-kanban プロセスを検出
@@ -28,7 +28,7 @@
 #
 # 【前提条件】
 #   - npx コマンドが利用可能であること
-#   - work/logs ディレクトリが作成可能であること
+#   - $HOME/.dotfiles/logs ディレクトリが作成可能であること
 #
 # 【注意事項】
 #   - このスクリプトは dotfiles リポジトリのルートから相対パスで動作
@@ -52,10 +52,10 @@ cd "$(dirname "$0")/../../" || {
 
 # 設定
 PORT=33333
-LOG_FILE="work/logs/vibe_kanban.log"
+LOG_FILE="$HOME/.dotfiles/logs/vibe_kanban.log"
 
 # ディレクトリ作成（冪等性）
-mkdir -p work/logs
+mkdir -p "$HOME/.dotfiles/logs"
 
 # プロセス名でチェック（シンプル版、スクリプト自身は除外）
 is_running() {
