@@ -3,3 +3,4 @@
 !.emacs.d/init.d
 .sheldon/repos
 .sheldon/plugins.lock
+logs

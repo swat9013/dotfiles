@@ -57,9 +57,10 @@ LOG_FILE="$HOME/.dotfiles/logs/vibe_kanban.log"
 # ディレクトリ作成（冪等性）
 mkdir -p "$HOME/.dotfiles/logs"
 
-# プロセス名でチェック（シンプル版、スクリプト自身は除外）
+# プロセス名でチェック（サーバーモードのみ、MCPモードは除外）
 is_running() {
-  pgrep -f "npx.*vibe-kanban|vibe-kanban.*--mcp|vibe-kanban/dist" > /dev/null 2>&1
+  ps aux | grep -E "npx.*vibe-kanban|node.*vibe-kanban|vibe-kanban/dist" | \
+    grep -v -- "--mcp" | grep -v "vibe-kanban-mcp" | grep -v grep > /dev/null 2>&1
 }
 
 # ログローテーション（10MBを超えたら.oldにリネーム）
@@ -117,8 +118,9 @@ stop_vibe_kanban() {
     return 0
   fi
 
-  echo "Stopping all vibe-kanban processes..."
-  local pids=$(pgrep -f "npx.*vibe-kanban|vibe-kanban.*--mcp|vibe-kanban/dist")
+  echo "Stopping all vibe-kanban server processes..."
+  local pids=$(ps aux | grep -E "npx.*vibe-kanban|node.*vibe-kanban|vibe-kanban/dist" | \
+    grep -v -- "--mcp" | grep -v "vibe-kanban-mcp" | grep -v grep | awk '{print $2}')
 
   # 通常終了を試行
   while read -r pid; do
@@ -138,7 +140,8 @@ stop_vibe_kanban() {
   # 強制終了
   if is_running; then
     echo "Force killing remaining processes..."
-    local force_pids=$(pgrep -f "npx.*vibe-kanban|vibe-kanban.*--mcp|vibe-kanban/dist")
+    local force_pids=$(ps aux | grep -E "npx.*vibe-kanban|node.*vibe-kanban|vibe-kanban/dist" | \
+      grep -v -- "--mcp" | grep -v "vibe-kanban-mcp" | grep -v grep | awk '{print $2}')
     while read -r pid; do
       kill -9 "$pid" 2>/dev/null || true
     done <<< "$force_pids"
@@ -159,10 +162,12 @@ stop_vibe_kanban() {
 status_vibe_kanban() {
   if is_running; then
     echo ""
-    echo "Active vibe-kanban processes:"
-    ps aux | grep -E "npx.*vibe-kanban|vibe-kanban.*--mcp|vibe-kanban/dist" | grep -v grep | awk '{printf "  PID: %-7s CMD: %s\n", $2, substr($0, index($0,$11))}'
+    echo "Active vibe-kanban server processes:"
+    ps aux | grep -E "npx.*vibe-kanban|node.*vibe-kanban|vibe-kanban/dist" | \
+      grep -v -- "--mcp" | grep -v "vibe-kanban-mcp" | grep -v grep | \
+      awk '{printf "  PID: %-7s CMD: %s\n", $2, substr($0, index($0,$11))}'
   else
-    echo "Vibe Kanban is not running"
+    echo "Vibe Kanban server is not running"
   fi
 }
 
