@@ -97,18 +97,29 @@ start_vibe_kanban() {
   echo "Starting Vibe Kanban on port $PORT..."
   env PORT="$PORT" nohup npx vibe-kanban >> "$LOG_FILE" 2>&1 &
 
-  # 起動確認（2秒待機）
-  sleep 2
-  if is_running; then
-    echo "Vibe Kanban started successfully"
-    echo "Log file: $LOG_FILE"
-    status_vibe_kanban
-    return 0
-  else
-    echo "Failed to start Vibe Kanban"
-    echo "Check log file: $LOG_FILE"
-    return 1
-  fi
+  # 起動確認（ポーリング: 最大30秒、1秒間隔）
+  local max_wait=30
+  local interval=1
+  local elapsed=0
+
+  echo -n "Waiting for startup"
+  while [ $elapsed -lt $max_wait ]; do
+    sleep $interval
+    elapsed=$((elapsed + interval))
+    if is_running; then
+      echo ""
+      echo "Vibe Kanban started successfully (${elapsed}s)"
+      echo "Log file: $LOG_FILE"
+      status_vibe_kanban
+      return 0
+    fi
+    echo -n "."
+  done
+
+  echo ""
+  echo "Failed to start Vibe Kanban (timeout after ${max_wait}s)"
+  echo "Check log file: $LOG_FILE"
+  return 1
 }
 
 # 停止処理
