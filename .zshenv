@@ -5,11 +5,18 @@ export LC_ALL="${LANGUAGE}"
 export LC_CTYPE="${LANGUAGE}"
 
 # editor
-export EDITOR=emacs
-if [ "$EDITOR" = "emacs" ]; then
+if command -v code > /dev/null 2>&1; then
+    export EDITOR="code --wait"
+    export VISUAL="$EDITOR"
+    EDITOR_CMD="code"
+elif command -v emacs > /dev/null 2>&1; then
+    export EDITOR=emacs
+    export VISUAL="$EDITOR"
     EDITOR_CMD="e"
 else
-    EDITOR_CMD="$EDITOR"
+    export EDITOR=vim
+    export VISUAL="$EDITOR"
+    EDITOR_CMD="vim"
 fi
 
 # history
