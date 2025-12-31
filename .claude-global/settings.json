@@ -1,0 +1,31 @@
+{
+  "alwaysThinkingEnabled": true,
+  "spinnerTipsEnabled": false,
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git status)",
+      "Bash(ls:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/.env)",
+      "Read(**/*.key)",
+      "Bash(wget:*)"
+    ],
+    "ask": [
+      "Bash(curl:*)",
+      "Bash(git push:*)",
+      "Bash(rm:*)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.dotfiles/scripts/claude-statusline.sh",
+    "padding": 0
+  }
+}

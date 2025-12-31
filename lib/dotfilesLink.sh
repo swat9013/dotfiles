@@ -7,6 +7,8 @@ do
     [ "$f" = ".gitignore" ] && continue
     [ "$f" = ".gitmodule" ] && continue
     [ "$f" = ".gitconfig.local.sample" ] && continue
+    [ "$f" = ".claude" ] && continue
+    [ "$f" = ".claude-global" ] && continue
 
     ln -snfv "$HOME"/.dotfiles/"$f" "$HOME"/"$f"
 done
@@ -18,3 +20,7 @@ fi
 if [ ! -e "$HOME"/.config/sheldon/plugins.toml ]; then
     ln -snfv "$HOME"/.dotfiles/sheldon "$HOME"/.config/sheldon
 fi
+
+# Claude Code global settings
+mkdir -p "$HOME"/.claude
+ln -snfv "$HOME"/.dotfiles/.claude-global/settings.json "$HOME"/.claude/settings.json
