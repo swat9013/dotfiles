@@ -148,3 +148,9 @@ alias vk="~/.dotfiles/scripts/vibe-kanban.sh"
 # vpn (OpenFortiVPN)
 #
 alias fvpn="~/.dotfiles/scripts/fortivpn.sh"
+
+
+#
+# AI Coding
+#
+alias bk-plan='d="work/$(date +%Y%m%d_%H%M%S)" && mkdir -p "$d" && mv plan.md implementation.md report.md "$d/"'
