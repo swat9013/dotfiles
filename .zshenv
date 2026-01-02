@@ -5,7 +5,8 @@ export LC_ALL="${LANGUAGE}"
 export LC_CTYPE="${LANGUAGE}"
 
 # editor
-if command -v code > /dev/null 2>&1; then
+# VS Code内のターミナルではVS Code、それ以外ではEmacsを優先
+if [ "$TERM_PROGRAM" = "vscode" ] && command -v code > /dev/null 2>&1; then
     export EDITOR="code --wait"
     export VISUAL="$EDITOR"
     EDITOR_CMD="code"
@@ -13,6 +14,10 @@ elif command -v emacs > /dev/null 2>&1; then
     export EDITOR=emacs
     export VISUAL="$EDITOR"
     EDITOR_CMD="e"
+elif command -v code > /dev/null 2>&1; then
+    export EDITOR="code --wait"
+    export VISUAL="$EDITOR"
+    EDITOR_CMD="code"
 else
     export EDITOR=vim
     export VISUAL="$EDITOR"

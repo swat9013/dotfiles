@@ -1,58 +1,99 @@
+;;; init.el --- Main Init -*- lexical-binding: t; -*-
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;;; Commentary:
+;; Emacs設定のエントリポイント
+;; straight.el + use-package によるモダンなパッケージ管理
 
-(require 'cl)
-(setq load-path (append '("~/.emacs.d/init.d") load-path))
+;;; Code:
 
-(load "config/common")
-(load "install-packages")
-(load "config/package")
+;; ============================================================
+;; 起動時間計測
+;; ============================================================
+(defun my/display-startup-time ()
+  "Display startup time and GC count."
+  (message "Emacs loaded in %s with %d garbage collections."
+           (format "%.2f seconds"
+                   (float-time (time-subtract after-init-time before-init-time)))
+           gcs-done))
+(add-hook 'emacs-startup-hook #'my/display-startup-time)
 
-(when (equal system-type 'darwin)
-  (load "config/mac"))
+;; ============================================================
+;; straight.el ブートストラップ
+;; ============================================================
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el"
+                         user-emacs-directory))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(eval-when-compile  (require 'use-package))
-(require 'diminish)    ;; if you use :diminish
-(require 'bind-key)    ;; if you use any :bind variant
+;; ============================================================
+;; use-package 統合
+;; ============================================================
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+(setq use-package-always-ensure nil)  ; straight.el が管理
+
+;; use-package のログ設定
 (setq use-package-verbose t)
 (setq use-package-minimum-reported-time 0.001)
-(setq frame-background-mode 'dark)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-comment-tag ((t (:foreground "brightblue"))))
- '(diff-added ((t (:background "yellow" :foreground "black"))))
- '(diff-hunk-header ((t (:background "brightred" :foreground "black"))))
- '(diff-removed ((t (:background "color-22" :foreground "brightred"))))
- '(font-lock-function-name-face ((t (:foreground "color-33"))))
- '(helm-selection ((t (:background "brightblue" :distant-foreground "black")))))
+;; ============================================================
+;; no-littering (ファイル整理) - 最初に読み込む
+;; ============================================================
+(use-package no-littering
+  :config
+  ;; auto-save ファイルの場所
+  (setq auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(anzu-deactivate-region t)
- '(anzu-mode-lighter "")
- '(anzu-search-threshold 100)
- '(avy-migemo-function-names
-   (quote
-    (swiper--add-overlays-migemo
-     (swiper--re-builder :around swiper--re-builder-migemo-around)
-     (ivy--regex :around ivy--regex-migemo-around)
-     (ivy--regex-ignore-order :around ivy--regex-ignore-order-migemo-around)
-     (ivy--regex-plus :around ivy--regex-plus-migemo-around)
-     ivy--highlight-default-migemo ivy-occur-revert-buffer-migemo ivy-occur-press-migemo avy-migemo-goto-char avy-migemo-goto-char-2 avy-migemo-goto-char-in-line avy-migemo-goto-char-timer avy-migemo-goto-subword-1 avy-migemo-goto-word-1 avy-migemo-isearch avy-migemo-org-goto-heading-timer avy-migemo--overlay-at avy-migemo--overlay-at-full)))
- '(package-selected-packages
-   (quote
-    (logview evil-magit helm-robe helm flycheck auto-complete yasnippet yascroll yaml-mode web-mode use-package undohist undo-tree ssh-config-mode smart-mode-line smart-compile slim-mode scss-mode sass-mode ruby-end ruby-electric ruby-block robe rinari rainbow-mode rainbow-delimiters powerline point-undo nginx-mode markdown-mode magit js2-mode helm-projectile helm-ag gitconfig-mode git-gutter flymake-cursor flycheck-tip flycheck-d-unittest csv-mode auto-complete-clang atom-dark-theme anzu anything ace-jump-mode)))
- '(robe-completing-read-func (quote helm-robe-completing-read)))
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
+  ;; custom-file の場所
+  (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+  (when (file-exists-p custom-file)
+    (load custom-file 'noerror 'nomessage)))
+
+;; ============================================================
+;; lisp/ モジュール読み込み
+;; ============================================================
+(defun my/load-module (name)
+  "Load a module from lisp/ directory."
+  (load (expand-file-name name
+                          (expand-file-name "lisp" user-emacs-directory))
+        nil 'nomessage))
+
+;; モジュール読み込み順序
+(my/load-module "init-core")
+(my/load-module "init-keybinds")
+(my/load-module "init-completion")
+(my/load-module "init-corfu")
+(my/load-module "init-project")
+(my/load-module "init-git")
+(my/load-module "init-lsp")
+(my/load-module "init-treesit")
+(my/load-module "init-lang-ruby")
+(my/load-module "init-lang-ts")
+(my/load-module "init-lang-web")
+(my/load-module "init-editing")
+(my/load-module "init-ui")
+
+;; macOS 固有設定
+(when (eq system-type 'darwin)
+  (my/load-module "init-macos"))
+
+;; ============================================================
+;; 起動後の処理
+;; ============================================================
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            ;; GC閾値を適正値に戻す (16MB)
+            (setq gc-cons-threshold (* 16 1024 1024)
+                  gc-cons-percentage 0.1)))
+
+;;; init.el ends here

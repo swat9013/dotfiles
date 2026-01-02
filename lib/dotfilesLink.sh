@@ -21,6 +21,12 @@ if [ ! -e "$HOME"/.config/sheldon/plugins.toml ]; then
     ln -snfv "$HOME"/.dotfiles/sheldon "$HOME"/.config/sheldon
 fi
 
+# Ghostty設定
+if [ ! -e "$HOME"/.config/ghostty ]; then
+    mkdir -p "$HOME"/.config
+    ln -snfv "$HOME"/.dotfiles/ghostty "$HOME"/.config/ghostty
+fi
+
 # Claude Code global settings
 mkdir -p "$HOME"/.claude
 ln -snfv "$HOME"/.dotfiles/.claude-global/settings.json "$HOME"/.claude/settings.json
