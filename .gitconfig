@@ -6,7 +6,6 @@
 	default = simple
 [core]
 	excludesfile = ~/.gitignore_global
-	editor = code --wait
 	quotepath = false
 [alias]
 	alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
