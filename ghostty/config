@@ -6,6 +6,7 @@ font-size = 12
 
 # macOS固有
 macos-titlebar-style = transparent
+macos-option-as-alt = true
 
 # ウィンドウ
 window-padding-x = 8

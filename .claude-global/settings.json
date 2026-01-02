@@ -25,11 +25,11 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.dotfiles/scripts/claude-statusline.sh",
+    "command": "~/.dotfiles/lib/claude-statusline.sh",
     "padding": 0
   },
   "fileSuggestion": {
     "type": "command",
-    "command": "~/.dotfiles/scripts/claude-file-suggestion.sh"
+    "command": "~/.dotfiles/lib/claude-file-suggestion.sh"
   }
 }

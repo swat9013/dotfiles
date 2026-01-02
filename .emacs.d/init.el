@@ -82,6 +82,7 @@
 (my/load-module "init-lang-web")
 (my/load-module "init-editing")
 (my/load-module "init-ui")
+(my/load-module "init-modeline")
 
 ;; macOS 固有設定
 (when (eq system-type 'darwin)
