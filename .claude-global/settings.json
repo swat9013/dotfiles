@@ -27,5 +27,9 @@
     "type": "command",
     "command": "~/.dotfiles/scripts/claude-statusline.sh",
     "padding": 0
+  },
+  "fileSuggestion": {
+    "type": "command",
+    "command": "~/.dotfiles/scripts/claude-file-suggestion.sh"
   }
 }
