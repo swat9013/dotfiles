@@ -1,25 +1,3 @@
-# Emacs
-.emacs.d/
-!.emacs.d/early-init.el
-!.emacs.d/init.el
-!.emacs.d/lisp/
-!.emacs.d/README.md
-
-# straight.el
-.emacs.d/straight/repos/
-.emacs.d/straight/build/
-.emacs.d/straight/build-cache.el
-.emacs.d/straight/modified/
-# バージョンファイルは管理
-!.emacs.d/straight/versions/
-
-# no-littering
-.emacs.d/var/
-.emacs.d/etc/
-
-# バックアップ
-.emacs.d.backup.*
-
 # Sheldon
 .sheldon/repos
 .sheldon/plugins.lock

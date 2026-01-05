@@ -1,0 +1,27 @@
+# straight.el (パッケージマネージャーのキャッシュ)
+straight/repos/
+straight/build/
+straight/build-cache.el
+straight/modified/
+# バージョンファイルは管理
+!straight/versions/
+
+# no-littering (自動生成される状態/キャッシュ)
+var/
+etc/
+
+# Emacs自動生成ファイル
+auto-save-list/
+eln-cache/
+tree-sitter/
+transient/
+.cache/
+
+# バックアップ・一時ファイル
+*~
+\#*\#
+.\#*
+*.elc
+
+# バックアップディレクトリ
+*.backup.*
