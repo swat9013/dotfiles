@@ -23,8 +23,10 @@ if [ -z "$TRANSCRIPT_PATH" ] || [ ! -f "$TRANSCRIPT_PATH" ]; then
 fi
 
 # 最初のユーザーメッセージを取得（セッションの最初のタスク）
+# トランスクリプト形式: {"type":"user","message":{"role":"user","content":"..."}}
+# isMeta: true のメッセージはシステムメッセージなので除外
 FIRST_TASK=$(head -100 "$TRANSCRIPT_PATH" | \
-    jq -r 'select(.type == "human") | .message.content[]? | select(.type == "text") | .text' 2>/dev/null | \
+    jq -r 'select(.type == "user" and (.isMeta | not)) | .message.content | select(type == "string")' 2>/dev/null | \
     head -1 | \
     head -c 150 | \
     tr '\n' ' ' | \
