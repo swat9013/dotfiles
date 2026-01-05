@@ -1,8 +1,9 @@
-# Usage: brew bundle --global --cleanup
+# Usage:brew bundle --global --cleanup
 brew "asdf"
 brew "aws-cdk"
 brew "awscli"
 brew "bash"
+brew "oven-sh/bun/bun"
 brew "colordiff"
 brew "coreutils"
 brew "curl"
