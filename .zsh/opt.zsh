@@ -2,6 +2,11 @@
 # history
 #
 
+# History file location and size
+export HISTFILE=$HOME/.zsh-history
+export HISTSIZE=100000
+export SAVEHIST=100000
+
 # 共有する
 setopt share_history
 

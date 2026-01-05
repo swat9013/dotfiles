@@ -4,7 +4,11 @@ typeset -U path cdpath fpath manpath
 # 自動アップデート用設定
 export DISABLE_UPDATE_PROMPT=true
 export UPDATE_ZSH_DAYS=13
-$HOME/.dotfiles/lib/auto_update.sh
+$HOME/.dotfiles/lib/auto_update.sh &!
+
+## 補完を有効化
+autoload -Uz compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
 
 # sheldon
 eval "$(sheldon source)"
@@ -26,6 +30,10 @@ if  (which asdf >/dev/null 2>&1) ; then
 fi
 
 export PATH="$HOME/.local/bin/:$PATH"
+
+if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+   source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+fi
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/Users/s-watanabe/.rd/bin:$PATH"
