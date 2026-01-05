@@ -25,8 +25,11 @@ curl -L raw.github.com/swat9013/dotfiles/master/install.sh | sh
 
 `lib/dotfilesLink.sh` が `.` で始まるファイルを `~/.dotfiles` → `~` へシンボリックリンク作成。
 
-- 除外：`.git`, `.gitignore`, `.gitmodule`
-- 特別処理：`sheldon/` → `~/.config/sheldon`
+- 除外：`.git`, `.gitignore`, `.gitmodule`, `.claude`, `.claude-global`
+- 特別処理：
+  - `sheldon/` → `~/.config/sheldon`
+  - `ghostty/` → `~/.config/ghostty`
+  - `.claude-global/settings.json` → `~/.claude/settings.json`
 
 ### Zsh設定の読み込み順序（.zshrc）
 
@@ -61,5 +64,39 @@ fi
 
 - **rm → rmtrash**: 誤削除防止
 - **peco**: `C-r` で履歴検索、ディレクトリナビゲーション
-- **Gitエイリアス**: `cofeature <name>`, `cofix <name>`, `delete-merged-branch`
+- **Gitエイリアス**: `cofeature <name>`, `cofix <name>`, `delete-merged-branch`, `aicommit`
 - **Docker**: `.zsh/aliases.zsh` に20以上のエイリアス
+- **Ghostty**: Catppuccin テーマ (ライト/ダーク自動切替)、Emacs風スプリット移動
+
+## Claude Code統合
+
+Claude Code関連のファイルは `.claude-global/` に集約。
+
+### .claude-global/ 構成
+
+```
+.claude-global/
+├── settings.json         # Claude Code設定
+├── statusline.sh         # ステータスライン (Git/コンテキスト使用率/セッションタイトル)
+├── file-suggestion.sh    # ファイル提案 (@参照時、ripgrep使用)
+├── setup-mcp.sh          # MCP サーバー・プラグインの自動セットアップ
+└── hooks/
+    └── notify-completion.sh  # Stop時にmacOS通知
+```
+
+### settings.json 主要設定
+
+- **statusLine**: カスタムステータスライン表示
+- **fileSuggestion**: @でのファイル参照をripgrepで高速化
+- **hooks.Stop**: 作業完了時にmacOS通知
+- **plugins**: claude-mem (thedotmack marketplace)
+- **alwaysThinkingEnabled**: true
+
+### MCP セットアップ
+
+```bash
+# MCP サーバーとプラグインの初期設定
+./.claude-global/setup-mcp.sh
+```
+
+設定済みサーバー: deepwiki-http, serena

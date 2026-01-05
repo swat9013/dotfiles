@@ -9,8 +9,6 @@ macOSとLinuxで開発環境の設定を管理するための個人用dotfiles�
 ├── lib/                          # ユーティリティスクリプト
 │   ├── dotfilesLink.sh           # シンボリックリンク管理
 │   ├── auto_update.sh            # 自動更新チェック (24時間間隔)
-│   ├── claude-statusline.sh      # Claude Code ステータスライン
-│   ├── claude-file-suggestion.sh # Claude Code ファイル提案
 │   ├── macos.sh                  # macOS固有設定
 │   ├── ide.sh                    # tmux IDE レイアウト
 │   ├── vibe-kanban.sh            # Kanban サーバー管理
@@ -29,6 +27,12 @@ macOSとLinuxで開発環境の設定を管理するための個人用dotfiles�
 │   └── plugins.toml              # プラグイン定義
 ├── ghostty/                      # Ghostty ターミナル設定
 ├── .claude-global/               # Claude Code グローバル設定
+│   ├── settings.json             # パーミッション、フック、ステータスライン
+│   ├── statusline.sh             # ステータスライン表示
+│   ├── file-suggestion.sh        # ファイル提案 (@参照)
+│   ├── setup-mcp.sh              # MCP自動セットアップ
+│   └── hooks/                    # 完了通知などのフック
+│       └── notify-completion.sh  # 作業完了時のmacOS通知
 ├── docs/                         # ドキュメント
 ├── .gitconfig                    # Git設定 (60+ エイリアス)
 ├── .zshenv                       # Zsh環境変数
@@ -101,8 +105,6 @@ Oh-My-Zshではなく **Sheldon** を採用（軽量・高速）。
 |-----------|------|
 | dotfilesLink.sh | シンボリックリンク作成・管理 |
 | auto_update.sh | 24時間経過で自動git pull |
-| claude-statusline.sh | ステータスライン表示 (Git/コンテキスト使用率) |
-| claude-file-suggestion.sh | ファイル提案 (ripgrep使用) |
 | macos.sh | macOS input source切り替え無効化 |
 | ide.sh | tmux IDE用パネル配置 |
 | vibe-kanban.sh | npx vibe-kanban の起動・停止管理 |
@@ -128,29 +130,57 @@ fi
 
 ## Claude Code統合
 
-### パーミッション設定 (.claude-global/settings.json)
+Claude Code関連のファイルは `.claude-global/` に集約。
+
+### .claude-global/ スクリプト
+
+| スクリプト | 機能 |
+|-----------|------|
+| statusline.sh | ステータスライン表示 (Git/コンテキスト使用率/セッションタイトル) |
+| file-suggestion.sh | ファイル提案 (@参照、ripgrep使用) |
+| setup-mcp.sh | MCP サーバー・プラグインの自動セットアップ |
+| hooks/notify-completion.sh | Stop時にmacOS通知 |
+
+### グローバル設定 (.claude-global/settings.json)
 
 ```json
 {
+  "fileSuggestion": { "type": "command", "command": "~/.dotfiles/.claude-global/file-suggestion.sh" },
+  "statusLine": { "type": "command", "command": "~/.dotfiles/.claude-global/statusline.sh" },
+  "hooks": { "Stop": [{ "hooks": [{ "type": "command", "command": "~/.dotfiles/.claude-global/hooks/notify-completion.sh" }] }] },
   "permissions": {
     "allow": ["Bash(npm run:*)", "Bash(git diff:*)", "Bash(git status)", ...],
     "deny": ["Read(./.env)", "Read(**/*.key)", "Bash(wget:*)"],
     "ask": ["Bash(curl:*)", "Bash(git push:*)", "Bash(rm:*)"]
-  }
+  },
+  "enabledPlugins": { "claude-mem@thedotmack": true },
+  "alwaysThinkingEnabled": true
 }
 ```
 
-### ステータスライン (lib/claude-statusline.sh)
+### ステータスライン (.claude-global/statusline.sh)
 
 表示形式: `directory git:branch* | Ctx:XX% | "session title..."`
 
-- Git情報取得
-- コンテキスト使用率計算 (色分け: Green/Yellow/Red)
-- セッションタイトル表示
+- Git情報: ブランチ名、dirty状態 (`*`)
+- コンテキスト使用率: トランスクリプトファイルから計算 (Green 0-50%, Yellow 50-80%, Red 80%+)
+- セッションタイトル: 最初のユーザーメッセージから取得
 
-### ファイル提案 (lib/claude-file-suggestion.sh)
+### 完了通知フック (.claude-global/hooks/notify-completion.sh)
+
+`Stop` イベント時にmacOS通知を送信:
+- プロジェクト名 (cwd)
+- 最初のタスク内容 (トランスクリプトから抽出)
+
+### ファイル提案 (.claude-global/file-suggestion.sh)
 
 ripgrepで全ファイル検索 (.gitignore無視、隠しファイル含む、lockファイル除外)
+
+### MCP・プラグインセットアップ (.claude-global/setup-mcp.sh)
+
+冪等性のある自動セットアップスクリプト:
+- **MCP Server**: deepwiki-http, serena
+- **Plugin**: claude-mem (thedotmack marketplace)
 
 ## Zshエイリアス概要
 
@@ -190,6 +220,11 @@ ripgrepで全ファイル検索 (.gitignore無視、隠しファイル含む、l
 | init-lang-web.el | Web開発 |
 | init-git.el | Magit, forge |
 | init-project.el | Projectile |
+| init-ui.el | UIカスタマイズ |
+| init-editing.el | 編集機能 |
+| init-keybinds.el | キーバインド |
+| init-modeline.el | モードライン |
+| init-macos.el | macOS固有設定 |
 
 ## Git設定 (.gitconfig)
 
@@ -216,11 +251,12 @@ ripgrepで全ファイル検索 (.gitignore無視、隠しファイル含む、l
 
 ## Brewfile (.Brewfile)
 
-45+パッケージを管理:
+50+パッケージを管理:
 
-- CLI: asdf, emacs, git, jq, peco, ripgrep, sheldon, tmux, zsh
-- GUI: dash, dbeaver-community, devtoys, obs
-- Fonts: font-*
+- CLI: asdf, bun, emacs, git, jq, peco, ripgrep, sheldon, tmux, uv, zsh
+- AI/Dev: ollama, poetry, uv
+- GUI: dash, dbeaver-community, devtoys, obs, codex
+- Fonts: font-iosevka, font-monaspace, font-myrica
 
 ## セキュリティ
 
