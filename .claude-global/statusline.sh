@@ -7,7 +7,7 @@
 # Color scheme:
 #   - Directory: Green
 #   - Git branch: Yellow
-#   - Context %: Green (0-50), Yellow (50-80), Red (80+)
+#   - Context %: Green (0-50), Yellow (50-70), Red (70+)
 #   - Session title: Cyan
 #==============================================================================
 
@@ -113,9 +113,14 @@ else
 fi
 
 # Color based on usage
+# しきい値の根拠 (調査結果 2026-01):
+#   - 50%未満: 快適ゾーン、パフォーマンス最高
+#   - 50-70%: /compact 検討推奨（Autocompactは64-75%でトリガー）
+#   - 70%以上: 新規セッション推奨（Lost in the Middle問題で精度低下）
+# 参考: Anthropic公式は80-85%を上限として推奨
 if [ "$PERCENT" -lt 50 ]; then
     CTX_COLOR="${GREEN}"
-elif [ "$PERCENT" -lt 80 ]; then
+elif [ "$PERCENT" -lt 70 ]; then
     CTX_COLOR="${YELLOW}"
 else
     CTX_COLOR="${RED}"
