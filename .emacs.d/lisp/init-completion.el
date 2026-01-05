@@ -6,6 +6,18 @@
 ;;; Code:
 
 ;; ============================================================
+;; バイトコンパイラ向け宣言
+;; ============================================================
+(defvar consult-buffer)
+(defvar consult-recent-file)
+(defvar xref-show-xrefs-function)
+(defvar xref-show-definitions-function)
+(declare-function vertico-mode "vertico")
+(declare-function marginalia-mode "marginalia")
+(declare-function consult-customize "consult")
+(declare-function consult-xref "consult-xref")
+
+;; ============================================================
 ;; Vertico (ミニバッファ補完UI)
 ;; ============================================================
 (use-package vertico

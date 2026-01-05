@@ -6,6 +6,13 @@
 ;;; Code:
 
 ;; ============================================================
+;; バイトコンパイラ向け宣言
+;; ============================================================
+(defvar treesit-language-source-alist)
+(declare-function treesit-auto-add-to-auto-mode-alist "treesit-auto")
+(declare-function global-treesit-auto-mode "treesit-auto")
+
+;; ============================================================
 ;; treesit-auto (自動インストール・モード切り替え)
 ;; ============================================================
 (use-package treesit-auto

@@ -6,6 +6,16 @@
 ;;; Code:
 
 ;; ============================================================
+;; バイトコンパイラ向け宣言
+;; ============================================================
+(defvar corfu-map)
+(defvar cape-dabbrev-min-length)
+(declare-function global-corfu-mode "corfu")
+(declare-function cape-dabbrev "cape")
+(declare-function cape-file "cape")
+(declare-function cape-keyword "cape")
+
+;; ============================================================
 ;; Corfu (ポップアップ補完)
 ;; ============================================================
 (use-package corfu

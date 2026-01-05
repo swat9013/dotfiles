@@ -6,6 +6,16 @@
 ;;; Code:
 
 ;; ============================================================
+;; バイトコンパイラ向け宣言
+;; ============================================================
+(defvar mac-command-modifier)
+(defvar mac-option-modifier)
+(defvar mac-control-modifier)
+(defvar ns-function-modifier)
+(defvar ns-use-native-fullscreen)
+(declare-function exec-path-from-shell-initialize "exec-path-from-shell")
+
+;; ============================================================
 ;; exec-path-from-shell (PATH 継承)
 ;; ============================================================
 (use-package exec-path-from-shell

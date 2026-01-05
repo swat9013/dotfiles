@@ -9,6 +9,15 @@
 ;;; Code:
 
 ;; ============================================================
+;; バイトコンパイラ向け宣言
+;; ============================================================
+(defvar auto-revert-check-vc-info)
+(declare-function minions-mode "minions")
+(declare-function eglot-current-server "eglot")
+(declare-function eglot-project-nickname "eglot")
+(declare-function flymake-diagnostic-type "flymake")
+
+;; ============================================================
 ;; ヘルパー関数
 ;; ============================================================
 

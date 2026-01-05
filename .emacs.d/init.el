@@ -7,6 +7,17 @@
 ;;; Code:
 
 ;; ============================================================
+;; バイトコンパイラ向け宣言
+;; ============================================================
+(defvar straight-use-package-by-default)
+(defvar use-package-always-ensure)
+(defvar use-package-verbose)
+(defvar use-package-minimum-reported-time)
+(declare-function straight-use-package "straight")
+(declare-function no-littering-expand-var-file-name "no-littering")
+(declare-function no-littering-expand-etc-file-name "no-littering")
+
+;; ============================================================
 ;; 起動時間計測
 ;; ============================================================
 (defun my/display-startup-time ()

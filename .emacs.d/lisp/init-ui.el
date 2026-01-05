@@ -6,6 +6,14 @@
 ;;; Code:
 
 ;; ============================================================
+;; バイトコンパイラ向け宣言
+;; ============================================================
+(defvar catppuccin-flavor)
+(declare-function catppuccin-reload "catppuccin-theme")
+(declare-function mac-application-state "macfns" nil t)
+(declare-function set-fontset-font "fontset")
+
+;; ============================================================
 ;; Catppuccin テーマ (ghostty と統一)
 ;; ============================================================
 ;; ghostty: light:Catppuccin Latte, dark:Catppuccin Mocha

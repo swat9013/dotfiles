@@ -6,6 +6,9 @@ straight/modified/
 # バージョンファイルは管理
 !straight/versions/
 
+# elpa (package.el - straight.el移行後は不要)
+elpa/
+
 # no-littering (自動生成される状態/キャッシュ)
 var/
 etc/
