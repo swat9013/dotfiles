@@ -16,11 +16,14 @@ unfocused-split-opacity = 0.95
 # シェル統合
 shell-integration = detect
 
+# デスクトップ通知（OSC 9/777対応）
+desktop-notifications = true
+
 # スプリット移動（矢印キー）
-keybind = ctrl+shift+left=goto_split:left
-keybind = ctrl+shift+right=goto_split:right
-keybind = ctrl+shift+up=goto_split:up
-keybind = ctrl+shift+down=goto_split:down
+keybind = shift+left=goto_split:left
+keybind = shift+right=goto_split:right
+keybind = shift+up=goto_split:up
+keybind = shift+down=goto_split:down
 
 # スプリット移動（Emacs風: n=down, p=up, b=left, f=right）
 keybind = ctrl+shift+b=goto_split:left
