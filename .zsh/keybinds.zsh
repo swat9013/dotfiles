@@ -1,23 +1,21 @@
 ## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
 
-if which peco > /dev/null 2>&1; then
+if which fzy > /dev/null 2>&1; then
 
-    function peco-select-history() {
+    function fzy-select-history() {
         local tac
         if which tac > /dev/null; then
             tac="tac"
         else
             tac="tail -r"
         fi
-        BUFFER=$(\history -n 1 | eval $tac | awk '!a[$0]++'| peco --query "$LBUFFER")
+        BUFFER=$(\history -n 1 | eval $tac | awk '!a[$0]++'| fzy --query "$LBUFFER")
         CURSOR=$#BUFFER
-        # zle clear-screen
-        # zle reset-screen
         zle reset-prompt
     }
-    zle -N peco-select-history
-    bindkey '^r' peco-select-history
+    zle -N fzy-select-history
+    bindkey '^r' fzy-select-history
 
     # cdrの有効化
     if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
@@ -28,7 +26,7 @@ if which peco > /dev/null 2>&1; then
       zstyle ':chpwd:*' recent-dirs-max 1000
     fi
 
-    function peco-go-to-dir () {
+    function fzy-go-to-dir () {
         local line
         local selected="$(
       {
@@ -40,9 +38,8 @@ if which peco > /dev/null 2>&1; then
             fi
           done
         )
-        # ghq list --full-path
         for line in *(-/) ${^cdpath}/*(N-/); do echo "$line"; done | sort -u
-      } | peco --query "$LBUFFER"
+      } | fzy --query "$LBUFFER"
     )"
         if [ -n "$selected" ]; then
             BUFFER="cd ${(q)selected}"
@@ -50,8 +47,8 @@ if which peco > /dev/null 2>&1; then
         fi
         zle reset-prompt
     }
-    zle -N peco-go-to-dir
-    bindkey '^s' peco-go-to-dir
+    zle -N fzy-go-to-dir
+    bindkey '^s' fzy-go-to-dir
 fi
 
 ## C-^ で一つ上のディレクトリへ
