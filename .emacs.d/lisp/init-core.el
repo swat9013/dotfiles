@@ -65,6 +65,7 @@
     (scroll-bar-mode -1))
   (blink-cursor-mode -1)
   (xterm-mouse-mode 1)
+  (mouse-wheel-mode 1)
 
   ;; 表示モード
   (column-number-mode 1)
