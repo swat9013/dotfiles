@@ -1,5 +1,5 @@
-# テーマ（ライト/ダーク自動切り替え）
-theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+# テーマ
+theme = TokyoNight Night
 
 # フォント
 font-size = 12
