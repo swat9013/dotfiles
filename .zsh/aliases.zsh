@@ -38,6 +38,7 @@ fi
 #
 alias c='code'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
+alias emacs-kill-force='pkill -9 emacs'
 
 # emacsclient をシームレスに使うための関数
 # http://k-ui.jp/?p=243

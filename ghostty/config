@@ -16,6 +16,9 @@ unfocused-split-opacity = 0.95
 # シェル統合
 shell-integration = detect
 
+# セッション復元（タブ・スプリットのレイアウトを保存）
+window-save-state = always
+
 # デスクトップ通知（OSC 9/777対応）
 desktop-notifications = true
 
