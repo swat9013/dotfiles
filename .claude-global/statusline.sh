@@ -2,7 +2,7 @@
 #==============================================================================
 # claude-statusline.sh - Claude Code Statusline Script
 #==============================================================================
-# Display: dir git:branch* | Ctx:XX% | "session title..."
+# Display: dir git:branch* | Model | Ctx:XX% | "session title..."
 #
 # Color scheme:
 #   - Directory: Green
@@ -33,6 +33,7 @@ input=$(cat)
 CURRENT_DIR=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // "."')
 CONTEXT_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
 TRANSCRIPT_PATH=$(echo "$input" | jq -r '.transcript_path // ""')
+MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"')
 
 # Expand transcript path once (used for both context and session title)
 EXPANDED_TRANSCRIPT=""
@@ -143,7 +144,7 @@ if [ -n "$EXPANDED_TRANSCRIPT" ]; then
 fi
 
 # Build output
-OUTPUT="${GREEN}${DIR_NAME}${RESET}${GIT_INFO} | ${CTX_COLOR}Ctx:${PERCENT}%${RESET}"
+OUTPUT="${GREEN}${DIR_NAME}${RESET}${GIT_INFO} | ${MODEL} | ${CTX_COLOR}Ctx:${PERCENT}%${RESET}"
 
 if [ -n "$SESSION_TITLE" ]; then
     OUTPUT="${OUTPUT} | ${CYAN}\"${SESSION_TITLE}\"${RESET}"

@@ -146,12 +146,54 @@ alias pip-upgrade-all="pip list -o | tail -n +3 | awk '{ print \$1 }' | xargs pi
 alias vk="~/.dotfiles/lib/vibe-kanban.sh"
 
 #
-# vpn (OpenFortiVPN)
+# vpn (OpenFortiVPN - SSL-VPN用)
 #
 alias fvpn="~/.dotfiles/lib/fortivpn.sh"
-
 
 #
 # AI Coding
 #
 alias bk-plan='d="work/$(date +%Y%m%d_%H%M%S)" && mkdir -p "$d" && mv plan.md implementation.md report.md "$d/"'
+alias cc='claude'
+alias cco='claude --model opus'
+alias ccs='claude --model sonnet'
+
+# 軽量Claude Codeでワンライナー質問（ファイル参照オプション対応）
+# Usage: cask "質問内容" [file1] [file2] ...
+# Example:
+#   cask "このコードを説明して" main.py
+#   cask "これらのファイルの違いは？" old.js new.js
+#   cask "今日の日付は？"
+function ccask() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: cask \"質問内容\" [file1] [file2] ..."
+        echo "Example: cask \"このコードを説明して\" main.py"
+        return 1
+    fi
+
+    local prompt="$1"
+    shift
+
+    # ファイル引数があれば内容を追加
+    if [[ $# -gt 0 ]]; then
+        local file_contents=""
+        for file in "$@"; do
+            if [[ -f "$file" ]]; then
+                file_contents="${file_contents}
+--- ${file} ---
+$(cat "$file")
+"
+            else
+                echo "Warning: '$file' is not a file, skipping." >&2
+            fi
+        done
+
+        if [[ -n "$file_contents" ]]; then
+            prompt="${prompt}
+
+${file_contents}"
+        fi
+    fi
+
+    claude --model haiku -p "$prompt"
+}

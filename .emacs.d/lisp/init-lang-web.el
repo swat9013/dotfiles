@@ -55,6 +55,10 @@
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :config
+  ;; キーバインドをすべて無効化（シンタックスハイライトのみ使用）
+  ;; グローバルキーバインドを優先させる
+  (setq markdown-mode-map (make-sparse-keymap))
+
   ;; markdown では行末空白を削除しない (改行のため)
   (add-hook 'markdown-mode-hook
             (lambda ()

@@ -63,5 +63,8 @@
   lmr-with-hash = "log --reverse --pretty=format:'- %C(reset)%h%C(reset) %s%C(auto)%n%w(0,2,2)%b%-'"
   cmfix = '!f() { git commit --fixup=$1 && git rebase -i --autosquash $1^; }; f'
   aicommit = "!f() { COMMITMSG=$(claude --model haiku -p 'Based on `git diff --cached`, generate a Git commit message following Conventional Commits format.\n\nFormat:\n<type>(<scope>): <subject in Japanese>\n\n<body in Japanese explaining WHY>\n\nTypes: feat|fix|docs|refactor|test|chore|style|perf|ci|build\n\nRules:\n- Type/Scope: English\n- Subject: Japanese, no period\n- Body: Japanese, explain WHY (the reason/motivation), not WHAT\n- Keep it concise\n\nOutput the commit message only.'); git commit -m \"$COMMITMSG\" -e; }; f"
+	open = "!f() { url=$(git remote get-url ${1:-origin} | sed -e \"s|git@|https://|\" -e \"s|:|/|2\" -e \"s|\\.git$||\"); open \"$url\"; }; f"
 [init]
 	defaultBranch = main
+[ghq]
+	root = ~/ghq

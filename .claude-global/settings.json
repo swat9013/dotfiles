@@ -22,13 +22,22 @@
       "Read(./.env.*)",
       "Read(**/.env)",
       "Read(**/*.key)",
-      "Bash(wget:*)"
+      "Read(**/*.pem)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/credentials*)",
+      "Read(**/.ssh/*)",
+      "Read(**/*.secret)",
+      "Bash(wget:*)",
+      "Bash(rm -rf:*)"
     ],
     "ask": [
       "Bash(curl:*)",
       "Bash(git push:*)",
-      "Bash(rm:*)"
-    ]
+      "Bash(rm:*)",
+      "Bash(brew install:*)"
+    ],
+    "defaultMode": "plan"
   },
   "statusLine": {
     "type": "command",
@@ -37,9 +46,9 @@
   },
   "enabledPlugins": {
     "claude-mem@thedotmack": true,
-    "example-skills@anthropic-agent-skills": true
+    "example-skills@anthropic-agent-skills": false
   },
+  "language": "japanese",
   "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": true,
-  "language": "japanese"
+  "promptSuggestionEnabled": false
 }
