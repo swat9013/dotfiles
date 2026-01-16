@@ -6,3 +6,6 @@
 logs
 
 .serena
+.claude/settings.local.json
+.claude/tasks.json
+.claude/completed.json

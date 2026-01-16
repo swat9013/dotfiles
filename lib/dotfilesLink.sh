@@ -30,3 +30,14 @@ fi
 # Claude Code global settings
 mkdir -p "$HOME"/.claude
 ln -snfv "$HOME"/.dotfiles/.claude-global/settings.json "$HOME"/.claude/settings.json
+ln -snfv "$HOME"/.dotfiles/.claude-global/CLAUDE.md "$HOME"/.claude/CLAUDE.md
+
+# Claude Code skills
+if [ -d "$HOME"/.dotfiles/.claude-global/skills ]; then
+    ln -snfv "$HOME"/.dotfiles/.claude-global/skills "$HOME"/.claude/skills
+fi
+
+# Claude Code rules
+if [ -d "$HOME"/.dotfiles/.claude-global/rules ]; then
+    ln -snfv "$HOME"/.dotfiles/.claude-global/rules "$HOME"/.claude/rules
+fi
