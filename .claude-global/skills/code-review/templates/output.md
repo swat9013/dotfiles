@@ -27,7 +27,7 @@
 次のアクション: [推奨事項]
 
 ## 参照したドキュメント
-- `~/.dotfiles/.claude-global/skills/_shared/checklists/code-review/[観点].md`
+- `~/.claude/skills/_shared/checklists/code-review/[観点].md`
 - （読み込んだすべてのドキュメントを列挙）
 ```
 

@@ -24,7 +24,7 @@ echo "=== Claude Code 設定スキャン ==="
 echo ""
 echo "[グローバル]"
 
-for path in ~/.dotfiles/.claude-global/CLAUDE.md ~/.dotfiles/.claude-global/settings.json ~/.dotfiles/.claude-global/skills ~/.dotfiles/.claude-global/commands ~/.dotfiles/.claude-global/agents; do
+for path in ~/.dotfiles/.claude-global/CLAUDE.md ~/.dotfiles/.claude-global/settings.json ~/.dotfiles/.claude-global/rules ~/.dotfiles/.claude-global/skills ~/.dotfiles/.claude-global/commands ~/.dotfiles/.claude-global/agents; do
     result=$(scan_target "$path")
     case "$result" in
         none:*)
@@ -47,7 +47,7 @@ done
 echo ""
 echo "[プロジェクト]"
 
-for path in .claude/CLAUDE.md CLAUDE.md .claude/skills .claude/commands .claude/agents; do
+for path in .claude/CLAUDE.md CLAUDE.md .claude/rules .claude/skills .claude/commands .claude/agents; do
     result=$(scan_target "$path")
     case "$result" in
         none:*)

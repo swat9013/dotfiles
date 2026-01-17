@@ -10,7 +10,7 @@ Claude Code設定ファイル・ディレクトリの存在確認。
 
 **使用方法**:
 ```bash
-~/.dotfiles/.claude-global/skills/config-optimizer/scripts/scan-targets.sh
+~/.dotfiles/.claude/skills/config-optimizer/scripts/scan-targets.sh
 ```
 
 **出力例**:
@@ -43,10 +43,10 @@ Skillsのfrontmatter検証と行数チェック。
 **使用方法**:
 ```bash
 # デフォルト（~/.claude/skills/）
-~/.dotfiles/.claude-global/skills/config-optimizer/scripts/check-skills.sh
+~/.dotfiles/.claude/skills/config-optimizer/scripts/check-skills.sh
 
 # ディレクトリ指定
-~/.dotfiles/.claude-global/skills/config-optimizer/scripts/check-skills.sh /path/to/skills
+~/.dotfiles/.claude/skills/config-optimizer/scripts/check-skills.sh /path/to/skills
 ```
 
 **出力例**:
@@ -87,7 +87,7 @@ design-workflow (220 行)
 `settings.json` に以下が設定済み:
 ```json
 "allow": [
-  "Bash(~/.dotfiles/.claude-global/skills/config-optimizer/scripts/scan-targets.sh:*)",
-  "Bash(~/.dotfiles/.claude-global/skills/config-optimizer/scripts/check-skills.sh:*)"
+  "Bash(~/.dotfiles/.claude/skills/config-optimizer/scripts/scan-targets.sh:*)",
+  "Bash(~/.dotfiles/.claude/skills/config-optimizer/scripts/check-skills.sh:*)"
 ]
 ```

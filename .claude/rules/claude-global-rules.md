@@ -1,5 +1,5 @@
 ---
-paths: .claude/rules/**
+paths: .claude-global/rules/**
 ---
 
 # Rules ガイド

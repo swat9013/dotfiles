@@ -11,7 +11,7 @@ macos-option-as-alt = true
 # ウィンドウ
 window-padding-x = 8
 window-padding-y = 8
-unfocused-split-opacity = 0.95
+unfocused-split-opacity = 0.80
 
 # シェル統合
 shell-integration = detect

@@ -56,7 +56,7 @@ description: システム設計・アーキテクチャ評価を担当する専�
 
 **保存先**: プロジェクトルート（`plan.md`）※一時ファイルとして扱う
 
-**テンプレート**: `~/.dotfiles/.claude-global/skills/_shared/templates/plan.md`
+**テンプレート**: `~/.claude/skills/architect/templates/plan.md`
 
 ## plan.md と ADR の使い分け
 

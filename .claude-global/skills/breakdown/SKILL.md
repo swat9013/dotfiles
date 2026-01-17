@@ -57,11 +57,11 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 
 プロジェクトルート直下に保存。
 
-テンプレート: `~/.dotfiles/.claude-global/skills/_shared/templates/implementation.md`
+テンプレート: `~/.claude/skills/breakdown/templates/implementation.md`
 
 ## タスク分解のベストプラクティス
 
-→ 詳細: `~/.dotfiles/.claude-global/skills/_shared/guides/task-breakdown.md`
+→ 詳細: `~/.claude/skills/breakdown/guides/task-breakdown.md`
 
 | パターン | 概要 |
 |---------|------|

@@ -1,6 +1,14 @@
 ---
 name: config-optimizer
 description: Claude Code設定の最適化と改善提案。「設定を最適化」「config-optimizer」「Claude設定チェック」と依頼された時に使用。skills/commands/agents/settings.json/CLAUDE.mdをベストプラクティスで分析・最適化。
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+  - Bash
+  - Task
+  - AskUserQuestion
+  - Edit
 ---
 
 # Config Optimizer
@@ -9,15 +17,16 @@ Claude Code設定をベストプラクティスに照らして分析・最適化
 
 ## 最適化対象
 
-| 対象 | パス |
-|-----|------|
-| グローバルCLAUDE.md | `~/.dotfiles/.claude-global/CLAUDE.md` |
-| プロジェクトCLAUDE.md | `.claude/CLAUDE.md`, `CLAUDE.md` |
-| settings.json | `~/.dotfiles/.claude-global/settings.json` |
-| rules | `~/.dotfiles/.claude-global/rules/`, `.claude/rules/` |
-| skills | `~/.dotfiles/.claude-global/skills/`, `.claude/skills/` |
-| commands | `~/.dotfiles/.claude-global/commands/`, `.claude/commands/` |
-| agents | `~/.dotfiles/.claude-global/agents/`, `.claude/agents/` |
+| 対象 | グローバル | プロジェクト |
+|-----|-----------|-------------|
+| CLAUDE.md | `~/.claude/CLAUDE.md` | `.claude/CLAUDE.md`, `CLAUDE.md` |
+| settings.json | `~/.claude/settings.json` | - |
+| rules | `~/.claude/rules/` | `.claude/rules/` |
+| skills | `~/.claude/skills/` | `.claude/skills/` |
+| commands | `~/.claude/commands/` | `.claude/commands/` |
+| agents | `~/.claude/agents/` | `.claude/agents/` |
+
+※ dotfiles 環境では `~/.claude/` はシンボリックリンク経由で `~/.dotfiles/.claude-global/` を参照
 
 ---
 
@@ -214,12 +223,6 @@ Task tool非対応の場合は6カテゴリを**順次**分析・最適化。
 3. 改善案が具体的で実行可能
 4. 優先度が適切に付与されている（Critical: 動作不能・セキュリティリスク、High: 機能低下、Medium: 保守性、Low: スタイル）
 5. カテゴリ横断の一貫性チェックが実施されている
-
----
-
-## ベストプラクティス詳細
-
-→ [config-best-practices.md](../_shared/guides/config-best-practices.md)
 
 ---
 

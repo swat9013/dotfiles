@@ -21,7 +21,7 @@ description: コードレビュー実行と学習反映。「コードレビュ�
 ### 前提条件
 
 1. レビュー対象ファイルが存在
-2. context.md または CLAUDE.md が読み込み可能
+2. CLAUDE.md が読み込み可能
 
 ### 実行手順
 
@@ -29,7 +29,7 @@ description: コードレビュー実行と学習反映。「コードレビュ�
 - 大規模変更（50ファイル超 or 1000行超）→ Critical/High先行レビューを提案
 
 #### 2. ドメイン知識収集
-- context.md、docs/ から制約・ドメイン知識を確認
+- CLAUDE.md、docs/ から制約・ドメイン知識を確認
 
 #### 3. 自動チェック
 - テスト、Lint、ビルド実行。**失敗時は中止**
@@ -40,11 +40,11 @@ description: コードレビュー実行と学習反映。「コードレビュ�
 
 | 観点 | チェックリスト |
 |------|--------------|
-| security | `~/.claude/skills/_shared/checklists/code-review/security.md` |
-| reliability | `~/.claude/skills/_shared/checklists/code-review/reliability.md` |
-| performance | `~/.claude/skills/_shared/checklists/code-review/performance.md` |
-| architecture | `~/.claude/skills/_shared/checklists/code-review/architecture.md` |
-| quality | `~/.claude/skills/_shared/checklists/code-review/quality.md` |
+| security | `~/.claude/skills/code-review/checklists/security.md` |
+| reliability | `~/.claude/skills/code-review/checklists/reliability.md` |
+| performance | `~/.claude/skills/code-review/checklists/performance.md` |
+| architecture | `~/.claude/skills/code-review/checklists/architecture.md` |
+| quality | `~/.claude/skills/code-review/checklists/quality.md` |
 
 **Task tool対応の場合（Claude Code）**:
 
@@ -69,7 +69,7 @@ ${対象コード}
 templates/code-review-output.md に従い、担当観点のみ報告
 ```
 
-→ ロール定義: `~/.claude/skills/_shared/guides/code-review-agents.md`
+→ ロール定義: `~/.claude/skills/code-review/guides/agents.md`
 
 **Task tool非対応の場合**:
 
@@ -81,7 +81,7 @@ templates/code-review-output.md に従い、担当観点のみ報告
 
 #### 6. 自己検証
 
-→ `~/.claude/skills/_shared/guides/code-review-self-reflection.md`
+→ `~/.claude/skills/code-review/guides/self-reflection.md`
 
 指摘を以下で再検証:
 - 位置検証: 行番号に該当コードが存在するか
@@ -91,7 +91,7 @@ templates/code-review-output.md に従い、担当観点のみ報告
 
 #### 7. 結果出力
 
-→ `~/.claude/skills/_shared/templates/code-review-output.md`
+→ `~/.claude/skills/code-review/templates/output.md`
 
 ### 出力形式
 
@@ -184,7 +184,7 @@ templates/code-review-output.md に従い、担当観点のみ報告
 
 ## よくあるパターン
 
-→ `~/.claude/skills/_shared/templates/code-review-patterns.md`
+→ `~/.claude/skills/code-review/templates/patterns.md`
 
 | パターン | 問題 | 修正 |
 |---------|------|------|

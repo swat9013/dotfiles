@@ -14,7 +14,6 @@ paths: .claude-global/**
 ├── CLAUDE.md                  # Claudeへの行動指針
 ├── hooks/                     # イベント駆動の自動処理
 ├── skills/                    # 対話的ワークフロー定義
-│   └── _shared/               # 共有リソース
 ├── agents/                    # カスタムサブエージェント
 ├── statusline.sh              # ステータスライン表示
 ├── file-suggestion.sh         # @参照時のファイル候補
@@ -39,6 +38,35 @@ paths: .claude-global/**
 | 実行タイミング | イベント発生時に自動 | ユーザー依頼またはClaude判断 |
 | ユーザー介入 | なし | あり（対話・相談） |
 
+## 情報階層とコスト
+
+| 階層 | 読み込みタイミング | コスト |
+|-----|------------------|-------|
+| CLAUDE.md | 常時 | 高 |
+| rules/ | パスマッチ時 | 中 |
+| skills/ | 必要時のみ | 低 |
+| agents/ | コンテキスト分離 | 独立 |
+
+### 配置判断
+- 「この情報は常に必要か？」→ No なら下位層へ
+- 使用頻度が低い情報は skills/ へ
+
+## パス参照の規則
+
+スキル内でのパス参照は用途によって使い分ける:
+
+| 用途 | パス形式 | 理由 |
+|------|----------|------|
+| ドキュメント参照 | `~/.claude/skills/...` | シンボリックリンク経由で環境非依存 |
+| スクリプト実行 | `~/.dotfiles/.claude-global/...` | シェル実行時の確実性 |
+| settings.json command | `~/.dotfiles/.claude-global/...` | 実ファイルパス必須 |
+
+## DRY原則
+
+- 複数スキルで共有する内容 → 各スキルの責務に応じて配置
+- rules/ と CLAUDE.md の重複を避ける
+- 重複を見つけたら適切な階層に集約
+
 ## 命名規則
 
 - **全体**: kebab-case（例: `config-optimizer`, `setup-mcp.sh`）
@@ -46,6 +74,6 @@ paths: .claude-global/**
 
 ## 参考資料
 
-- 設定ベストプラクティス: `skills/_shared/guides/config-best-practices.md`
-- タスク分解ガイド: `skills/_shared/guides/task-breakdown.md`
-- エージェント設計: `skills/_shared/guides/code-review-agents.md`
+- 設定ベストプラクティス: `docs/config-best-practices.md`
+- タスク分解ガイド: `skills/breakdown/guides/task-breakdown.md`
+- エージェント設計: `skills/code-review/guides/agents.md`

@@ -30,6 +30,12 @@ paths: .claude-global/skills/**
 - **Progressive Disclosure**: 詳細は `references/` に分離
 - **トリガー明記**: `description` にキーワード含める
 
+## 参照先の明示
+
+詳細を references/ に分離した場合、参照先パスを明記:
+- 「詳細は `references/xxx.md` を参照」
+- リンク切れを防ぐため相対パスを使用
+
 ## ディレクトリ構成
 
 ```
@@ -47,6 +53,7 @@ skill-name/
 | code-review | 5観点コードレビュー | 「コードレビュー」「レビューして」 |
 | config-optimizer | 設定最適化と改善提案 | 「設定を最適化」「config-optimizer」 |
 | domain-context | プロジェクトドメイン知識管理 | 「学びを保存」「ドメイン知識更新」 |
+| context-optimizer | CLAUDE.mdの圧縮・最適化 | 「CLAUDE.md圧縮」「コンテキスト最適化」またはdomain-contextから自動呼び出し |
 | critical-think | 回答の批判的検証 | 「批判的に見て」「自己レビュー」 |
 | debug | 根本原因分析（5 Whys） | 「デバッグ」「バグ調査」 |
 | architect | 設計・plan.md作成 | 「設計して」「plan.md作成」 |

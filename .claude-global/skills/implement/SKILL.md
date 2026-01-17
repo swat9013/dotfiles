@@ -74,7 +74,7 @@ implementation.md のタスクステータスを更新:
 
 タスク種別に応じて、サブエージェントにロール・原則を付与する。
 
-→ 詳細: `~/.dotfiles/.claude-global/skills/_shared/guides/task-roles.md`
+→ 詳細: `~/.claude/skills/implement/guides/task-roles.md`
 
 | 種別 | ロールの要点 |
 |-----|-------------|

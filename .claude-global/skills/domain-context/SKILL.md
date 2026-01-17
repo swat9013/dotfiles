@@ -21,8 +21,8 @@ description: プロジェクト固有のドメイン知識を管理。「学び�
 
 | モード | 用途 | トリガー |
 |--------|------|----------|
+| Reflect | セッション会話から自動抽出 | **デフォルト**（`/domain-context`） |
 | Manual | 手動で知識を抽出・追記 | ユーザーが明示的に内容を指定 |
-| Reflect | セッション会話から自動抽出 | `/domain-context reflect` |
 
 ## Manual モード
 
@@ -46,25 +46,13 @@ description: プロジェクト固有のドメイン知識を管理。「学び�
 | 背景・代替案を含む判断 | docs/decisions/ (ADR形式) |
 | 詳細手順・ガイド | docs/guidelines/ |
 
-→ ADRテンプレート: `~/.dotfiles/.claude-global/skills/_shared/templates/adr.md`
+→ ADRテンプレート: `~/.claude/skills/domain-context/templates/adr.md`
 
 ### 3. 追記
 
 - 既存セクションに追記、または新規セクション作成
 - 重複確認: 同じ内容が既にないか
-
-### 4. 確認
-
-```
-### 抽出結果
-
-| # | カテゴリ | 内容 | 保存先 |
-|---|----------|------|--------|
-| 1 | 落とし穴 | 〜 | CLAUDE.md |
-| 2 | 技術選択 | 〜 | docs/decisions/ |
-
-追記を実行しますか？
-```
+- 確認なしで即時追記
 
 ## Reflect モード
 
@@ -74,7 +62,7 @@ description: プロジェクト固有のドメイン知識を管理。「学び�
 
 ```bash
 # 現在のセッションファイルを取得
-SESSION_FILE=$(~/.dotfiles/.claude-global/skills/domain-context/scripts/find-session.sh)
+SESSION_FILE=$(~/.claude/skills/domain-context/scripts/find-session.sh)
 ```
 
 **対象**: スキルを呼び出したセッション（現在実行中のセッション）
@@ -123,7 +111,7 @@ templates/session-reflect-output.md 形式で報告:
 - 詳細（根拠の引用付き）
 ```
 
-テンプレート: `~/.dotfiles/.claude-global/skills/_shared/templates/session-reflect-output.md`
+テンプレート: `~/.claude/skills/domain-context/templates/session-reflect-output.md`
 
 ### 3. 整合性チェック
 
@@ -133,29 +121,20 @@ templates/session-reflect-output.md 形式で報告:
 - 既存 docs/ との矛盾
 - 確信度の妥当性
 
-### 4. 確認と保存
+### 4. 保存
 
-Manual モードと同じフローで追記:
+- 確認なしで即時追記
+- 抽出結果を表示後、自動的に保存
 
+## 追記後の行数チェック
+
+追記完了後、CLAUDE.md の行数を確認:
+
+```bash
+wc -l ./CLAUDE.md
 ```
-=== セッション振り返り結果 ===
 
-| # | カテゴリ | 内容 | 保存先 | 確信度 |
-|---|----------|------|--------|--------|
-| 1 | 落とし穴 | JSONL解析時はtype:"progress"を除外 | CLAUDE.md | High |
-
-追記を実行しますか？ [y/N]
-```
-
-## 圧縮（必要時のみ）
-
-CLAUDE.md が肥大化した場合:
-
-1. 重複統合
-2. 詳細を docs/ へ分離
-3. 古い情報削除
-
-→ 詳細: `~/.dotfiles/.claude-global/skills/_shared/guides/context-compression.md`
+**150行を超えた場合**: `/context-optimizer` を自動呼び出し
 
 ## CLAUDE.md テンプレート
 

@@ -57,7 +57,7 @@ description: 技術調査・コードベース分析を担当する専門エー�
 
 **保存先**: プロジェクトルート（`report.md`） ※一時ファイルとして扱う
 
-**テンプレート**: `~/.dotfiles/.claude-global/skills/_shared/templates/report.md`
+**テンプレート**: `~/.claude/skills/researcher/templates/report.md`
 
 ## 出力形式
 

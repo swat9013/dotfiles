@@ -45,7 +45,7 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "claude-mem@thedotmack": true,
+    "claude-mem@thedotmack": false,
     "example-skills@anthropic-agent-skills": false
   },
   "language": "japanese",

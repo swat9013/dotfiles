@@ -27,6 +27,12 @@ if [ ! -e "$HOME"/.config/ghostty ]; then
     ln -snfv "$HOME"/.dotfiles/ghostty "$HOME"/.config/ghostty
 fi
 
+# Yazi設定
+if [ ! -e "$HOME"/.config/yazi ]; then
+    mkdir -p "$HOME"/.config
+    ln -snfv "$HOME"/.dotfiles/yazi "$HOME"/.config/yazi
+fi
+
 # Claude Code global settings
 mkdir -p "$HOME"/.claude
 ln -snfv "$HOME"/.dotfiles/.claude-global/settings.json "$HOME"/.claude/settings.json
