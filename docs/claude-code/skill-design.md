@@ -481,4 +481,4 @@ if __name__ == "__main__":
 
 ### 関連ドキュメント
 
-- [Claude Code コンテキスト最適化ガイド](./claude-code-context-optimization.md) - 設定メカニズムの概念的説明
+- [Claude Code コンテキスト最適化ガイド](./context-optimization.md) - 設定メカニズムの概念的説明

@@ -1,6 +1,29 @@
 # コードレビュー: よくあるパターンと修正例
 
-## N+1クエリ
+## Security
+
+### インジェクション
+
+```typescript
+// NG: 文字列結合でクエリ構築
+const query = `SELECT * FROM users WHERE id = ${userId}`;
+// OK: パラメータバインディング
+const query = 'SELECT * FROM users WHERE id = ?';
+db.query(query, [userId]);
+```
+
+### 認証情報のハードコード
+
+```typescript
+// NG: ハードコード
+const apiKey = 'sk-1234567890';
+// OK: 環境変数
+const apiKey = process.env.API_KEY;
+```
+
+## Correctness
+
+### N+1クエリ
 
 ```typescript
 // NG: ループ内でクエリ
@@ -9,7 +32,18 @@ for (const user of users) { await user.getPosts(); }
 const users = await User.findAll({ include: [Post] });
 ```
 
-## エラーハンドリング
+### 競合状態
+
+```typescript
+// NG: check-then-act
+if (await cache.exists(key)) {
+  return await cache.get(key);  // 別スレッドで削除される可能性
+}
+// OK: アトミック操作
+return await cache.getOrSet(key, computeValue);
+```
+
+### エラーハンドリング
 
 ```typescript
 // NG: レスポンスチェックなし
@@ -18,22 +52,65 @@ return response.json();
 if (!response.ok) throw new Error(`HTTP ${response.status}`);
 ```
 
-## 依存注入・VO・リソース分離
+### リソースリーク
+
+```typescript
+// NG: クローズ漏れ
+const conn = await pool.getConnection();
+const result = await conn.query(sql);
+return result;
+// OK: finally で確実にクローズ
+const conn = await pool.getConnection();
+try {
+  return await conn.query(sql);
+} finally {
+  conn.release();
+}
+```
+
+## Design
+
+### 依存注入
 
 ```typescript
 // NG: 依存を直接生成
 class UserService { private db = new Database(); }
 // OK: コンストラクタで注入
 class UserService { constructor(private db: Database) {} }
+```
 
-// NG: プリミティブ型のまま: amount: number; email: string;
-// OK: VOとして抽出: Money, Email（バリデーション内包）
+### バリューオブジェクト
 
+```typescript
+// NG: プリミティブ型のまま
+amount: number;
+email: string;
+// OK: VOとして抽出（バリデーション内包）
+amount: Money;
+email: Email;
+```
+
+### リソースとイベントの分離
+
+```typescript
 // NG: 混在: status + statusHistory[] が同じエンティティ
 // OK: 分離: Order（現在状態）+ OrderStatusChanged（履歴イベント）
 ```
 
-## テスト: Mock/Stub・実装詳細の検証
+### 複雑なクエリの実行計画
+
+複雑なクエリ（OR結合、EXISTSサブクエリ等）は、SQLオプティマイザーが期待通りの実行計画を選択しない場合がある。
+
+**確認が必要なケース**:
+- `or()` を使用
+- `EXISTS` サブクエリがある
+- 大量データを扱う可能性がある
+
+**対策**: 本番相当データで `EXPLAIN ANALYZE` を確認
+
+## Testing
+
+### Mock/Stubの誤用
 
 ```typescript
 // NG: Stubの呼び出しを検証（実装詳細への結合）
@@ -47,6 +124,22 @@ expect(result).toEqual(expectedUser);
 expect(result.total).toBe(900);
 ```
 
+### テストの独立性
+
+```typescript
+// NG: 他のテストの副作用に依存
+test('should update user', async () => {
+  // 前のテストで作成されたユーザーを期待
+  await updateUser(1, { name: 'new' });
+});
+
+// OK: 各テストで独立したセットアップ
+test('should update user', async () => {
+  const user = await createTestUser();
+  await updateUser(user.id, { name: 'new' });
+});
+```
+
 ## コメント
 
 ```typescript
@@ -55,37 +148,3 @@ expect(result.total).toBe(900);
 // OK: 命名で表現: const retentionDays = 7;
 // OK: Why not: // ループで実装（再帰はスタックオーバーフローの恐れ）
 ```
-
-## 設計判断（トレードオフ）の提示
-
-```ruby
-# 一般的なパターン（1クエリ）
-titles = Title.bookmarked_by(user_id).current
-
-# 意図的な分離（2クエリ）- SQLオプティマイザー問題回避のため
-bookmarked_ids = Title.bookmarked_by(user_id).pluck(:id)
-current_ids = Title.where(id: bookmarked_ids).current.pluck(:id)
-```
-
-レビュー時の対応:
-- MR説明に分離理由あり → 現状維持推奨 + 統合案を選択肢として提示
-- 理由が不明 → 統合の選択肢を提示し意図を確認
-
-## 複雑なクエリの実行計画
-
-複雑なクエリ（OR結合、EXISTSサブクエリ等）は、SQLオプティマイザーが期待通りの実行計画を選択しない場合がある。
-
-```ruby
-# 注意: 複雑なクエリは実行計画の確認が必要
-titles = Title.where(...).or(Title.where(...))
-# → 本番相当データでEXPLAIN ANALYZEを確認すること
-```
-
-**確認が必要なケース**:
-- スコープが `or()` を使用している
-- スコープ内に `EXISTS` サブクエリがある
-- 大量データを扱う可能性がある
-
-**対策**:
-- 本番相当データで `EXPLAIN ANALYZE` を確認し、期待通りの実行計画か検証
-- 問題がある場合は、クエリ分離やインデックス追加など個別に対応を検討

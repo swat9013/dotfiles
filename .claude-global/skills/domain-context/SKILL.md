@@ -58,14 +58,17 @@ description: プロジェクト固有のドメイン知識を管理。「学び�
 
 セッション会話からドメイン知識を自動抽出。
 
-### 1. セッション特定
+### 1. セッション取得
 
 ```bash
-# 現在のセッションファイルを取得
-SESSION_FILE=$(~/.claude/skills/domain-context/scripts/find-session.sh)
+# セッションファイルを特定
+SESSION=$(~/.dotfiles/.claude-global/skills/domain-context/scripts/find-session.sh)
+
+# メッセージを抽出（Markdown形式）
+~/.dotfiles/.claude-global/skills/domain-context/scripts/extract-messages.sh "$SESSION"
 ```
 
-**対象**: スキルを呼び出したセッション（現在実行中のセッション）
+**対象**: 現在実行中のセッション
 
 ### 2. サブエージェントに分析委譲
 
@@ -94,10 +97,9 @@ Task tool で専門エージェントに委譲:
 | コマンド | 有用なワークフロー・スクリプト |
 
 ## セッション読み込み
-1. JSONLから type:"user"/"assistant" を抽出
-2. message または message[].text からテキスト取得
-3. tool_use も文脈として考慮（何を調査したか）
-4. type:"progress" は無視
+extract-messages.sh の出力（Markdown形式）を使用。
+- user/assistant メッセージを抽出済み
+- tool_use は【tool: name】形式で表示
 
 ## 除外基準
 - 一時的な作業メモ

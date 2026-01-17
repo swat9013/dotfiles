@@ -12,9 +12,9 @@ paths: .claude-global/**
 .claude-global/
 ├── settings.json              # Claude Code動作設定
 ├── CLAUDE.md                  # Claudeへの行動指針
+├── rules/                     # パス固有のガイドライン
 ├── hooks/                     # イベント駆動の自動処理
 ├── skills/                    # 対話的ワークフロー定義
-├── agents/                    # カスタムサブエージェント
 ├── statusline.sh              # ステータスライン表示
 ├── file-suggestion.sh         # @参照時のファイル候補
 └── setup-mcp.sh               # MCPサーバー初期化
@@ -26,9 +26,9 @@ paths: .claude-global/**
 |---------|---------|------|
 | 動作設定 | `settings.json` | permissions、hooks登録、UI、MCP |
 | 行動指針 | `CLAUDE.md` | コーディング哲学、環境制約 |
+| ガイドライン | `rules/` | パス固有のルール |
 | 自動処理 | `hooks/` | イベント駆動実行 |
-| ワークフロー | `skills/` | 対話的タスク定義 |
-| サブエージェント | `agents/` | コンテキスト分離実行 |
+| ワークフロー | `skills/` | 対話的タスク定義（サブエージェント呼び出し含む） |
 | 動的情報 | `*.sh` | 状態取得スクリプト |
 
 ## hooks vs skills
@@ -45,11 +45,11 @@ paths: .claude-global/**
 | CLAUDE.md | 常時 | 高 |
 | rules/ | パスマッチ時 | 中 |
 | skills/ | 必要時のみ | 低 |
-| agents/ | コンテキスト分離 | 独立 |
 
 ### 配置判断
 - 「この情報は常に必要か？」→ No なら下位層へ
 - 使用頻度が低い情報は skills/ へ
+- サブエージェントが必要な場合は skills/ 内でTask toolを呼び出す
 
 ## パス参照の規則
 
@@ -76,4 +76,4 @@ paths: .claude-global/**
 
 - 設定ベストプラクティス: `docs/config-best-practices.md`
 - タスク分解ガイド: `skills/breakdown/guides/task-breakdown.md`
-- エージェント設計: `skills/code-review/guides/agents.md`
+- サブエージェントオーケストレーション: `docs/skill-subagent-orchestration.md`

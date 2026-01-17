@@ -46,7 +46,8 @@
   },
   "enabledPlugins": {
     "claude-mem@thedotmack": false,
-    "example-skills@anthropic-agent-skills": false
+    "example-skills@anthropic-agent-skills": false,
+    "code-simplifier@claude-plugins-official": true
   },
   "language": "japanese",
   "spinnerTipsEnabled": false,

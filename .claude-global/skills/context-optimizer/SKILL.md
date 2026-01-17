@@ -24,7 +24,7 @@ CLAUDE.mdを50行未満に削減し、コンテキスト消費を最適化する
 
 1. 対象ファイルを特定
    - CLAUDE.md（プロジェクト直下）
-   - 既存の `.claude/` 配下（rules/skills/commands/agents）
+   - 既存の `.claude/` 配下（rules/skills）
 2. 行数カウント（`scripts/analyze-context.sh` を使用）
 3. 各セクションの内容を把握
 
@@ -41,11 +41,9 @@ CLAUDE.mdを50行未満に削減し、コンテキスト消費を最適化する
 |--------------|---------|--------|
 | パス固有ルール | 特定の拡張子・ディレクトリにのみ適用 | `rules/{topic}.md` |
 | ワークフロー | 3ステップ以上の手順 | `skills/{name}/SKILL.md` |
-| 定型プロンプト | ユーザー明示実行（`/command`） | `commands/{name}.md` |
-| 専門タスク | 独立コンテキスト必要 | `agents/{name}.md` |
 | 核心的指針 | 全操作に必須 | CLAUDE.mdに残す |
 
-詳細: `~/.claude/skills/context-optimizer/references/extraction-criteria.md`
+※ サブエージェントが必要な場合はskill内でTask toolを使ってadhocに呼び出す（agents/は使用しない）
 
 ### Phase 3: 計画
 
@@ -56,7 +54,6 @@ CLAUDE.mdを50行未満に削減し、コンテキスト消費を最適化する
 |---------|------------|------|--------------|
 | TypeScript規約 | rules/typescript.md | Rule | `**/*.ts` |
 | コードレビュー手順 | skills/code-review/SKILL.md | Skill | 「レビューして」 |
-| コミット作成 | commands/commit.md | Command | `/commit` |
 ```
 
 **必ず `AskUserQuestion` で承認を取得してから次へ進む。**
@@ -66,7 +63,7 @@ CLAUDE.mdを50行未満に削減し、コンテキスト消費を最適化する
 承認後、抽出ファイルを生成:
 
 1. 適切なfrontmatter付きでファイル作成
-2. 正しいディレクトリに配置（rules/skills/commands/agents）
+2. 正しいディレクトリに配置（rules/skills）
 3. dotfiles環境の場合はシンボリックリンクを確認
 
 frontmatter例: `~/.claude/skills/context-optimizer/templates/frontmatter-examples.md`

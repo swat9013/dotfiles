@@ -13,15 +13,11 @@ CLAUDE.mdの各セクションをどこに抽出するかの詳細な判断基�
 ├─ 3ステップ以上のワークフロー？
 │   └─ YES → Skills
 │
-├─ ユーザーが明示的に実行するテンプレート？
-│   └─ YES → Commands
-│
-├─ 独立コンテキストで実行すべき専門タスク？
-│   └─ YES → Agents
-│
 └─ 全操作に必須？
     └─ YES → CLAUDE.mdに残す
 ```
+
+※ サブエージェントが必要な場合はskill内でTask toolを使ってadhocに呼び出す（agents/は使用しない）
 
 ---
 
@@ -87,67 +83,7 @@ allowed-tools:          # オプション
 
 ---
 
-## 3. Commands（定型プロンプト）
-
-### 判断基準
-
-- ユーザーが `/command` で明示的に実行
-- 引数を受け取るテンプレート
-- 単発の定型タスク
-
-### frontmatter
-
-```yaml
----
-description: 簡潔な説明 (project)
----
-```
-
-### 例
-
-| コンテンツ | 抽出先 | 使用方法 |
-|-----------|--------|----------|
-| コミット作成 | `commands/commit.md` | `/commit [message]` |
-| PR作成 | `commands/pr.md` | `/pr [title]` |
-| Issue作成 | `commands/issue.md` | `/issue [title]` |
-
----
-
-## 4. Agents（専門タスク）
-
-### 判断基準
-
-- 独立したコンテキストで実行すべき
-- 特定のツールセットに限定
-- 並列実行の可能性がある
-
-### frontmatter
-
-```yaml
----
-name: agent-name
-description: |
-  説明文。
-  〜時に使用。
-allowed-tools:
-  - Read
-  - Grep
-skills:               # オプション: 継承するスキル
-  - code-review
----
-```
-
-### 例
-
-| コンテンツ | 抽出先 | 用途 |
-|-----------|--------|------|
-| セキュリティレビュー | `agents/security-reviewer.md` | 脆弱性検出 |
-| パフォーマンス分析 | `agents/perf-analyzer.md` | ボトルネック特定 |
-| 依存関係監査 | `agents/dep-auditor.md` | 依存関係の問題検出 |
-
----
-
-## 5. CLAUDE.mdに残すべき内容
+## 3. CLAUDE.mdに残すべき内容
 
 ### 判断基準
 
@@ -185,6 +121,5 @@ skills:               # オプション: 継承するスキル
 | 状況 | 判断 |
 |------|------|
 | パス条件があるが手順もある | → Skills（手順優先） |
-| 手順があるがユーザー実行前提 | → Commands |
-| 複数の観点で並列実行したい | → Agents |
+| サブエージェントで並列実行したい | → Skill内でTask toolを使用 |
 | どこにも当てはまらない | → CLAUDE.mdに残す |
