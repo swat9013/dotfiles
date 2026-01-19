@@ -145,9 +145,9 @@ Claude が**自動判断**または**ユーザー明示的実行**で読み込�
 
 ```yaml
 ---
-name: code-review                    # 必須: kebab-case、64文字以内
-description: |                       # 必須: トリガーキーワードを含める
-  5観点でコードレビューを実行。
+name: code-review                    # 必須: gerund形式推奨、64文字以内
+description: |                       # 必須: 三人称で記述、トリガーキーワードを含める
+  5観点でコードレビューを実行する。
   「コードレビュー」「レビューして」と依頼された時に使用。
 allowed-tools:                       # オプション: ツール制限
   - Read
@@ -171,12 +171,25 @@ user-invocable: true                 # オプション: /メニュー表示（�
 - 品質
 ```
 
+### description設計のポイント
+
+- **三人称で記述**: 一人称・二人称は発見に問題を起こす
+- **具体的なトリガー**: 曖昧な表現を避ける
+
+```yaml
+# ❌ 悪い例
+description: ユーザーのPDF処理を手伝う
+
+# ✅ 良い例
+description: PDFからテキスト・表を抽出する。PDF関連の依頼時に使用。
+```
+
 ### Progressive Disclosure（段階的情報開示）
 
 ```
 skill-name/
 ├── SKILL.md           # 概要・ワークフロー（500行以下）
-├── references/        # 詳細ガイド（必要時のみ読み込み）
+├── references/        # 詳細ガイド（必要時のみ、1階層まで）
 │   └── security-checklist.md
 ├── scripts/           # 実行スクリプト（読み込まず実行）
 │   └── analyze.py
@@ -184,7 +197,10 @@ skill-name/
     └── output-template.md
 ```
 
-**ポイント**: SKILL.md は概要のみ、詳細は `references/` に分離してトークン節約。
+**ポイント**:
+- SKILL.md は概要のみ、詳細は `references/` に分離してトークン節約
+- **参照は1階層まで**: 深いネストはClaudeの部分読み込みで情報欠落を起こす
+- 100行超のリファレンスには先頭に目次を配置
 
 ### Skills vs Slash Commands
 
@@ -348,6 +364,7 @@ description: データベースクエリのベストプラクティス
 ## 参考資料
 
 ### 公式ドキュメント
+- [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) - Skills作成ベストプラクティス
 - [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
 - [Claude Code: Best practices for agentic coding](https://www.anthropic.com/engineering/claude-code-best-practices)
 

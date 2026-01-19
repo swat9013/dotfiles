@@ -41,10 +41,14 @@ mkdir -p "$SKILL_DIR"/{references,scripts,assets}
 cat > "$SKILL_DIR/SKILL.md" << EOF
 ---
 name: $SKILL_NAME
-description: [TODO: スキルの説明。何をするか + どんな言葉で呼び出すか]
+description: |-
+  [TODO: 三人称で記述。例：「〇〇を担当する支援エージェント。」]
+  [TODO: トリガーキーワード。例：「〜して」「〜したい」と依頼された時に使用。]
 ---
 
 # ${SKILL_NAME//-/ }
+
+## 概要
 
 [TODO: 1-2文でスキルの目的]
 

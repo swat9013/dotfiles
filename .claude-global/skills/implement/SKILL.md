@@ -16,44 +16,60 @@ implementation.md のタスクを Phase 別に実行する。並列実行可能�
 
 ## 実行手順
 
-### 1. implementation.md 読み込み
+### 1. 前提条件チェック（Haiku）
+
+Task tool で軽量エージェントを起動:
+- model: haiku
+- prompt: |
+    implementation.md の存在と形式を検証:
+    1. ファイルが存在するか
+    2. タスクに種別・成功基準が明記されているか
+    3. 各タスクのステータス（pending/in_progress/completed）を集計
+    結果を報告（OK or 問題点リスト）
+
+### 2. implementation.md 読み込み
 - タスク一覧、依存関係、並列実行可否を把握
 - 現在のステータス（pending/in_progress/completed）を確認
 
-### 2. Phase別実行サイクル
+### 3. Phase別実行サイクル
 
 ```
 Phase開始 → 並列タスク実行 → 順次タスク実行 → 品質ゲート → 進捗報告 → 次Phase
 ```
 
-### 3. タスク実行
+### 4. タスク実行
 
 実行中に不明点があれば `[NEEDS CLARIFICATION: 質問]` を挿入し、ユーザーに確認（最大3箇所）。
 
 #### 並列実行（Pマーク付きタスク）
-Task tool で複数サブエージェントを同時呼び出し:
+Task tool で複数サブエージェントを**単一メッセージで同時呼び出し**:
 - タスク内容、成功基準、制約条件を渡す
-- **タスク種別に応じたロール・原則を付与**（後述）
+- **タスク種別に応じたロール・原則・モデルを付与**（`guides/task-roles.md` 参照）
 
 #### 順次実行（依存タスク）
 依存タスク完了後に実行。
 
-### 4. 品質ゲート
+### 5. 品質ゲート（並列実行）
 
-各Phase完了時に実行:
-- [ ] {{LINT_COMMAND}} 成功
-- [ ] {{TEST_COMMAND}} 全通過
-- [ ] {{BUILD_COMMAND}} 成功（該当する場合）
+各Phase完了時に以下を**単一メッセージで並列起動**:
+
+| チェック | モデル | コマンド |
+|---------|--------|---------|
+| Lint | Haiku | implementation.md記載の LINT_COMMAND |
+| Test | Sonnet | implementation.md記載の TEST_COMMAND |
+| Build | Haiku | implementation.md記載の BUILD_COMMAND（該当時） |
+
+**注**: コマンドはimplementation.mdまたはプロジェクトのCLAUDE.mdから取得。
 
 失敗時: 原因分析 → 修正 → 再検証
 
-### 5. ステータス更新
+### 6. ステータス更新
 
 implementation.md のタスクステータスを更新:
 - 実行中: `in_progress`
 - 完了: `completed`
 
-### 6. Phase完了報告
+### 7. Phase完了報告
 
 ```markdown
 ## Phase X 完了報告
@@ -74,7 +90,7 @@ implementation.md のタスクステータスを更新:
 
 タスク種別に応じて、サブエージェントにロール・原則を付与する。
 
-→ 詳細: `~/.claude/skills/implement/guides/task-roles.md`
+→ 詳細: `guides/task-roles.md`
 
 | 種別 | ロールの要点 |
 |-----|-------------|

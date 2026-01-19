@@ -76,17 +76,31 @@ user-invocable-only: true
 ---
 ```
 
+## 命名規則
+
+| 形式 | 推奨度 | 例 |
+|------|--------|-----|
+| gerund形式 | ◎ 推奨 | `processing-pdfs`, `analyzing-data` |
+| 名詞句 | ○ 許容 | `pdf-processing`, `data-analysis` |
+| 動詞形 | ○ 許容 | `process-pdfs`, `analyze-data` |
+| 曖昧な名前 | ✕ 避ける | `helper`, `utils`, `tools` |
+
 ## description設計
 
 **必須要素:**
 - スキルの目的（1行目）
 - トリガーキーワード（「〜と依頼されたら」形式）
 
-```yaml
-# 悪い例
-description: ドキュメントを処理する
+**記述ルール:**
+- **三人称で記述する**（一人称・二人称は発見に問題を起こす）
+- システムプロンプトに注入されるため、視点の一貫性が重要
 
-# 良い例
+```yaml
+# 悪い例（曖昧 or 視点が不適切）
+description: ドキュメントを処理する
+description: ユーザーのPDF処理を手伝う  # 二人称
+
+# 良い例（三人称 + 具体的）
 description: |
   システム設計・アーキテクチャ評価を担当する専門エージェント。
   「設計して」「アーキテクチャを考えて」「plan.md作成」と依頼された時に使用。
@@ -111,6 +125,13 @@ description: |
 - 事前準備
 
 ## 手順
+
+複雑なワークフローにはチェックリストを提供:
+
+進捗チェックリスト:
+- [ ] Phase 1: 調査完了
+- [ ] Phase 2: 実行完了
+- [ ] Phase 3: 検証完了
 
 ### Phase 1: 調査
 1. ステップ1
@@ -143,6 +164,40 @@ SKILL.mdは概要と手順に集中し、詳細は分離する。
 詳細をreferences/に分離した場合、参照先パスを明記:
 - 「詳細は `references/xxx.md` を参照」
 - リンク切れを防ぐため相対パスを使用
+
+### 参照深度の制限
+
+参照は**1階層まで**に制限する。深いネストはClaudeの部分読み込みで情報欠落を起こす。
+
+```
+# ❌ 悪い例（2階層）
+SKILL.md → advanced.md → details.md
+
+# ✅ 良い例（すべて1階層）
+SKILL.md → advanced.md
+SKILL.md → reference.md
+SKILL.md → examples.md
+```
+
+### 長いリファレンスの構成
+
+100行を超えるリファレンスファイルには先頭に目次を配置:
+- Claudeの部分読み込み（`head -100`等）に対応
+- 全体構造を俯瞰可能に
+
+```markdown
+# API Reference
+
+## 目次
+- 認証とセットアップ
+- コアメソッド（CRUD）
+- 高度な機能
+- エラーハンドリング
+- コード例
+
+## 認証とセットアップ
+...
+```
 
 ## _shared/ リソース配置
 
@@ -203,6 +258,57 @@ Task tool:
 - 同時実行数は5-7程度を目安
 - 依存関係がなければ並列、あれば順次
 
+## フィードバックループ
+
+品質向上には「実行→検証→修正→繰り返し」パターンが効果的:
+
+```markdown
+## ドキュメント編集プロセス
+
+1. 編集を実行
+2. **即座に検証**: `python scripts/validate.py`
+3. 検証失敗時:
+   - エラーメッセージを確認
+   - 問題を修正
+   - 再度検証
+4. **検証パスまで繰り返し**
+5. 出力を生成
+```
+
+検証ループにより早期にエラーを検出できる。
+
+## コンテンツガイドライン
+
+### 用語の一貫性
+
+同じ概念には同じ用語を使用:
+- ✅ 一貫: "extract"のみ使用
+- ❌ 混在: "extract", "pull", "get", "retrieve"を混用
+
+### 時間依存情報の回避
+
+日付や期限に依存する情報は避ける:
+
+```markdown
+# ❌ 悪い例
+2025年8月以降は新APIを使用してください。
+
+# ✅ 良い例（旧パターンセクションで対応）
+## 現在の方法
+v2 APIエンドポイントを使用: `api.example.com/v2/`
+
+<details>
+<summary>旧パターン（v1 API、2025-08廃止）</summary>
+v1 APIは `api.example.com/v1/` を使用していた。
+</details>
+```
+
+### パス表記
+
+常にスラッシュ（/）を使用:
+- ✅ `scripts/helper.py`
+- ❌ `scripts\helper.py`
+
 ## アンチパターン
 
 | パターン | 問題点 | 対策 |
@@ -211,3 +317,10 @@ Task tool:
 | トリガーキーワードなし | 自動選択されない | descriptionに明記 |
 | 汎用すぎるdescription | 誤マッチ多発 | 具体的なキーワード |
 | 単純なルール | skills不要 | rules/で十分 |
+| 深い参照ネスト | 情報欠落 | 1階層までに制限 |
+| 選択肢の提示過多 | 混乱を招く | デフォルトを示す |
+
+## 参考資料
+
+- [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) - 公式ベストプラクティス
+- [Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) - Skills概要

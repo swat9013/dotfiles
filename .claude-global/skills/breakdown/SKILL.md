@@ -1,6 +1,9 @@
 ---
 name: breakdown
-description: plan.mdからimplementation.mdを生成。実装計画を実行可能なタスクリストに変換。「/breakdown」「タスク分解」と依頼された時に使用。
+description: |-
+  plan.mdからimplementation.mdを生成するタスク分解エージェント。
+  実装計画を実行可能なタスクリストに変換する。
+  「/breakdown」「タスク分解」と依頼された時に使用。
 ---
 
 # /breakdown コマンド
@@ -61,7 +64,7 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 
 ## タスク分解のベストプラクティス
 
-→ 詳細: `~/.claude/skills/breakdown/guides/task-breakdown.md`
+→ 詳細: `~/.claude/skills/breakdown/references/task-breakdown.md`
 
 | パターン | 概要 |
 |---------|------|

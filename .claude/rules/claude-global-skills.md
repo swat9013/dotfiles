@@ -7,8 +7,14 @@ paths: .claude-global/skills/**
 ## 制約
 
 - **SKILL.md**: 500行以下
-- **Progressive Disclosure**: 詳細は `references/` に分離
-- **トリガー必須**: descriptionにキーワード明記
+- **Progressive Disclosure**: 詳細は `references/` に分離（1階層まで）
+- **description**: 三人称で記述、トリガーキーワード必須
+- **name**: gerund形式推奨（`processing-pdfs`等）
+
+## description設計
+
+- **三人称で記述**（一人称・二人称は発見に問題を起こす）
+- 具体的なトリガーキーワードを含める
 
 ## skills vs agents
 

@@ -1,7 +1,7 @@
 ---
 name: context-optimizer
 description: |
-  CLAUDE.mdを最小化し、コンテキスト消費を最適化。
+  CLAUDE.mdを最小化し、コンテキスト消費を最適化する。
   「CLAUDE.md圧縮」「コンテキスト最適化」「context-optimizer」と依頼された時に使用。
 user-invocable: true
 ---
@@ -63,6 +63,8 @@ CLAUDE.mdを50行未満に削減し、コンテキスト消費を最適化する
 承認後、抽出ファイルを生成:
 
 1. 適切なfrontmatter付きでファイル作成
+   - **descriptionは三人称で記述**（一人称・二人称は発見に問題を起こす）
+   - 参照ファイルは1階層までに制限
 2. 正しいディレクトリに配置（rules/skills）
 3. dotfiles環境の場合はシンボリックリンクを確認
 
@@ -106,7 +108,9 @@ CLAUDE.mdを圧縮:
 - [ ] 抽出ファイルに適切なfrontmatterがある
 - [ ] rulesに`paths:`が記載されている
 - [ ] skillsに`name:`と`description:`が記載されている
+- [ ] descriptionが**三人称で記述**されている
 - [ ] descriptionにトリガー説明（「〜時に使用」）がある
+- [ ] skills内の参照が**1階層まで**に制限されている
 
 ## 検証手順
 

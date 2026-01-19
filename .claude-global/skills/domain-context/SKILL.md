@@ -1,6 +1,6 @@
 ---
 name: domain-context
-description: プロジェクト固有のドメイン知識を管理。「学びを保存」「ドメイン知識更新」「domain-context」と依頼された時に使用。
+description: プロジェクト固有のドメイン知識を管理する。「学びを保存」「ドメイン知識更新」「domain-context」と依頼された時に使用。
 ---
 
 # Domain Context
@@ -46,7 +46,7 @@ description: プロジェクト固有のドメイン知識を管理。「学び�
 | 背景・代替案を含む判断 | docs/decisions/ (ADR形式) |
 | 詳細手順・ガイド | docs/guidelines/ |
 
-→ ADRテンプレート: `~/.claude/skills/domain-context/templates/adr.md`
+→ ADRテンプレート: `templates/adr.md`
 
 ### 3. 追記
 
@@ -113,7 +113,7 @@ templates/session-reflect-output.md 形式で報告:
 - 詳細（根拠の引用付き）
 ```
 
-テンプレート: `~/.claude/skills/domain-context/templates/session-reflect-output.md`
+テンプレート: `templates/session-reflect-output.md`
 
 ### 3. 整合性チェック
 
@@ -157,3 +157,13 @@ cp ~/.dotfiles/.claude-global/skills/domain-context/assets/claude-md-template.md
 - **ドメイン知識のみ**: Claude設定は config-optimizer の責務
 - **最小限の高シグナル情報**: 効果を最大化
 - **具体性**: 抽象論ではなく、このプロジェクト固有の知識
+
+## 参照ファイル
+
+| ファイル | 用途 |
+|---------|------|
+| `templates/adr.md` | ADRテンプレート |
+| `templates/session-reflect-output.md` | 抽出結果テンプレート |
+| `assets/claude-md-template.md` | 新規CLAUDE.mdテンプレート |
+| `scripts/find-session.sh` | セッション特定スクリプト |
+| `scripts/extract-messages.sh` | メッセージ抽出スクリプト |
