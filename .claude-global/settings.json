@@ -15,7 +15,12 @@
       "Bash(git log:*)",
       "Bash(git status)",
       "Bash(ls:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "mcp__deepwiki-http__*",
+      "mcp__serena__*",
+      "Read(~/.claude/skills/**/*)",
+      "Read(~/.dotfiles/.claude-global/skills/**/*)",
+      "Read(.claude/skills/**/*)"
     ],
     "deny": [
       "Read(./.env)",
@@ -47,7 +52,8 @@
   "enabledPlugins": {
     "claude-mem@thedotmack": true,
     "example-skills@anthropic-agent-skills": false,
-    "code-simplifier@claude-plugins-official": true
+    "code-simplifier@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "language": "japanese",
   "spinnerTipsEnabled": false,

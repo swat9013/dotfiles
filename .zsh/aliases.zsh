@@ -197,3 +197,16 @@ ${file_contents}"
 
     claude --model haiku -p "$prompt"
 }
+
+#
+# wtp (git worktree)
+#
+function wtp-init() {
+    local project_name="${1:-$(basename $(pwd))}"
+    if [ -f ".wtp.yml" ]; then
+        echo "Error: .wtp.yml already exists"
+        return 1
+    fi
+    sed "s/{{ .ProjectName }}/$project_name/g" ~/.dotfiles/.wtp.yml.template > .wtp.yml
+    echo "Created .wtp.yml for project: $project_name"
+}

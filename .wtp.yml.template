@@ -1,0 +1,39 @@
+# wtp (git worktree) 設定ファイル
+# https://github.com/satococoa/wtp
+
+version: "1.0"
+
+defaults:
+  # worktreeの作成先ディレクトリ
+  # ブランチ名がそのままサブディレクトリになる
+  # 例: feature/auth → ~/worktrees/my-project/feature/auth
+  base_dir: "~/worktrees/{{ .ProjectName }}"
+
+hooks:
+  # worktree作成後に実行されるフック
+  post_create:
+    # --- type: copy ---
+    # メインworktreeから新worktreeにファイルをコピー
+    # gitignoreされたファイルもコピー可能
+    # from: メインworktreeからの相対パス
+    # to: 新worktreeへの相対パス
+    # - type: copy
+    #   from: ".env"
+    #   to: ".env"
+
+    # --- type: symlink ---
+    # シンボリックリンクを作成（node_modules等の共有向け）
+    # - type: symlink
+    #   from: "node_modules"
+    #   to: "node_modules"
+
+    # --- type: command ---
+    # 任意のシェルコマンドを実行
+    # - type: command
+    #   command: "npm install"
+
+    # 複数コマンドの例:
+    # - type: command
+    #   command: "cp ../.env.local .env.local"
+    # - type: command
+    #   command: "bundle install"

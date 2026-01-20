@@ -9,5 +9,5 @@ function ghq-fzy() {
 }
 
 # エイリアス
-alias gh='ghq-fzy'
+alias gf='ghq-fzy'
 alias gg='ghq get'
