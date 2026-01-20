@@ -31,7 +31,6 @@ input=$(cat)
 
 # Extract values from JSON
 CURRENT_DIR=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // "."')
-CONTEXT_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
 TRANSCRIPT_PATH=$(echo "$input" | jq -r '.transcript_path // ""')
 MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"')
 
@@ -65,60 +64,11 @@ if git -C "$CURRENT_DIR" rev-parse --git-dir > /dev/null 2>&1; then
     fi
 fi
 
-#------------------------------------------------------------------------------
-# Context Usage Calculation
-#------------------------------------------------------------------------------
-# 調査結果 (2026-01):
-#
-# 1. /context コマンドの表示値には Autocompact buffer (~45k tokens) が含まれる
-#    - 実使用量: System prompt + Tools + Memory + Messages ≈ 63k
-#    - /context表示: 上記 + Autocompact buffer ≈ 108k (54%)
-#
-# 2. context_window.current_usage はタイミングによって null になる
-#    - 信頼できないため、プライマリソースとして使用不可
-#
-# 3. トランスクリプトファイル (JSONL) の message.usage が最も正確
-#    - input_tokens + cache_creation_input_tokens + cache_read_input_tokens
-#    - これが実際のコンテキストウィンドウ使用量に近い
-#
-# 参考: ccstatusline, claude-code-statusline も同様の手法を採用
-#------------------------------------------------------------------------------
-CURRENT_TOKENS=0
+# Context usage (v2.1.6+)
+PERCENT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
+[[ ! "$PERCENT" =~ ^[0-9]+$ ]] && PERCENT=0
 
-# 優先: トランスクリプトファイルから最新のusage情報を取得
-if [ -n "$EXPANDED_TRANSCRIPT" ]; then
-    # 最新のassistantメッセージからusage情報を取得 (1回のjq呼び出しで計算)
-    CURRENT_TOKENS=$(tail -20 "$EXPANDED_TRANSCRIPT" 2>/dev/null \
-        | grep '"type":"assistant"' \
-        | tail -1 \
-        | jq -r '.message.usage | ((.input_tokens // 0) + (.cache_creation_input_tokens // 0) + (.cache_read_input_tokens // 0))' 2>/dev/null) || CURRENT_TOKENS=0
-    # 数値でない場合は0にリセット
-    [[ ! "$CURRENT_TOKENS" =~ ^[0-9]+$ ]] && CURRENT_TOKENS=0
-fi
-
-# フォールバック: JSONのcurrent_usageのみ使用
-# 注意: total_input_tokens/total_output_tokensは累積値のため使用しない
-#       /new直後など取得できない場合は0%表示が正しい動作
-if [ "$CURRENT_TOKENS" -eq 0 ]; then
-    USAGE=$(echo "$input" | jq '.context_window.current_usage')
-    if [ "$USAGE" != "null" ] && [ -n "$USAGE" ]; then
-        CURRENT_TOKENS=$(echo "$USAGE" | jq -r '((.input_tokens // 0) + (.cache_creation_input_tokens // 0) + (.cache_read_input_tokens // 0))') || CURRENT_TOKENS=0
-    fi
-    [[ ! "$CURRENT_TOKENS" =~ ^[0-9]+$ ]] && CURRENT_TOKENS=0
-fi
-
-if [ "$CONTEXT_SIZE" -gt 0 ] && [ "$CURRENT_TOKENS" -gt 0 ]; then
-    PERCENT=$((CURRENT_TOKENS * 100 / CONTEXT_SIZE))
-else
-    PERCENT=0
-fi
-
-# Color based on usage
-# しきい値の根拠 (調査結果 2026-01):
-#   - 50%未満: 快適ゾーン、パフォーマンス最高
-#   - 50-70%: /compact 検討推奨（Autocompactは64-75%でトリガー）
-#   - 70%以上: 新規セッション推奨（Lost in the Middle問題で精度低下）
-# 参考: Anthropic公式は80-85%を上限として推奨
+# Color based on usage (50%: green, 50-70%: yellow, 70%+: red)
 if [ "$PERCENT" -lt 50 ]; then
     CTX_COLOR="${GREEN}"
 elif [ "$PERCENT" -lt 70 ]; then
