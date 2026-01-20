@@ -38,5 +38,9 @@
 - ツールをバイパスして直接ライブラリを実行することは禁止。
 - 可能な限りタスクを並列実行する。
 
+### サブエージェント委譲
+- 基本はsonnet。相当軽量なタスク（単純な検索、ファイル存在確認、定型出力の収集等）のみhaiku。
+- Task tool で `subagent_type: general-purpose` と `model: sonnet/haiku` を指定。
+
 ### 開発スタイル
 - `rm` → `rmtrash` で誤削除防止（ディレクトリ削除時は `rmtrash -r` が必要）

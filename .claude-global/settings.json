@@ -20,7 +20,8 @@
       "mcp__serena__*",
       "Read(~/.claude/skills/**/*)",
       "Read(~/.dotfiles/.claude-global/skills/**/*)",
-      "Read(.claude/skills/**/*)"
+      "Read(.claude/skills/**/*)",
+      "Bash(~/.dotfiles/.claude-global/skills/**/*.sh:*)"
     ],
     "deny": [
       "Read(./.env)",
