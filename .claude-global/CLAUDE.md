@@ -1,47 +1,42 @@
-# Claude Code Guidelines
+# Claude Code ガイドライン
 
-## Coding Philosophy
+## コーディング哲学
 
-### Design Principles
-- Complexity signals a flawed problem definition. Reframe the question, not the solution.
-- Build only what is needed now. Never add "future-proofing" extensibility.
-- Create small units that do one thing well, then compose them.
+### 設計原則
+- 複雑さは問題定義の欠陥を示す。解決策ではなく、問いを再定義する。
+- 今必要なものだけを作る。「将来のため」の拡張性は追加しない。
+- 一つのことを上手くやる小さな単位を作り、それらを組み合わせる。
 
-### Implementation Guidelines
-- Name things to reveal intent.
-- When in doubt, optimize for readability.
-- Fix root causes, not symptoms. No ad-hoc workarounds.
-- No implicit fallbacks. Handle errors explicitly.
-- No boolean arguments. Don't branch behavior via parameters.
-- Avoid lazy optionals. Force callers to express intent.
+### 実装指針
+- 名前で意図を表現する。
+- 迷ったら可読性を優先する。
+- 症状ではなく根本原因を修正する。その場しのぎの回避策は禁止。
+- 暗黙のフォールバックは禁止。エラーは明示的に処理する。
+- boolean引数は禁止。パラメータで振る舞いを分岐させない。
+- 安易なオプショナルは避ける。呼び出し側に意図を表現させる。
+- 成果物ごとに表現すべき内容を分ける:
+  - コード: How（どう実装するか。コード自体が実装方法を語る）
+  - テスト: What（何を期待するか。仕様を表現する）
+  - コミットログ: Why（なぜ変更するか。動機と背景を記録する）
+  - コメント: Why not（なぜ別の方法を選ばないか。非自明な選択の理由のみ）
 
-### Structural Design
-- Choose the simplest solution (KISS).
-- Consolidate code with the same responsibility (DRY).
-- Keep statements in a function at the same abstraction level (SLAP).
-- One class/module, one responsibility (SRP).
+### 構造設計
+- 最もシンプルな解決策を選ぶ（KISS）。
+- 同じ責務のコードは集約する（DRY）。
+- 関数内の文は同じ抽象レベルに保つ（SLAP）。
+- 1クラス/モジュール、1責務（SRP）。
 
-## Interaction Rules
-- Ask questions proactively when anything is unclear.
-- Present options with recommendations and rationale.
-- Before generating a response, ask about any missing context—no matter how minor.
-- Always use `AskUserQuestion` tool when proposing options or seeking clarification.
+## インタラクションルール
+- 不明点があれば積極的に質問する。
+- 選択肢を提示するときは推奨案と理由を添える。
+- 回答を生成する前に、不足しているコンテキストを確認する。
+- 選択肢の提示や確認には `AskUserQuestion` ツールを使用する。
 
-## Other
-- Execute tasks in parallel whenever possible.
-
-## User Context
-
-### 環境制約
-- macOS (Darwin) メイン環境
-- Zsh + Sheldon（プラグインマネージャー）
-- Homebrew でパッケージ管理
+## 作業ルール
+- プロジェクトで案内されているスクリプトやツールがあれば、それを優先使用する。
+- ツールが動作しない場合は、不具合を修正してから作業を進める。
+- ツールをバイパスして直接ライブラリを実行することは禁止。
+- 可能な限りタスクを並列実行する。
 
 ### 開発スタイル
-- rm → rmtrash で誤削除防止
-- fzy によるインタラクティブ選択
-- emacsclient + デーモンモード
-
-### dotfiles制約
-- ~/.dotfiles をgitで管理
-- シンボリックリンク方式で設定配布
+- `rm` → `rmtrash` で誤削除防止（ディレクトリ削除時は `rmtrash -r` が必要）
