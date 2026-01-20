@@ -1,9 +1,19 @@
+[[plugin.prepend_fetchers]]
+id  = "git"
+url = "*"
+run = "git"
+
+[[plugin.prepend_fetchers]]
+id  = "git"
+url = "*/"
+run = "git"
+
 [mgr]
 sort_by = "alphabetical"
 sort_dir_first = true
 sort_sensitive = false
 sort_reverse = false
-linemode = "size"
+linemode = "none"
 show_hidden = true
 show_symlink = true
 

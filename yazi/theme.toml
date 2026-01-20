@@ -1,5 +1,13 @@
 # Tokyo Night テーマ for Yazi
 
+[git]
+modified = { fg = "#e0af68" }
+added = { fg = "#9ece6a" }
+untracked = { fg = "#bb9af7" }
+ignored = { fg = "#626880" }
+deleted = { fg = "#f7768e" }
+updated = { fg = "#7aa2f7" }
+
 [mgr]
 cwd = { fg = "#7aa2f7", bold = true }
 
