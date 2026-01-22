@@ -1,0 +1,70 @@
+#!/bin/bash
+#
+# Local MCP Server Setup Template
+# Copy this file to setup-mcp-local.sh and customize
+#
+# Usage:
+#   cp setup-mcp-local.sh.example setup-mcp-local.sh
+#   vim setup-mcp-local.sh  # Edit as needed
+#   ./setup-mcp-local.sh
+#
+
+set -euo pipefail
+
+if ! command -v claude &> /dev/null; then
+    echo "Error: claude command not found"
+    exit 1
+fi
+
+mcp_exists() {
+    local name="$1"
+    claude mcp get "$name" > /dev/null 2>&1
+}
+
+add_mcp_server() {
+    local name="$1"
+    shift
+
+    if mcp_exists "$name"; then
+        echo "  ✓ $name (already configured)"
+    else
+        if claude mcp add --scope user "$name" "$@" > /dev/null 2>&1; then
+            echo "  ✓ $name (added)"
+        else
+            echo "  ✗ $name (failed to add)"
+            return 1
+        fi
+    fi
+}
+
+echo "Setting up local MCP servers..."
+echo ""
+
+# ============================================
+# Examples - Uncomment and customize as needed
+# ============================================
+
+# GitLab Self-Managed (HTTP transport, OAuth)
+# Requires: GitLab 18.2+, Duo Core enabled
+# add_mcp_server "gitlab" \
+#     --transport http \
+#     "https://gitlab.example.com/api/v4/mcp"
+
+# GitLab with Personal Access Token (community version)
+# add_mcp_server "gitlab" \
+#     -- npx -y @zereight/mcp-gitlab \
+#     --env GITLAB_PERSONAL_ACCESS_TOKEN="glpat-xxxx" \
+#     --env GITLAB_API_URL="https://gitlab.example.com/api/v4"
+
+# GitHub Enterprise
+# add_mcp_server "github-enterprise" \
+#     --transport http \
+#     "https://github.mycompany.com/api/v4/mcp"
+
+# Local development server
+# add_mcp_server "local-api" \
+#     --transport http \
+#     "http://localhost:3000/mcp"
+
+echo ""
+echo "Done."

@@ -17,6 +17,7 @@
       "Bash(ls:*)",
       "Bash(grep:*)",
       "mcp__deepwiki-http__*",
+      "mcp__gitlab__*",
       "mcp__serena__*",
       "Read(~/.claude/skills/**/*)",
       "Read(~/.dotfiles/.claude-global/skills/**/*)",

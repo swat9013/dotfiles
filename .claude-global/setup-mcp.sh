@@ -99,6 +99,10 @@ add_mcp_server "serena" \
     --context ide-assistant \
     --project '$(pwd)'
 
+add_mcp_server "chrome-devtools" \
+    -- npx \
+    chrome-devtools-mcp@latest
+
 echo ""
 echo "Setting up plugin marketplaces..."
 echo ""
