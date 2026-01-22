@@ -99,6 +99,7 @@ implementation.md のタスクステータスを更新:
 | テスト追加 | Observable Behavior、境界値 |
 | バグ修正 | 原因特定優先、回帰テスト |
 | ドキュメント | 整合性、簡潔さ |
+| フロントエンド/UI実装 | frontend-design/SKILL.md参照、独自性、意図的な美的選択 |
 
 ## 成功基準
 
