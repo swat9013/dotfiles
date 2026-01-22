@@ -1,7 +1,5 @@
 ---
-paths:
-  - "**/CLAUDE.md"
-  - "!.claude-global/CLAUDE.md"
+paths: **/CLAUDE.md, !.claude-global/CLAUDE.md
 ---
 
 # プロジェクト CLAUDE.md ガイド

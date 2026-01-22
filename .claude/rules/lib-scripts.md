@@ -31,6 +31,7 @@ paths: lib/**
 |----|---------|
 | `sheldon/` | `~/.config/sheldon` |
 | `ghostty/` | `~/.config/ghostty` |
+| `colima/colima.yaml` | `~/.colima/default/colima.yaml` |
 | `.claude-global/settings.json` | `~/.claude/settings.json` |
 | `.claude-global/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `.claude-global/skills/` | `~/.claude/skills/` |

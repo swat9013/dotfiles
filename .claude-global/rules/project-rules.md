@@ -1,5 +1,5 @@
 ---
-paths: "**/.claude/rules/**"
+paths: **/.claude/rules/**
 ---
 
 # プロジェクト Rules ガイド
@@ -22,9 +22,7 @@ paths: src/**/*.ts          # 単一
 
 ```yaml
 ---
-paths:                      # 複数・除外
-  - "src/api/**"
-  - "!**/__mocks__/**"      # ! で除外
+paths: src/api/**, !**/__mocks__/**
 ---
 ```
 

@@ -159,8 +159,9 @@
 ;; Git以外のバックエンドを無効化
 (setq vc-handled-backends '(Git))
 
-;; auto-revert時にvc情報も更新
-(setq auto-revert-check-vc-info t)
+;; auto-revert時のvc情報更新を無効化（フリーズ防止）
+;; vc-stateの同期Git呼び出しがブロッキングの原因となるため
+(setq auto-revert-check-vc-info nil)
 
 (provide 'init-modeline)
 ;;; init-modeline.el ends here

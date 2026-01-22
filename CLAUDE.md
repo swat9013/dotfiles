@@ -49,3 +49,10 @@ brew bundle --global        # Homebrewパッケージ更新
 - シンプルさ優先（KISS）
 - 既存パターンに従う（新規ツールは`.zsh/[tool].zsh`）
 - 詳細は各`rules/`ファイルを参照
+
+## Gotchas
+
+- **rules の paths 記法**: YAML配列（ハイフン複数行）は適用されない。カンマ区切りワンライナー、クオーテーションなしで記述
+  ```yaml
+  paths: **/*.test.*, **/*.spec.*
+  ```

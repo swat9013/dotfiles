@@ -1,5 +1,5 @@
 ---
-paths: "**/.claude/skills/**"
+paths: **/.claude/skills/**
 ---
 
 # Skills 作成ルール

@@ -42,11 +42,13 @@ alias emacs-kill-force='pkill -9 emacs'
 
 # emacsclient をシームレスに使うための関数
 # http://k-ui.jp/?p=243
+# TERM=xterm-256color: Ghosttyのxterm-ghostty terminfoがEmacsデーモンに
+# 伝播しないためフォールバック（SGRマウスプロトコル不整合回避）
 function e(){
     echo "[$0] emacsclient -c -t $*";
-    (emacsclient -c -t $* ||
+    (TERM=xterm-256color emacsclient -c -t $* ||
             (echo "[$0] emacs --daemon"; emacs --daemon &&
-                 (echo "[$0] emacsclient -c -t $*"; emacsclient -c -t $*)) ||
+                 (echo "[$0] emacsclient -c -t $*"; TERM=xterm-256color emacsclient -c -t $*)) ||
             (echo "[$0] emacs $*"; emacs $*))
 }
 

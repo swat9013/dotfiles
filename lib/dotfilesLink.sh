@@ -47,3 +47,9 @@ fi
 if [ -d "$HOME"/.dotfiles/.claude-global/rules ]; then
     ln -snfv "$HOME"/.dotfiles/.claude-global/rules "$HOME"/.claude/rules
 fi
+
+# Colima設定
+if [ -f "$HOME"/.dotfiles/colima/colima.yaml ]; then
+    mkdir -p "$HOME"/.colima/default
+    ln -snfv "$HOME"/.dotfiles/colima/colima.yaml "$HOME"/.colima/default/colima.yaml
+fi

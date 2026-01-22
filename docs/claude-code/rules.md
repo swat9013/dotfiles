@@ -23,13 +23,11 @@ paths: src/**/*.ts
 ---
 ```
 
-### 複数パターン（配列）
+### 複数パターン
 
 ```yaml
 ---
-paths:
-  - "src/api/**"
-  - "src/services/**"
+paths: src/api/**, src/services/**
 ---
 ```
 
@@ -37,11 +35,11 @@ paths:
 
 ```yaml
 ---
-paths:
-  - "**/*.test.ts"
-  - "!**/__mocks__/**"      # ! で除外
+paths: **/*.test.ts, !**/__mocks__/**
 ---
 ```
+
+**注意**: YAML配列形式（ハイフン複数行）は適用されない。カンマ区切りワンライナーで記述すること。
 
 ## Rules vs CLAUDE.md vs skills
 

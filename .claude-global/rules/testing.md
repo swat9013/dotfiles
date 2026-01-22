@@ -1,10 +1,5 @@
 ---
-paths:
-  - "**/*.test.*"
-  - "**/*.spec.*"
-  - "**/test/**"
-  - "**/tests/**"
-  - "**/__tests__/**"
+paths: **/*.test.*, **/*.spec.*, **/test/**, **/tests/**, **/__tests__/**
 description: テストコード編集時にKhorikov 4本柱に基づくテスト設計原則を適用する
 ---
 
