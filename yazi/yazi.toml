@@ -16,6 +16,7 @@ sort_reverse = false
 linemode = "none"
 show_hidden = true
 show_symlink = true
+ratio = [1, 3, 4]
 
 [preview]
 tab_size = 2
