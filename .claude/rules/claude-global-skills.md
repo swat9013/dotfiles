@@ -41,3 +41,4 @@ paths: .claude-global/skills/**
 | config-optimizer | 「設定を最適化」 |
 | skill-creator | 「スキルを作って」 |
 | task | 「/task」「タスク追加」 |
+| ghq | 「ghq」「リポジトリ管理」「リポジトリをクローン」 |
