@@ -156,18 +156,18 @@ alias fvpn="~/.dotfiles/lib/fortivpn.sh"
 # AI Coding
 #
 function _init-work() {
-    [[ ! -d "work" ]] && mkdir -p work
-    [[ ! -f "work/.gitignore" ]] && echo '*' > work/.gitignore
+    [[ ! -d ".work" ]] && mkdir -p .work
+    [[ ! -f ".work/.gitignore" ]] && echo '*' > .work/.gitignore
 }
 function bk-plan() {
     _init-work
-    local d="work/$(date +%Y%m%d_%H%M%S)"
+    local d=".work/$(date +%Y%m%d_%H%M%S)"
     mkdir -p "$d"
     mv plan.md implementation.md report.md "$d/" 2>/dev/null
 }
 function et() {
     _init-work
-    e work/todo.md
+    e .work/todo.md
 }
 alias cc='claude'
 alias cco='claude --model opus'
