@@ -56,3 +56,8 @@ brew bundle --global        # Homebrewパッケージ更新
   ```yaml
   paths: **/*.test.*, **/*.spec.*
   ```
+- **macOS lsof の複数条件**: `-a`フラグ必須（AND条件）。`lsof -a -d cwd -p $pid`
+- **コマンド名衝突**: `cc*` 系は既存エイリアス確認必須（例: `ccs`=`claude --model sonnet`）
+- **サブエージェント残存**: Task toolで起動したサブエージェントは親セッション終了後も残存しメモリ消費。定期的に`cck --sub`でクリーンアップ
+- **zsh サブシェル内 PATH**: `$()` 内で `local var=$(dirname ...)` は PATH 解決失敗の可能性。フルパス `/usr/bin/dirname` を使用
+- **zsh NULLCMD の罠**: `> file` だけの行は `cat > file` として実行される（NULLCMD デフォルト）。stdin待ちでハング。解決策: `: > file`

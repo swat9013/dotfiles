@@ -49,6 +49,17 @@ if which fzy > /dev/null 2>&1; then
     }
     zle -N fzy-go-to-dir
     bindkey '^s' fzy-go-to-dir
+
+    function fzy-edit-file() {
+        local file=$(rg --files --hidden --follow --glob '!.git' 2>/dev/null | fzy)
+        if [ -n "$file" ]; then
+            BUFFER="${EDITOR:-vim} ${(q)file}"
+            zle accept-line
+        fi
+        zle reset-prompt
+    }
+    zle -N fzy-edit-file
+    bindkey '^e' fzy-edit-file
 fi
 
 ## C-^ で一つ上のディレクトリへ

@@ -12,3 +12,6 @@ logs
 
 # Local MCP settings (machine-specific)
 .claude-global/setup-mcp-local.sh
+
+# Cache
+.cache/

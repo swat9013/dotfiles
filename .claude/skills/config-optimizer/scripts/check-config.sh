@@ -110,7 +110,7 @@ done
 
 echo ""
 
-# Rules frontmatter globs チェック
+# Rules frontmatter paths/globs チェック
 echo "[Rules frontmatter]"
 
 check_rules_frontmatter() {
@@ -123,12 +123,15 @@ check_rules_frontmatter() {
             if head -n 1 "$rule_file" | grep -q '^---$'; then
                 frontmatter=$(sed -n '2,/^---$/p' "$rule_file" | grep -v '^---$')
 
-                # globs チェック
-                if echo "$frontmatter" | grep -q '^globs:'; then
+                # paths または globs チェック
+                if echo "$frontmatter" | grep -q '^paths:'; then
+                    paths=$(echo "$frontmatter" | grep '^paths:' | sed 's/^paths: *//')
+                    echo "  ✓ ${rule_file/#$HOME/\~}: paths設定あり ($paths)"
+                elif echo "$frontmatter" | grep -q '^globs:'; then
                     globs=$(echo "$frontmatter" | grep '^globs:' | sed 's/^globs: *//')
                     echo "  ✓ ${rule_file/#$HOME/\~}: globs設定あり ($globs)"
                 else
-                    echo "  ✗ ${rule_file/#$HOME/\~}: globs未設定"
+                    echo "  ✗ ${rule_file/#$HOME/\~}: paths/globs未設定"
                 fi
             else
                 echo "  ✗ ${rule_file/#$HOME/\~}: frontmatter なし"

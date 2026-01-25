@@ -55,14 +55,26 @@
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :config
-  ;; キーバインドをすべて無効化（シンタックスハイライトのみ使用）
-  ;; グローバルキーバインドを優先させる
-  (setq markdown-mode-map (make-sparse-keymap))
+  ;; Enterでリスト項目を継続
+  (setq markdown-indent-on-enter 'indent-and-new-item)
 
-  ;; markdown では行末空白を削除しない (改行のため)
   (add-hook 'markdown-mode-hook
             (lambda ()
-              (setq-local delete-trailing-whitespace-before-save nil))))
+              ;; markdown では行末空白を削除しない (改行のため)
+              (setq-local delete-trailing-whitespace-before-save nil)
+              ;; TABでインデント、S-TABでアンインデント
+              (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+              (local-set-key (kbd "<backtab>") 'indent-rigidly-left-to-tab-stop)
+              ;; Enterでリスト継続（electric-indentは無効化）
+              (electric-indent-local-mode -1)
+              ;; GFMチェックボックス挿入
+              (local-set-key (kbd "C-c C-t") 'markdown-insert-gfm-checkbox)
+              ;; グローバルキーバインドを優先（markdown-mode標準を上書き）
+              (local-set-key (kbd "C-c C-r") 'revert-buffer-no-confirm)
+              (local-set-key (kbd "M-{") 'previous-buffer)
+              (local-set-key (kbd "M-}") 'next-buffer)
+              (local-set-key (kbd "M-p") 'scroll-down-command)
+              (local-set-key (kbd "M-n") 'scroll-up-command))))
 
 ;; ============================================================
 ;; YAML (Tree-sitter)

@@ -58,34 +58,20 @@ description: プロジェクト固有のドメイン知識を管理する。「�
 
 セッション会話からドメイン知識を自動抽出。
 
-### 1. セッション取得
+### 1. サブエージェントに分析委譲
 
-```bash
-# セッションファイルを特定
-SESSION=$(~/.dotfiles/.claude-global/skills/domain-context/scripts/find-session.sh)
-
-# メッセージを抽出（Markdown形式）
-~/.dotfiles/.claude-global/skills/domain-context/scripts/extract-messages.sh "$SESSION"
-```
-
-**対象**: 現在実行中のセッション
-
-### 2. サブエージェントに分析委譲
-
-Task tool で専門エージェントに委譲:
+Task tool（subagent_type: general-purpose）でセッション取得から分析まで一括委譲:
 
 ```
-あなたはドメイン知識抽出の専門家です。
+ドメイン知識を抽出してください。
 
-## 原則
-- 具体的で再利用可能な知識のみ抽出
-- 汎用的なベストプラクティスは除外
-- このプロジェクト固有の学びに集中
+## セッション取得
+~/.dotfiles/.claude-global/skills/domain-context/scripts/extract-messages.sh \
+  "$(~/.dotfiles/.claude-global/skills/domain-context/scripts/find-session.sh)"
 
-## 入力
-セッションJSONL: {ファイルパス}
-既存CLAUDE.md: {内容}
-既存docs/: {構造}
+## 既存コンテキスト
+- CLAUDE.md: ./CLAUDE.md
+- docs/: ./docs/
 
 ## 抽出カテゴリ
 | カテゴリ | 探すべきパターン |
@@ -96,26 +82,17 @@ Task tool で専門エージェントに委譲:
 | 落とし穴 | 実際にハマった問題・エラー |
 | コマンド | 有用なワークフロー・スクリプト |
 
-## セッション読み込み
-extract-messages.sh の出力（Markdown形式）を使用。
-- user/assistant メッセージを抽出済み
-- tool_use は【tool: name】形式で表示
-
 ## 除外基準
 - 一時的な作業メモ
 - 汎用的なベストプラクティス
 - セッション限りの判断
+- Claude設定の変更（config-optimizer の責務）
 
 ## 出力
-templates/session-reflect-output.md 形式で報告:
-- セッション情報
-- 抽出結果テーブル（カテゴリ、内容、保存先、確信度）
-- 詳細（根拠の引用付き）
+templates/session-reflect-output.md 形式で報告
 ```
 
-テンプレート: `templates/session-reflect-output.md`
-
-### 3. 整合性チェック
+### 2. 整合性チェック
 
 サブエージェント結果を確認:
 
@@ -123,7 +100,7 @@ templates/session-reflect-output.md 形式で報告:
 - 既存 docs/ との矛盾
 - 確信度の妥当性
 
-### 4. 保存
+### 3. 保存
 
 - 確認なしで即時追記
 - 抽出結果を表示後、自動的に保存

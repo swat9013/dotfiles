@@ -32,6 +32,7 @@ paths: .claude-global/skills/**
 | architect | 「設計して」「plan.md作成」 |
 | breakdown | 「/breakdown」「タスク分解」 |
 | implement | 「/implement」「タスク実行」 |
+| implement-review | 「/implement-review」「実装してレビューまで」 |
 | code-review | 「コードレビュー」「レビューして」 |
 | researcher | 「調査して」「リサーチして」 |
 | debug | 「デバッグ」「バグ調査」 |

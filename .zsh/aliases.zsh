@@ -75,6 +75,7 @@ alias g='git'
 alias -g L='`git log --decorate --oneline | fzy | cut -d" " -f1`'
 alias -g LA='`git log --decorate --oneline --all | fzy | cut -d" " -f1`'
 alias -g R='`git reflog | fzy | cut -d" " -f1`'
+alias difit='npx difit . --include-untracked'
 
 #
 # ls
@@ -155,20 +156,6 @@ alias fvpn="~/.dotfiles/lib/fortivpn.sh"
 #
 # AI Coding
 #
-function _init-work() {
-    [[ ! -d ".work" ]] && mkdir -p .work
-    [[ ! -f ".work/.gitignore" ]] && echo '*' > .work/.gitignore
-}
-function bk-plan() {
-    _init-work
-    local d=".work/$(date +%Y%m%d_%H%M%S)"
-    mkdir -p "$d"
-    mv plan.md implementation.md report.md "$d/" 2>/dev/null
-}
-function et() {
-    _init-work
-    e .work/todo.md
-}
 alias cc='claude'
 alias cco='claude --model opus'
 alias ccs='claude --model sonnet'

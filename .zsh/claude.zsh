@@ -1,0 +1,123 @@
+# Claude Code session management
+
+# List running Claude Code sessions
+# Usage: ccl [options]
+#   -a, --all    Show all processes including subagents
+#   -v, --verbose Show detailed info
+function ccl() {
+  local show_all=false
+  local verbose=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -a|--all) show_all=true; shift ;;
+      -v|--verbose) verbose=true; shift ;;
+      *) shift ;;
+    esac
+  done
+
+  local pids=($(pgrep '^claude$' 2>/dev/null))
+
+  if [[ ${#pids[@]} -eq 0 ]]; then
+    echo "No Claude Code sessions running"
+    return 0
+  fi
+
+  # Header
+  if $verbose; then
+    printf "%-7s %-4s %-40s %-20s %s\n" "PID" "TYPE" "DIRECTORY" "STARTED" "ARGS"
+    printf "%s\n" "$(printf '%.0s-' {1..100})"
+  else
+    printf "%-7s %-4s %-40s %s\n" "PID" "TYPE" "DIRECTORY" "STARTED"
+    printf "%s\n" "$(printf '%.0s-' {1..80})"
+  fi
+
+  for pid in "${pids[@]}"; do
+    local args=$(ps -p $pid -o args= 2>/dev/null)
+    [[ -z "$args" ]] && continue
+
+    # Determine type: main session or subagent
+    local type="main"
+    if [[ "$args" == *"stream-json"* ]]; then
+      type="sub"
+      $show_all || continue
+    fi
+
+    # Get working directory (-a for AND condition on macOS)
+    local cwd=$(lsof -a -d cwd -p $pid 2>/dev/null | awk 'NR==2 {print $NF}')
+    cwd=${cwd/#$HOME/\~}
+
+    # Get start time
+    local started=$(ps -p $pid -o lstart= 2>/dev/null | awk '{print $2, $3, $4}')
+
+    # Format output
+    if $verbose; then
+      local short_args=${args:0:30}
+      [[ ${#args} -gt 30 ]] && short_args="${short_args}..."
+      printf "%-7s %-4s %-40s %-20s %s\n" "$pid" "$type" "$cwd" "$started" "$short_args"
+    else
+      printf "%-7s %-4s %-40s %s\n" "$pid" "$type" "$cwd" "$started"
+    fi
+  done
+}
+
+# Kill Claude Code sessions
+# Usage: cck [options] [pid]
+#   <pid>       Kill specific process
+#   -s, --sub   Kill all subagents
+#   -a, --all   Kill all Claude processes (main + sub)
+function cck() {
+  local mode="pid"
+  local target_pid=""
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -s|--sub) mode="sub"; shift ;;
+      -a|--all) mode="all"; shift ;;
+      *)
+        if [[ "$1" =~ ^[0-9]+$ ]]; then
+          target_pid="$1"
+        fi
+        shift ;;
+    esac
+  done
+
+  case "$mode" in
+    pid)
+      if [[ -z "$target_pid" ]]; then
+        echo "Usage: cck [options] [pid]"
+        echo "  <pid>       Kill specific process"
+        echo "  -s, --sub   Kill all subagents"
+        echo "  -a, --all   Kill all Claude processes"
+        return 1
+      fi
+      local cmd=$(ps -p $target_pid -o comm= 2>/dev/null)
+      if [[ "$cmd" != "claude" ]]; then
+        echo "Error: PID $target_pid is not a Claude process"
+        return 1
+      fi
+      kill $target_pid && echo "Killed Claude session $target_pid"
+      ;;
+    sub)
+      local pids=($(pgrep '^claude$' 2>/dev/null))
+      local count=0
+      for pid in "${pids[@]}"; do
+        local args=$(ps -p $pid -o args= 2>/dev/null)
+        if [[ "$args" == *"stream-json"* ]]; then
+          kill $pid 2>/dev/null && ((count++))
+        fi
+      done
+      echo "Killed $count subagent(s)"
+      ;;
+    all)
+      local pids=($(pgrep '^claude$' 2>/dev/null))
+      local count=${#pids[@]}
+      if [[ $count -eq 0 ]]; then
+        echo "No Claude processes running"
+        return 0
+      fi
+      kill "${pids[@]}" 2>/dev/null
+      echo "Killed $count Claude process(es)"
+      ;;
+  esac
+}

@@ -87,7 +87,9 @@ Step 2で検出されたissueを別サブエージェントで再検証:
 
 ### Step 5: 出力
 
-→ `templates/output.md`
+`templates/output.md` の形式に従い、**カレントディレクトリに `review.md` として書き出す**。
+
+既存の `review.md` がある場合は上書きする。
 
 ## 出力形式
 

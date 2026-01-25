@@ -40,10 +40,10 @@ while IFS= read -r -d '' skill_file; do
 
     # description チェック
     description=$(echo "$frontmatter" | grep '^description:' | sed 's/^description: *//')
+
     if [[ -n "$description" ]]; then
         # トリガーキーワードの確認
         if echo "$description" | grep -q '「.*」.*依頼.*時.*使用'; then
-            # トリガーを抽出
             triggers=$(echo "$description" | grep -o '「[^」]*」' | tr '\n' ' ')
             echo "  ✓ description: あり"
             echo "  ✓ トリガー: $triggers"
