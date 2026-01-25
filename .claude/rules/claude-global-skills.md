@@ -43,3 +43,4 @@ paths: .claude-global/skills/**
 | skill-creator | 「スキルを作って」 |
 | task | 「/task」「タスク追加」 |
 | ghq | 「ghq」「リポジトリ管理」「リポジトリをクローン」 |
+| setup-linter-hooks | 「linter hook作成」「formatter hook設定」「編集後linter実行」 |
