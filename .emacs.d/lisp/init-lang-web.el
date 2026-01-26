@@ -53,7 +53,8 @@
 ;; ============================================================
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
+         ("\\.markdown\\'" . markdown-mode)
+         ("\\.mdc\\'" . markdown-mode))
   :config
   ;; Enterでリスト項目を継続
   (setq markdown-indent-on-enter 'indent-and-new-item)
@@ -70,6 +71,7 @@
               ;; GFMチェックボックス挿入
               (local-set-key (kbd "C-c C-t") 'markdown-insert-gfm-checkbox)
               ;; グローバルキーバインドを優先（markdown-mode標準を上書き）
+              (local-set-key (kbd "C-c C-f") 'project-find-file)
               (local-set-key (kbd "C-c C-r") 'revert-buffer-no-confirm)
               (local-set-key (kbd "M-{") 'previous-buffer)
               (local-set-key (kbd "M-}") 'next-buffer)

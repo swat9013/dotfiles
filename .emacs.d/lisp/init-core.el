@@ -44,6 +44,9 @@
   (create-lockfiles nil)
   (backup-inhibited t)
 
+  ;; シンボリックリンク
+  (vc-follow-symlinks t)
+
   ;; スクロール
   (scroll-conservatively 101)
   (scroll-margin 3)
