@@ -40,7 +40,7 @@
 
 **問題**: TypeScript以外のファイル編集時も読み込まれる。
 
-**対策**: `rules/typescript.md` に `paths: ["**/*.ts"]` で抽出。
+**対策**: `rules/typescript.md` に `paths: **/*.ts` で抽出。
 
 ### 3. ワークフローの詳細記述
 

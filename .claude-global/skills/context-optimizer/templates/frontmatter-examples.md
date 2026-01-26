@@ -8,14 +8,13 @@
 
 ### 必須フィールド
 
-- `paths`: 適用するファイルパス（glob形式）
+- `paths`: 適用するファイルパス（glob形式、カンマ区切りワンライナー、クオーテーションなし）
 
 ### 基本テンプレート
 
 ```yaml
 ---
-paths:
-  - "src/**/*.ts"
+paths: src/**/*.ts
 ---
 ```
 
@@ -23,10 +22,7 @@ paths:
 
 ```yaml
 ---
-paths:
-  - "src/**/*.ts"
-  - "!src/**/*.test.ts"
-  - "!src/**/*.spec.ts"
+paths: src/**/*.ts, !src/**/*.test.ts, !src/**/*.spec.ts
 ---
 ```
 
@@ -34,11 +30,7 @@ paths:
 
 ```yaml
 ---
-paths:
-  - "**/*.ts"
-  - "**/*.tsx"
-  - "**/*.js"
-  - "**/*.jsx"
+paths: **/*.ts, **/*.tsx, **/*.js, **/*.jsx
 ---
 ```
 
@@ -46,9 +38,7 @@ paths:
 
 ```yaml
 ---
-paths:
-  - "src/api/**"
-  - "src/routes/**"
+paths: src/api/**, src/routes/**
 ---
 ```
 
