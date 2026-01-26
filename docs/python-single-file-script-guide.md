@@ -301,6 +301,93 @@ if __name__ == "__main__":
     typer.run(main)
 ```
 
+## テストコード管理
+
+### テスト実行方法
+
+```bash
+# 方法1: --with フラグでpytestを追加
+uv run --with pytest pytest script.py
+
+# 方法2: スクリプト内にpytest依存を含める場合
+uv run pytest script.py
+```
+
+※ pytestはPEP 723メタデータの自動読み込みに未対応。依存関係は`--with`フラグか`dependencies`に明示的に含める。
+
+### パターンA: 同一ファイル型（小規模向け）
+
+```python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "requests",
+#     "pytest",
+# ]
+# ///
+"""APIクライアント"""
+
+import requests
+
+def fetch_json(url: str) -> dict:
+    return requests.get(url, timeout=10).json()
+
+# ========== Tests ==========
+
+def test_fetch_json(monkeypatch):
+    class MockResponse:
+        def json(self):
+            return {"key": "value"}
+    monkeypatch.setattr(requests, "get", lambda *a, **kw: MockResponse())
+    assert fetch_json("http://example.com") == {"key": "value"}
+
+if __name__ == "__main__":
+    import sys
+    print(fetch_json(sys.argv[1]))
+```
+
+### パターンB: 分離ファイル型（中規模以上）
+
+```
+project/
+├── script.py           # PEP 723メタデータ付き
+├── tests/
+│   └── test_script.py
+└── pyproject.toml      # 開発依存管理
+```
+
+**pyproject.toml:**
+```toml
+[project]
+name = "my-script"
+requires-python = ">=3.11"
+dependencies = ["requests"]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+```
+
+**tests/test_script.py:**
+```python
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from script import fetch_json
+
+def test_fetch_json(monkeypatch):
+    # テスト実装
+    pass
+```
+
+### 選択基準
+
+| 規模 | 推奨アプローチ | 理由 |
+|------|---------------|------|
+| 小規模（<500行、テスト<10） | 同一ファイル | 1ファイルで完結、共有容易 |
+| 中規模以上 | 分離ファイル | 保守性、CI/CD統合、フィクスチャ活用 |
+
 ## ベストプラクティス
 
 | カテゴリ | 推奨事項 |
