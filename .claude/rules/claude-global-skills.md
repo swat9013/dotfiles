@@ -34,6 +34,7 @@ paths: .claude-global/skills/**
 | implement | 「/implement」「タスク実行」 |
 | implement-review | 「/implement-review」「実装してレビューまで」 |
 | code-review | 「コードレビュー」「レビューして」 |
+| refactor | 「リファクタリング」「コード改善」「スメル検出」 |
 | researcher | 「調査して」「リサーチして」 |
 | debug | 「デバッグ」「バグ調査」 |
 | critical-think | 「批判的に見て」「自己レビュー」 |
