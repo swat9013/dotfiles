@@ -55,12 +55,26 @@
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)
          ("\\.mdc\\'" . markdown-mode))
-  :config
+  :custom
+  ;; パフォーマンス最適化: 重い機能を無効化
+  (markdown-enable-wiki-links nil)
+  (markdown-fontify-code-blocks-natively nil)
+  ;; char-displayable-p遅延回避
+  (markdown-url-compose-char ?∞)
+  (markdown-blockquote-display-char "▌")
+  (markdown-hr-display-char ?─)
+  (markdown-definition-display-char ?⁘)
   ;; Enterでリスト項目を継続
-  (setq markdown-indent-on-enter 'indent-and-new-item)
-
+  (markdown-indent-on-enter 'indent-and-new-item)
+  :config
   (add-hook 'markdown-mode-hook
             (lambda ()
+              ;; ターミナル環境でfont-lock/jit-lock最適化
+              (when (not (display-graphic-p))
+                (setq-local font-lock-maximum-decoration 2)
+                (setq-local jit-lock-defer-time 0.1)
+                (setq-local jit-lock-stealth-time 1.0)
+                (setq-local jit-lock-chunk-size 500))
               ;; markdown では行末空白を削除しない (改行のため)
               (setq-local delete-trailing-whitespace-before-save nil)
               ;; TABでインデント、S-TABでアンインデント
