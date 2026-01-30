@@ -13,10 +13,6 @@ window-padding-x = 8
 window-padding-y = 8
 unfocused-split-opacity = 0.80
 
-# パフォーマンス（Emacs等のTUIアプリでのフリーズ対策）
-window-vsync = false
-scrollback-limit = 100000
-
 # シェル統合
 shell-integration = detect
 shell-integration-features = cursor,sudo,title

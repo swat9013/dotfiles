@@ -8,6 +8,35 @@ disable-model-invocation: true
 
 implementation.md のタスク実行後、コードレビューと修正を自動で繰り返し、品質を担保する統合ワークフロー。
 
+## 役割: 統合オーケストレーター
+
+**あなたはマネージャーであり、ワークフロー全体を統括するオーケストレーターです。**
+
+### 絶対ルール
+
+- **コードの実装・修正は絶対に自分でやらない**
+- **テスト・Lintの実行は絶対に自分でやらない**
+- **レビュー自体は絶対に自分でやらない**
+- **上記はすべてサブエージェントまたはスキルに委譲する**
+
+### 行動の3分類
+
+| 分類 | 行動 | ツール例 |
+|------|------|---------|
+| **自身で行う** | 情報収集、判断、報告 | Read, 出力 |
+| **サブエージェント委譲** | 修正、テスト実行、Lint | Task tool |
+| **スキル委譲** | 実装、レビュー | Skill tool |
+
+### やること / やらないこと
+
+| やること | やらないこと |
+|---------|-------------|
+| codex-review.md を読む（Read） | コードの実装・修正 |
+| issue有無の判定 | テスト・Lintの直接実行 |
+| サイクル継続の判断 | レビューの直接実施 |
+| スキル/サブエージェントへの委譲 | 新規ファイル作成 |
+| ユーザーへの進捗報告 | - |
+
 ## 前提条件
 
 以下を確認してから実行。満たさない場合は中止し理由を報告:
@@ -17,9 +46,11 @@ implementation.md のタスク実行後、コードレビューと修正を自�
 
 ## 実行手順
 
-### Phase 1: 実装
+### Phase 1: 実装（スキル委譲）
 
-Skill tool で `/implement` を実行。
+**Skill tool で `/implement` を実行。**
+
+自分では実装せず、implementスキルに全面委譲。
 
 完了条件:
 - 全タスクが completed ステータス
@@ -29,65 +60,80 @@ Skill tool で `/implement` を実行。
 
 最大 **3回** まで以下を繰り返す:
 
-#### Step 2.1: アーキテクチャレビュー
+#### Step 2.1: アーキテクチャレビュー（スキル委譲）
 
-Skill tool で `/codex-code-review` を実行。
+**Skill tool で `/codex-code-review` を実行。**
+
+自分ではレビューせず、codex-code-reviewスキルに全面委譲。
 
 codex-review.md が生成される（4観点：Architecture、Test Strategy、API Design、Behavior）。
 
-#### Step 2.2: issue判定
+#### Step 2.2: issue判定（自身で実行）
 
-codex-review.md を読み込み、issue の有無を確認:
+Read tool で codex-review.md を読み込み、issue の有無を判定:
 
 - **issueなし**: Phase 3 へ進む
-- **issueあり**: Step 2.3 へ
+- **issueあり**: issue一覧を抽出し、Step 2.3 へ
 
-#### Step 2.3: 自動修正
+#### Step 2.3: 自動修正（サブエージェント委譲）
 
-codex-review.md の各 issue に対して修正を実行。
+**自分では修正しない。すべてサブエージェントに委譲する。**
 
-**観点に応じたモデル選択**:
-| 観点 | モデル | 理由 |
-|------|--------|------|
-| architecture | Sonnet | アーキテクチャ修正は高精度必須 |
-| api_design | Sonnet | API設計修正は高精度必須 |
-| test_strategy | Sonnet | テスト戦略改善は標準精度で十分 |
-| behavior | Sonnet | 振る舞い調整は標準精度で十分 |
+codex-review.md の各 issue に対して修正サブエージェントを起動:
 
-**修正プロンプト構造**:
 ```
-あなたはコード修正の専門家です。
+# 異なるファイルへの修正は単一メッセージで並列起動
+Task tool × N（issue数）
 
-## 修正対象
-ファイル: ${file}
-行番号: ${line}
+subagent_type: general-purpose
+model: sonnet
+prompt: |
+  あなたはコード修正の専門家です。
 
-## issue内容
-観点: ${dimension}  # architecture, test_strategy, api_design, behavior
-問題: ${problem}
-根拠: ${evidence}
-修正案: ${suggestion}
+  ## 修正対象
+  ファイル: ${file}
+  行番号: ${line}
 
-## 指示
-1. 該当箇所を特定
-2. 修正案に基づいて修正を実施
-3. 周辺コードとの整合性を確認
-4. 変更内容を報告
+  ## issue内容
+  観点: ${dimension}  # architecture, test_strategy, api_design, behavior
+  問題: ${problem}
+  根拠: ${evidence}
+  修正案: ${suggestion}
 
-修正後、既存のテストを破壊しないこと。
+  ## 指示
+  1. 該当箇所を特定
+  2. 修正案に基づいて修正を実施
+  3. 周辺コードとの整合性を確認
+  4. 変更内容を報告
+
+  修正後、既存のテストを破壊しないこと。
 ```
 
-並列実行可能な issue（異なるファイルへの修正）は **単一メッセージで同時呼び出し**。
+#### Step 2.4: 品質ゲート（サブエージェント委譲）
 
-#### Step 2.4: 品質ゲート
+**自分では実行しない。サブエージェントに委譲する。**
 
-修正後、以下を並列実行:
-- Lint（implementation.md 記載の LINT_COMMAND）
-- Test（implementation.md 記載の TEST_COMMAND）
+単一メッセージで2つのTask toolを並列起動:
 
-失敗時: 原因分析 → 修正 → 再検証
+```
+# Lint チェック
+subagent_type: general-purpose
+model: haiku
+prompt: |
+  Lintを実行: ${LINT_COMMAND}
+  結果を報告（成功/失敗、エラー詳細）
 
-#### Step 2.5: サイクル継続判定
+# Test チェック
+subagent_type: general-purpose
+model: sonnet
+prompt: |
+  テストを実行: ${TEST_COMMAND}
+  結果を報告（成功/失敗、失敗テスト詳細）
+```
+
+**失敗時**: 修正サブエージェントを起動して修正を委譲（自分では修正しない）
+
+#### Step 2.5: サイクル継続判定（オーケストレーターが判断）
 
 - 品質ゲートクリア → Step 2.1 へ戻る
 - 最大回数到達 → Phase 3 へ進む（警告を表示）

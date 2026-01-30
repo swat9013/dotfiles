@@ -8,6 +8,35 @@ disable-model-invocation: true
 
 implementation.md のタスクを Phase 別に実行する。並列実行可能タスク（Pマーク）は同時実行し、品質ゲートで各フェーズの品質を担保する。
 
+## 役割: オーケストレーター
+
+**あなたはマネージャーであり、エージェントオーケストレーターです。**
+
+### 絶対ルール
+
+- **コードの実装・修正は絶対に自分でやらない**
+- **テスト・Lint・ビルドの実行は絶対に自分でやらない**
+- **上記はすべてサブエージェントに委譲する**
+
+### 行動の3分類
+
+| 分類 | 行動 | ツール例 |
+|------|------|---------|
+| **自身で行う** | 情報収集、判断、報告、軽微な更新 | Read, Edit（ステータス更新のみ）, 出力 |
+| **サブエージェント委譲** | 実装、修正、テスト実行、Lint | Task tool |
+| **スキル委譲** | 複雑なサブワークフロー | Skill tool |
+
+### やること / やらないこと
+
+| やること | やらないこと |
+|---------|-------------|
+| implementation.md を読む（Read） | コードの実装・修正 |
+| タスクの分析・分解 | テスト・Lint・ビルドの実行 |
+| サブエージェントへの委譲 | バグの直接修正 |
+| 進捗の監視・結果判定 | リファクタリング |
+| ステータス更新（Edit） | 新規ファイル作成 |
+| ユーザーへの報告 | - |
+
 ## 前提条件
 
 以下を確認してから実行。満たさない場合は中止し理由を報告:
@@ -17,58 +46,102 @@ implementation.md のタスクを Phase 別に実行する。並列実行可能�
 
 ## 実行手順
 
-### 1. 前提条件チェック（Haiku）
+### 1. 前提条件チェック（自身で実行）
 
-Task tool で軽量エージェントを起動:
-- model: haiku
-- prompt: |
-    implementation.md の存在と形式を検証:
-    1. ファイルが存在するか
-    2. タスクに種別・成功基準が明記されているか
-    3. 各タスクのステータス（pending/in_progress/completed）を集計
-    結果を報告（OK or 問題点リスト）
+Read tool で implementation.md を読み込み、以下を確認:
+- ファイルが存在するか
+- タスクに種別・成功基準が明記されているか
+- 各タスクのステータス（pending/in_progress/completed）を集計
 
-### 2. implementation.md 読み込み
-- タスク一覧、依存関係、並列実行可否を把握
-- 現在のステータス（pending/in_progress/completed）を確認
+**→ 問題があれば中止し理由を報告**
+
+### 2. タスク分析（自身で実行）
+
+implementation.md の内容から以下を把握:
+- 全タスク一覧（ID、タイトル、種別、ステータス）
+- 依存関係
+- 並列実行可能タスク（Pマーク）の特定
+- Phase別のグルーピング
 
 ### 3. Phase別実行サイクル
 
 ```
-Phase開始 → 並列タスク実行 → 順次タスク実行 → 品質ゲート → 進捗報告 → 次Phase
+Phase開始 → サブエージェント並列起動 → 完了待機 → 品質ゲート委譲 → 結果判定 → ステータス更新 → 進捗報告 → 次Phase
 ```
 
-### 4. タスク実行
-
-実行中に不明点があれば `[NEEDS CLARIFICATION: 質問]` を挿入し、ユーザーに確認（最大3箇所）。
+### 4. タスク実行（すべてサブエージェントに委譲）
 
 #### 並列実行（Pマーク付きタスク）
-Task tool で複数サブエージェントを**単一メッセージで同時呼び出し**:
-- タスク内容、成功基準、制約条件を渡す
-- **タスク種別に応じたロール・原則・モデルを付与**（`guides/task-roles.md` 参照）
+
+**単一メッセージで複数のTask toolを同時呼び出し**:
+
+```
+# タスクごとに1つのサブエージェントを起動
+Task tool × N（並列実行可能タスク数）
+
+subagent_type: general-purpose
+model: sonnet  # 実装タスクは基本sonnet
+prompt: |
+  あなたは実装担当エージェントです。
+
+  ## タスク
+  ID: ${task_id}
+  タイトル: ${title}
+  種別: ${type}
+
+  ## 成功基準
+  ${success_criteria}
+
+  ## 制約条件
+  ${constraints}
+
+  ## 指示
+  1. 該当コードを特定
+  2. 実装を完了
+  3. 成功基準を満たすことを確認
+  4. 完了報告（変更ファイル、変更内容の要約）
+```
+
+**タスク種別に応じたロール付与**（`guides/task-roles.md` 参照）
 
 #### 順次実行（依存タスク）
-依存タスク完了後に実行。
 
-### 5. 品質ゲート（並列実行）
+依存タスク完了を確認後、同様にサブエージェントに委譲。
 
-各Phase完了時に以下を**単一メッセージで並列起動**:
+### 5. 品質ゲート（並列サブエージェント委譲）
 
-| チェック | モデル | コマンド |
-|---------|--------|---------|
-| Lint | Haiku | implementation.md記載の LINT_COMMAND |
-| Test | Sonnet | implementation.md記載の TEST_COMMAND |
-| Build | Haiku | implementation.md記載の BUILD_COMMAND（該当時） |
+各Phase完了時に**単一メッセージで3つのTask toolを並列起動**:
 
-**注**: コマンドはimplementation.mdまたはプロジェクトのCLAUDE.mdから取得。
+```
+# Lint チェック
+subagent_type: general-purpose
+model: haiku
+prompt: |
+  Lintチェックを実行: ${LINT_COMMAND}
+  結果を報告（成功/失敗、エラー詳細）
 
-失敗時: 原因分析 → 修正 → 再検証
+# Test チェック
+subagent_type: general-purpose
+model: sonnet
+prompt: |
+  テストを実行: ${TEST_COMMAND}
+  結果を報告（成功/失敗、失敗テスト詳細）
 
-### 6. ステータス更新
+# Build チェック（該当時）
+subagent_type: general-purpose
+model: haiku
+prompt: |
+  ビルドを実行: ${BUILD_COMMAND}
+  結果を報告（成功/失敗、エラー詳細）
+```
 
-implementation.md のタスクステータスを更新:
-- 実行中: `in_progress`
-- 完了: `completed`
+**失敗時**: 修正サブエージェントを起動して修正を委譲
+
+### 6. ステータス更新（自身で実行）
+
+Edit tool で implementation.md のタスクステータスを更新:
+- 完了タスク: `completed`
+- 失敗タスク: `failed`（原因をコメント追記）
 
 ### 7. Phase完了報告
 
