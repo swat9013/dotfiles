@@ -120,3 +120,16 @@ d4e5f6g7 [pending] [none] 種別なしタスク
 - IDは8桁16進数（例: a1b2c3d4）
 - スクリプトパスは絶対パス: `~/.dotfiles/.claude-global/skills/task/scripts/task.sh`
 - タスク内容が不明な場合は、AskUserQuestion ツールを使用して詳細を確認すること
+
+## 成功基準
+
+1. add後に`.claude/tasks.json`が更新されている
+2. listで追加/更新したタスクが表示される
+3. update/done/deleteの操作が反映される
+
+## 完了チェックリスト
+
+- [ ] タスク操作が`.claude/tasks.json`に永続化された
+- [ ] listコマンドで期待する結果が表示される
+- [ ] フィルタ（status, type）が正常に機能する
+- [ ] 不明なタスクはAskUserQuestionで詳細を確認した

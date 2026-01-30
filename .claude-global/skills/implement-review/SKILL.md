@@ -28,30 +28,30 @@ Skill tool で `/implement` を実行。
 
 最大 **3回** まで以下を繰り返す:
 
-#### Step 2.1: コードレビュー
+#### Step 2.1: アーキテクチャレビュー
 
-Skill tool で `/code-review` を実行。
+Skill tool で `/codex-code-review` を実行。
 
-review.md が生成される。
+codex-review.md が生成される（4観点：Architecture、Test Strategy、API Design、Behavior）。
 
 #### Step 2.2: issue判定
 
-review.md を読み込み、issue の有無を確認:
+codex-review.md を読み込み、issue の有無を確認:
 
 - **issueなし**: Phase 3 へ進む
 - **issueあり**: Step 2.3 へ
 
 #### Step 2.3: 自動修正
 
-review.md の各 issue に対して修正を実行。
+codex-review.md の各 issue に対して修正を実行。
 
 **観点に応じたモデル選択**:
 | 観点 | モデル | 理由 |
 |------|--------|------|
-| security | Opus | 脆弱性修正は高精度必須 |
-| correctness | Opus | ロジック修正は高精度必須 |
-| design | Sonnet | 設計改善は標準精度で十分 |
-| testing | Sonnet | テスト追加は標準精度で十分 |
+| architecture | Sonnet | アーキテクチャ修正は高精度必須 |
+| api_design | Sonnet | API設計修正は高精度必須 |
+| test_strategy | Sonnet | テスト戦略改善は標準精度で十分 |
+| behavior | Sonnet | 振る舞い調整は標準精度で十分 |
 
 **修正プロンプト構造**:
 ```
@@ -62,7 +62,7 @@ review.md の各 issue に対して修正を実行。
 行番号: ${line}
 
 ## issue内容
-観点: ${perspective}
+観点: ${dimension}  # architecture, test_strategy, api_design, behavior
 問題: ${problem}
 根拠: ${evidence}
 修正案: ${suggestion}
@@ -122,13 +122,13 @@ review.md の各 issue に対して修正を実行。
 
 **推奨アクション**:
 - 手動で残存issueを確認
-- 必要に応じて `/code-review` を再実行
+- 必要に応じて `/codex-code-review` を再実行
 ```
 
 ## 成功基準
 
 1. implementation.md の全タスクが completed
-2. review.md の issue がゼロ（または最大サイクル後に残存を報告）
+2. codex-review.md の issue がゼロ（または最大サイクル後に残存を報告）
 3. 全品質ゲートをクリア
 
 ## 制約

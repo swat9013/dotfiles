@@ -25,7 +25,7 @@ Cursor Agent CLI経由でGPT-5.2-Codexを使用し、高レベル設計レビュ
 
 ## 前提条件
 
-1. `cursor` または `agent` コマンドが利用可能
+1. `cursor agent` コマンドが利用可能
 2. レビュー対象ファイルが存在
 
 ## セキュリティ設定
@@ -42,7 +42,7 @@ Cursor Agent CLI経由でGPT-5.2-Codexを使用し、高レベル設計レビュ
 ### Step 0: 前提条件の検証
 
 ```bash
-which agent || which cursor
+cursor agent --version
 ```
 
 コマンドが見つからない場合はユーザーに通知して終了。
@@ -68,8 +68,8 @@ which agent || which cursor
 
 ```bash
 # コード用とドキュメント用を同時実行（sandbox有効化）
-agent -p "..." --sandbox enabled --model gpt-5.2-codex --output-format json > /tmp/codex-code.json &
-agent -p "..." --sandbox enabled --model gpt-5.2 --output-format json > /tmp/codex-doc.json &
+cursor agent --print "..." --sandbox enabled --model gpt-5.2-codex --output-format json > /tmp/codex-code.json &
+cursor agent --print "..." --sandbox enabled --model gpt-5.2 --output-format json > /tmp/codex-doc.json &
 wait
 ```
 
@@ -77,7 +77,7 @@ wait
 
 #### コードレビュー用プロンプト
 ```bash
-agent -p "あなたはシニアソフトウェアアーキテクトです。以下の4観点でコードレビューを実施してください。
+cursor agent --print "あなたはシニアソフトウェアアーキテクトです。以下の4観点でコードレビューを実施してください。
 
 ## 観点
 
@@ -133,7 +133,7 @@ ${ファイルパスリスト}
 
 #### ドキュメントレビュー用プロンプト
 ```bash
-agent -p "あなたはテクニカルライティングとアーキテクチャドキュメントの専門家です。以下の4観点でドキュメントレビューを実施してください。
+cursor agent --print "あなたはテクニカルライティングとアーキテクチャドキュメントの専門家です。以下の4観点でドキュメントレビューを実施してください。
 
 ## 観点
 

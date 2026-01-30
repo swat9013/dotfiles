@@ -218,6 +218,19 @@ chmod +x .claude/hooks/format-and-lint.sh
 
 ---
 
+## 成功基準
+
+1. `.claude/settings.json`にhooks設定が反映されている
+2. 外部スクリプト方式の場合、スクリプトファイルが存在し実行権限がある
+3. 対象拡張子のファイル編集後、linter/formatterが自動実行される
+
+## 完了チェックリスト
+
+- [ ] settings.jsonにhooks設定を追加した
+- [ ] 外部スクリプトがあれば実行権限を付与した（chmod +x）
+- [ ] 最小1ファイルで動作確認した（Write/Edit → hook実行を確認）
+- [ ] 既存hooks設定との競合がないことを確認した
+
 ## 参考資料
 
 - [Hooks設計ガイド](~/.dotfiles/docs/claude-code/hooks.md)

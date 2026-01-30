@@ -187,3 +187,16 @@ scenario-to-chapter/
 ```
 
 SKILL.mdはワークフローと具体例に集中。詳細な技法はreferencesに分離。
+
+## 成功基準
+
+1. スキルディレクトリとSKILL.mdが作成されている
+2. frontmatterにnameとdescription（トリガー含む）が記載されている
+3. 実際にスキルを呼び出して期待する動作が得られる
+
+## 完了チェックリスト
+
+- [ ] スキルディレクトリを作成した
+- [ ] SKILL.mdに必須フィールド（name, description）を記載した
+- [ ] descriptionが三人称形式で、トリガーキーワードを含む
+- [ ] 実際に呼び出して期待の動作をすることを確認した

@@ -4,7 +4,6 @@ description: システム設計・アーキテクチャ評価を担当する専�
 
 denied-tools:
   - Edit
-  - Write
   - NotebookEdit
 ---
 

@@ -56,7 +56,6 @@
       "Task(Plan)",
       "Skill",
       "mcp__deepwiki-http__*",
-      "mcp__gitlab__*",
       "mcp__serena__*",
       "Read(~/.claude/skills/**/*)",
       "Read(~/.dotfiles/.claude-global/skills/**/*)",
@@ -87,7 +86,8 @@
       "Bash(sudo:*)",
       "Bash(chmod 777:*)",
       "Bash(ssh:*)",
-      "Bash(scp:*)"
+      "Bash(scp:*)",
+      "Bash(cursor agent:*)"
     ],
     "ask": [
       "Bash(curl:*)",
@@ -102,9 +102,7 @@
       "Bash(brew install:*)",
       "Bash(npm publish:*)",
       "Bash(docker:*)",
-      "Bash(kubectl:*)",
-      "Bash(agent:*)",
-      "Bash(cursor agent:*)"
+      "Bash(kubectl:*)"
     ],
     "defaultMode": "default"
   },

@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces with high design quality.「UI作成」「フロントエンド実装」「コンポーネント作成」「Webページ作成」と依頼された時に使用。
+description: Creates distinctive, production-grade frontend interfaces with high design quality.「UI作成」「フロントエンド実装」「コンポーネント作成」「Webページ作成」と依頼された時に使用。
 license: Complete terms in LICENSE.txt
 ---
 
@@ -40,3 +40,16 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 **IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
 
 Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+
+## 成功基準
+
+1. 実装が動作している（HTML/CSS/JS/フレームワークコードが正常実行）
+2. 明確な美的方向性がある（選択したトーンが一貫して表現されている）
+3. プロダクションレベルの品質（レスポンシブ対応、基本的なアクセシビリティ確保）
+
+## 完了チェックリスト
+
+- [ ] 実装コードが生成された
+- [ ] ブラウザで動作確認可能
+- [ ] 選択した美的コンセプトが明確
+- [ ] 既存プロジェクトなら、ビルド/型チェックが通る
