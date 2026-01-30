@@ -64,10 +64,22 @@ description: ...        # 三人称で記述、1024文字以内、トリガー�
 
 | フィールド | 説明 | 例 |
 |-----------|------|-----|
-| allowed-tools | 使用可能ツール制限 | `Read, Grep, Glob` |
-| model | 実行モデル指定 | `claude-sonnet-4-20250514` |
-| context | fork指定でサブエージェント実行 | `fork` |
-| user-invocable | /メニュー表示 | `false` |
+| `argument-hint` | オートコンプリート時のヒント | `[issue-number]` |
+| `disable-model-invocation` | `true`でClaude自動呼び出し禁止 | `true` |
+| `user-invocable` | `false`で/メニュー非表示 | `false` |
+| `allowed-tools` | 許可確認なしで使用可能なツール | `Read, Grep, Glob` |
+| `model` | 実行モデル指定 | `claude-sonnet-4-20250514` |
+| `context` | `fork`でサブエージェント実行 | `fork` |
+| `agent` | fork時のサブエージェントタイプ | `Explore` |
+| `hooks` | スキルライフサイクルフック | (Hooks設定形式) |
+
+### 呼び出し制御
+
+| 設定 | ユーザー呼び出し | Claude呼び出し | 用途 |
+|------|----------------|---------------|------|
+| (デフォルト) | ○ | ○ | 汎用スキル |
+| `disable-model-invocation: true` | ○ | ✕ | deploy, commit等の副作用あり |
+| `user-invocable: false` | ✕ | ○ | 背景知識、コンテキスト |
 
 ## description設計
 
@@ -94,15 +106,73 @@ description: PDFからテキスト・表を抽出し、フォーム入力、文�
 
 詳細パターン: [patterns.md](references/patterns.md)
 
+## String substitutions
+
+スキル内容で使用可能な置換変数:
+
+| 変数 | 説明 | 例 |
+|------|------|-----|
+| `$ARGUMENTS` | 全引数 | `/fix-issue 123` → `123` |
+| `$ARGUMENTS[N]` | N番目の引数（0-indexed） | `$ARGUMENTS[0]` |
+| `$N` | `$ARGUMENTS[N]`の短縮形 | `$0`, `$1` |
+| `${CLAUDE_SESSION_ID}` | セッションID | ログ出力、ファイル名に使用 |
+
+```yaml
+---
+name: fix-issue
+---
+Fix GitHub issue $ARGUMENTS following our coding standards.
+# または
+Migrate $0 from $1 to $2.
+```
+
+## 動的コンテキスト注入
+
+`!`command`` 構文でシェルコマンド出力を事前注入:
+
+```yaml
+---
+name: pr-summary
+context: fork
+agent: Explore
+---
+## PR context
+- PR diff: !`gh pr diff`
+- Changed files: !`gh pr diff --name-only`
+
+Summarize this pull request...
+```
+
+コマンドはスキル実行前に実行され、出力がプレースホルダを置換する。
+
+## サブエージェント実行
+
+`context: fork` でスキルを分離コンテキストで実行:
+
+```yaml
+---
+name: deep-research
+context: fork
+agent: Explore  # Explore, Plan, general-purpose, またはカスタム
+---
+Research $ARGUMENTS thoroughly...
+```
+
+- スキル内容がサブエージェントのタスクになる
+- `agent` でサブエージェントタイプを指定
+- 会話履歴にアクセスしない独立実行
+
 ## 配置場所
 
-| 場所 | 用途 | 優先度 |
+| 場所 | パス | 優先度 |
 |------|------|--------|
-| `~/.dotfiles/.claude-global/skills/` | 個人用（全プロジェクト） | 高 |
-| `.claude/skills/` | プロジェクト固有 | 中 |
-| plugin内 | 配布用 | 低 |
+| Enterprise | 組織管理設定 | 1（最高） |
+| Personal | `~/.claude/skills/` | 2 |
+| Project | `.claude/skills/` | 3 |
+| Plugin | `plugin-name:skill-name` | 4（名前空間分離） |
 
 同名スキルは優先度の高い方が使用される。
+skills と commands が同名の場合、**skillsが優先**。
 
 ## 具体例
 

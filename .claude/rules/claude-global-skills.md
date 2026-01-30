@@ -25,6 +25,12 @@ paths: .claude-global/skills/**
 
 → サブエージェントはskill内でTask toolを呼び出す
 
+## 優先度
+
+Enterprise > Personal (`~/.claude/skills/`) > Project (`.claude/skills/`) > Plugin
+
+**skills と commands が同名の場合、skillsが優先**
+
 ## スキル一覧
 
 | スキル | トリガー |
@@ -34,6 +40,7 @@ paths: .claude-global/skills/**
 | implement | 「/implement」「タスク実行」 |
 | implement-review | 「/implement-review」「実装してレビューまで」 |
 | code-review | 「コードレビュー」「レビューして」 |
+| codex-code-review | 「codexレビュー」「アーキテクチャレビュー」「設計レビュー」 |
 | refactor | 「リファクタリング」「コード改善」「スメル検出」 |
 | researcher | 「調査して」「リサーチして」 |
 | debug | 「デバッグ」「バグ調査」 |

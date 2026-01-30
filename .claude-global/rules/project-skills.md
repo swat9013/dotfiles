@@ -37,7 +37,7 @@ description: |
 ---
 ```
 
-オプション: `allowed-tools`, `denied-tools`, `user-invocable-only`
+オプション: `argument-hint`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `model`, `context`, `agent`, `hooks`
 
 ## description設計
 

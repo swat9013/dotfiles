@@ -102,7 +102,9 @@
       "Bash(brew install:*)",
       "Bash(npm publish:*)",
       "Bash(docker:*)",
-      "Bash(kubectl:*)"
+      "Bash(kubectl:*)",
+      "Bash(agent:*)",
+      "Bash(cursor agent:*)"
     ],
     "defaultMode": "default"
   },

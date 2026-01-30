@@ -10,6 +10,11 @@ CLAUDE.mdを最小限に圧縮し、Claude Codeのコンテキスト効率を最
 - **起動時コンテキスト消費**: 最小化
 - **必要な情報**: 段階的に開示（Progressive Disclosure）
 
+### 制限事項
+
+- **SKILL.md**: 500行以下
+- **スキルdescription合計**: 15,000文字のbudget制限（`SLASH_COMMAND_TOOL_CHAR_BUDGET`環境変数で調整可能）
+
 ### なぜskills化するのか
 
 | 観点 | CLAUDE.mdに全部書く | skills化 |
@@ -48,6 +53,16 @@ Follow Kent Beck's Test-Driven Development methodology (tdd skill) as the prefer
 - 基本コマンド（build, test, lint）
 - 重要な参照リンク
 - すべての操作に必須のルール
+
+### コンテンツタイプによる設計指針
+
+| タイプ | 内容 | 呼び出し制御 |
+|--------|------|-------------|
+| **Reference** | 知識・規約・スタイルガイド | 自動呼び出し許可（デフォルト） |
+| **Task** | 手順・アクション（deploy, commit等） | `disable-model-invocation: true` 推奨 |
+
+- **Reference content**: Claudeが作業中に参照する知識。インラインで実行される
+- **Task content**: 副作用を伴うアクション。ユーザーが明示的に `/skill-name` で呼び出すべき
 
 ### 決定フロー
 
@@ -191,11 +206,8 @@ name: code-review
 description: |
   5観点でコードレビューを実行。
   「コードレビュー」「レビューして」と依頼された時に使用。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-user-invocable: true
+argument-hint: [target-file]
+allowed-tools: Read, Grep, Glob
 ---
 
 # コードレビュー
@@ -215,6 +227,28 @@ user-invocable: true
 ## 詳細
 - チェックリスト: `references/checklist.md`
 - 出力形式: `templates/output.md`
+```
+
+### Task Skill テンプレート（副作用あり）
+
+```yaml
+---
+name: deploy
+description: |
+  アプリケーションを本番環境にデプロイ。
+  「デプロイ」「本番反映」と依頼された時に使用。
+disable-model-invocation: true  # ユーザー明示呼び出しのみ
+---
+
+# デプロイ
+
+対象: $ARGUMENTS
+
+## 手順
+1. テストスイート実行
+2. アプリケーションビルド
+3. デプロイターゲットにプッシュ
+4. デプロイ成功を確認
 ```
 
 ### Command テンプレート
@@ -325,13 +359,7 @@ name: context-optimizer
 description: |
   CLAUDE.mdを最小化しコンテキスト消費を最適化。
   「CLAUDE.md圧縮」「コンテキスト最適化」「context-optimizer」と依頼された時に使用。
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Bash
-user-invocable: true
+allowed-tools: Read, Write, Edit, Glob, Bash
 ---
 
 # コンテキスト最適化
@@ -473,6 +501,11 @@ if __name__ == "__main__":
 ---
 
 ## 参考資料
+
+### 公式ドキュメント
+
+- [Extend Claude with skills](https://code.claude.com/docs/en/skills) - Skills公式ドキュメント
+- [A complete guide to building skills for Claude](https://claude.com/blog/complete-guide-to-building-skills-for-claude) - 公式ガイド
 
 ### 外部リソース
 

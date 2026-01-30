@@ -21,6 +21,19 @@ skill-name/
 └── assets/            # テンプレート・画像等
 ```
 
+## 配置場所と優先度
+
+| 場所 | パス | 優先度 |
+|------|------|--------|
+| Enterprise | 組織管理設定 | 1（最高） |
+| Personal | `~/.claude/skills/` | 2 |
+| Project | `.claude/skills/` | 3 |
+| Plugin | `plugin-name:skill-name` | 4（名前空間分離） |
+
+- 同名スキルは優先度の高い方が使用される
+- **skills と commands が同名の場合、skillsが優先**
+- `.claude/commands/` は引き続き動作するが、skillsへの移行を推奨
+
 ## skills vs agents vs rules
 
 | 観点 | skills/ | agents/ | rules/ |
@@ -40,14 +53,24 @@ skill-name/
 
 | フィールド | 必須 | 説明 | 制約 |
 |-----------|------|------|------|
-| name | Yes | スキル識別子 | ハイフンケース、64文字以内 |
-| description | Yes | 説明とトリガー | 1024文字以内 |
-| allowed-tools | No | 許可ツール | カンマ区切り |
-| denied-tools | No | 禁止ツール | カンマ区切り |
+| name | No | スキル識別子（省略時はディレクトリ名） | 小文字・数字・ハイフン、64文字以内 |
+| description | 推奨 | 説明とトリガー（省略時はマークダウン最初の段落） | Claudeの自動選択に使用 |
+| argument-hint | No | オートコンプリート時のヒント | `[issue-number]`等 |
+| disable-model-invocation | No | Claude自動呼び出しを禁止 | `true`でユーザー専用 |
+| user-invocable | No | /メニュー表示 | `false`で非表示 |
+| allowed-tools | No | 許可確認なしで使用可能なツール | カンマ区切り |
 | model | No | モデル指定 | claude-sonnet-4等 |
-| context | No | 実行コンテキスト | fork でサブエージェント |
-| user-invocable | No | /メニュー表示 | true/false |
-| user-invocable-only | No | 自動起動を無効化 | true/false |
+| context | No | 実行コンテキスト | `fork` でサブエージェント |
+| agent | No | fork時のサブエージェントタイプ | `Explore`, `Plan`, `general-purpose` |
+| hooks | No | スキルライフサイクルフック | Hooks設定形式 |
+
+### 呼び出し制御
+
+| 設定 | ユーザー | Claude | 用途 |
+|------|---------|--------|------|
+| (デフォルト) | ○ | ○ | 汎用スキル |
+| `disable-model-invocation: true` | ○ | ✕ | deploy, commit等の副作用あり |
+| `user-invocable: false` | ✕ | ○ | 背景知識、コンテキスト |
 
 ### frontmatter例
 
@@ -57,22 +80,13 @@ name: my-skill
 description: |
   スキルの説明。トリガーキーワードを含める。
   「設計して」「plan.md作成」と依頼された時に使用。
+argument-hint: [target-file]
 
 # ツール制限（オプション）
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Task
-  - WebSearch
+allowed-tools: Read, Glob, Grep, Task, WebSearch
 
-# ツール除外（オプション）
-denied-tools:
-  - Edit
-  - Write
-
-# 自動起動を無効化（オプション）
-user-invocable-only: true
+# Claude自動呼び出しを禁止（オプション）
+disable-model-invocation: true
 ---
 ```
 
@@ -105,6 +119,48 @@ description: |
   システム設計・アーキテクチャ評価を担当する専門エージェント。
   「設計して」「アーキテクチャを考えて」「plan.md作成」と依頼された時に使用。
 ```
+
+## String substitutions
+
+スキル内容で使用可能な置換変数:
+
+| 変数 | 説明 | 例 |
+|------|------|-----|
+| `$ARGUMENTS` | 全引数 | `/fix-issue 123` → `123` |
+| `$ARGUMENTS[N]` | N番目の引数（0-indexed） | `$ARGUMENTS[0]` |
+| `$N` | `$ARGUMENTS[N]`の短縮形 | `$0`, `$1` |
+| `${CLAUDE_SESSION_ID}` | セッションID | ログ出力、ファイル名に使用 |
+
+```yaml
+---
+name: fix-issue
+---
+Fix GitHub issue $ARGUMENTS following our coding standards.
+# または
+Migrate $0 from $1 to $2.
+```
+
+`$ARGUMENTS`がスキル内容に含まれない場合、引数は末尾に`ARGUMENTS: <value>`として追加される。
+
+## 動的コンテキスト注入
+
+`!`command`` 構文でシェルコマンド出力を事前注入:
+
+```yaml
+---
+name: pr-summary
+context: fork
+agent: Explore
+---
+## PR context
+- PR diff: !`gh pr diff`
+- Changed files: !`gh pr diff --name-only`
+
+Summarize this pull request...
+```
+
+- コマンドはスキル実行前に実行され、出力がプレースホルダを置換
+- Claudeはコマンドではなく、実行結果のみを受け取る
 
 ## SKILL.md 構成テンプレート
 
@@ -320,7 +376,26 @@ v1 APIは `api.example.com/v1/` を使用していた。
 | 深い参照ネスト | 情報欠落 | 1階層までに制限 |
 | 選択肢の提示過多 | 混乱を招く | デフォルトを示す |
 
+## トラブルシューティング
+
+### スキルが発動しない
+
+1. descriptionにユーザーが使う言葉を含めているか確認
+2. `What skills are available?` でスキル一覧を確認
+3. 直接 `/skill-name` で呼び出してテスト
+
+### スキルが頻繁に誤発動する
+
+1. descriptionをより具体的に
+2. `disable-model-invocation: true` で手動呼び出しのみに制限
+
+### スキルが読み込まれない
+
+- スキルdescriptionは**15,000文字のbudget制限**あり
+- `/context` で除外されたスキルを確認
+- `SLASH_COMMAND_TOOL_CHAR_BUDGET`環境変数で上限を調整可能
+
 ## 参考資料
 
-- [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) - 公式ベストプラクティス
-- [Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) - Skills概要
+- [Extend Claude with skills](https://code.claude.com/docs/en/skills) - 公式ドキュメント
+- [A complete guide to building skills for Claude](https://claude.com/blog/complete-guide-to-building-skills-for-claude) - 公式ガイド
