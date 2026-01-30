@@ -1,6 +1,7 @@
 ---
 name: task
 description: プロジェクトタスクの永続管理。「/task」「タスク追加」「タスク一覧」と依頼された時に使用。.claude/tasks.jsonにタスクを保存し、セッションをまたいで継続管理。
+disable-model-invocation: true
 ---
 
 # Task Manager

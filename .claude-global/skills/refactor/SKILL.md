@@ -1,6 +1,7 @@
 ---
 name: refactor
 description: 既存コードの安全なリファクタリング。「リファクタリング」「コード改善」「スメル検出」と依頼された時に使用。振る舞いを変えず内部構造を改善する3フェーズワークフロー。
+disable-model-invocation: true
 ---
 
 # Refactor

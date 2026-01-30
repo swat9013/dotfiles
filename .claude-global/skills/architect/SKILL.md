@@ -1,7 +1,7 @@
 ---
 name: architect
 description: システム設計・アーキテクチャ評価を担当する専門エージェント。「設計して」「アーキテクチャを考えて」「plan.md作成」と依頼された時に使用。
-
+disable-model-invocation: true
 denied-tools:
   - Edit
   - NotebookEdit

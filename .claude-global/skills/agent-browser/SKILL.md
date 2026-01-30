@@ -1,6 +1,7 @@
 ---
 name: agent-browser
 description: Automates browser interactions for web testing, form filling, screenshots, and data extraction.「ブラウザ操作」「Webテスト」「スクリーンショット取得」「フォーム入力」と依頼された時に使用。
+disable-model-invocation: true
 ---
 
 # Browser Automation with agent-browser

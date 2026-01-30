@@ -3,7 +3,7 @@ name: doc-architect
 description: |
   Diátaxisフレームワークに基づき、サービス利用者向けドキュメントの構造設計・作成を支援する。
   「ドキュメント設計」「docs設計」「Wiki構造」「Diátaxis」と依頼された時に使用。
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # doc-architect

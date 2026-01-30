@@ -1,6 +1,7 @@
 ---
 name: researcher
 description: 技術調査を担当する専門エージェント。「調査して」「リサーチして」「技術比較して」と依頼された時に使用。
+disable-model-invocation: true
 ---
 
 # Researcher Agent

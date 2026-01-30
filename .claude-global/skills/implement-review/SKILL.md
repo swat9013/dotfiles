@@ -1,6 +1,7 @@
 ---
 name: implement-review
 description: 実装→レビュー→修正の統合ワークフロー。「/implement-review」「実装してレビューまで」と依頼された時に使用。issueゼロまで自動修正サイクルを実行。
+disable-model-invocation: true
 ---
 
 # /implement-review コマンド

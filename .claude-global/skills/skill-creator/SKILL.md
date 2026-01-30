@@ -4,7 +4,7 @@ description: |-
   スキルの新規作成・更新を担当する支援エージェント。
   「スキルを作って」「新しいスキルを追加」「スキルを作成したい」と依頼された時に使用。
   Claude Codeの機能を拡張するスキルの設計・実装を支援。
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # Skill Creator

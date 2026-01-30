@@ -1,6 +1,7 @@
 ---
 name: critical-think
 description: 前回回答の厳密批評と改善。「批判的に見て」「自己レビュー」「回答を見直して」と依頼された時に使用。6セクション分析で論理的欠陥を特定し改善版を提示。
+disable-model-invocation: true
 ---
 
 # Critical Think

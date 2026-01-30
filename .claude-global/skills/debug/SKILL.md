@@ -1,6 +1,7 @@
 ---
 name: debug
 description: バグ調査・根本原因特定。「デバッグ」「バグ調査」「エラー解析」と依頼された時に使用。5 Whysで直接原因と根本原因を区別して特定。
+disable-model-invocation: true
 ---
 
 # Debug

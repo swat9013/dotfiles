@@ -1,6 +1,7 @@
 ---
 name: domain-context
 description: プロジェクト固有のドメイン知識を管理する。「学びを保存」「ドメイン知識更新」「domain-context」と依頼された時に使用。
+disable-model-invocation: true
 ---
 
 # Domain Context

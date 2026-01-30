@@ -1,7 +1,7 @@
 ---
 name: setup-linter-hooks
 description: プロジェクトに適したlinter/formatter hookを設定する。「linter hook作成」「formatter hook設定」と依頼された時に使用。プロジェクトの設定ファイルから自動検出してClaude Code hooks設定を生成。
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # Setup Linter Hooks

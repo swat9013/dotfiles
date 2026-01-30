@@ -1,6 +1,7 @@
 ---
 name: ghq
 description: ghqによるリポジトリ管理。「ghq」「リポジトリ管理」「リポジトリをクローン」と依頼された時に使用。ローカルリポジトリの取り込みワークフローも対応。
+disable-model-invocation: true
 ---
 
 # ghq

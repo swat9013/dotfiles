@@ -2,6 +2,7 @@
 name: frontend-design
 description: Creates distinctive, production-grade frontend interfaces with high design quality.「UI作成」「フロントエンド実装」「コンポーネント作成」「Webページ作成」と依頼された時に使用。
 license: Complete terms in LICENSE.txt
+disable-model-invocation: true
 ---
 
 This skill guides creation of distinctive, production-grade frontend interfaces that avoid generic "AI slop" aesthetics. Implement real working code with exceptional attention to aesthetic details and creative choices.

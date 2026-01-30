@@ -1,6 +1,7 @@
 ---
 name: code-review
 description: コードレビュー実行。「コードレビュー」と依頼された時に使用。4観点（Security、Correctness、Design、Testing）で評価。
+disable-model-invocation: true
 ---
 
 # Code Review

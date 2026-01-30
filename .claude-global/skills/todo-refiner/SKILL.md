@@ -4,6 +4,7 @@ description: |
   .work/todo.mdをINVEST原則に沿って整理する。
   「todo整理」「タスク整理」「todo-refiner」と依頼されたときに使用。
   整理後のタスクは`tt`コマンドでClaude Codeに直接渡せる品質になる。
+disable-model-invocation: true
 ---
 
 # Todo Refiner

@@ -3,7 +3,7 @@ name: context-optimizer
 description: |
   CLAUDE.mdを最小化し、コンテキスト消費を最適化する。
   「CLAUDE.md圧縮」「コンテキスト最適化」「context-optimizer」と依頼された時に使用。
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # Context Optimizer

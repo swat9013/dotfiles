@@ -4,6 +4,7 @@ description: |-
   plan.mdからimplementation.mdを生成するタスク分解エージェント。
   実装計画を実行可能なタスクリストに変換する。
   「/breakdown」「タスク分解」と依頼された時に使用。
+disable-model-invocation: true
 ---
 
 # /breakdown コマンド
