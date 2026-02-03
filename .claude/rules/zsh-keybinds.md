@@ -12,6 +12,7 @@ paths: .zsh/keybinds.zsh
 | Ctrl+s | fzyディレクトリナビゲーション | ディレクトリをインタラクティブに選択・移動 |
 | Ctrl+^ | 一つ上のディレクトリへ | `cd ..` の短縮 |
 | Ctrl+m | 入力なし→ls+git status | 空行でEnter時に自動実行 |
+| Ctrl+v | VSCode起動 | カレントディレクトリをVSCodeで開く |
 
 ## fzy統合
 

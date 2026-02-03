@@ -128,7 +128,7 @@ Migrate $0 from $1 to $2.
 
 ## 動的コンテキスト注入
 
-`!`command`` 構文でシェルコマンド出力を事前注入:
+`!｀command｀` 構文（｀は実際にはバッククォート）でシェルコマンド出力を事前注入:
 
 ```yaml
 ---
@@ -137,11 +137,13 @@ context: fork
 agent: Explore
 ---
 ## PR context
-- PR diff: !`gh pr diff`
-- Changed files: !`gh pr diff --name-only`
+- PR diff: !｀gh pr diff｀
+- Changed files: !｀gh pr diff --name-only｀
 
 Summarize this pull request...
 ```
+
+※ 上記の ｀ は実際にはバッククォート(`)を使用
 
 コマンドはスキル実行前に実行され、出力がプレースホルダを置換する。
 

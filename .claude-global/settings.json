@@ -60,7 +60,12 @@
       "Read(~/.claude/skills/**/*)",
       "Read(~/.dotfiles/.claude-global/skills/**/*)",
       "Read(.claude/skills/**/*)",
-      "Bash(~/.dotfiles/.claude-global/skills/**/*.sh:*)"
+      "Bash(~/.dotfiles/.claude-global/skills/**/*.sh:*)",
+      "Bash(find: *)",
+      "Bash(cursor agent:*)",
+      "Bash(docker:*)",
+      "Bash(comm:*)",
+      "Bash(sort:*)"
     ],
     "deny": [
       "Read(./.env)",
@@ -86,8 +91,7 @@
       "Bash(sudo:*)",
       "Bash(chmod 777:*)",
       "Bash(ssh:*)",
-      "Bash(scp:*)",
-      "Bash(cursor agent:*)"
+      "Bash(scp:*)"
     ],
     "ask": [
       "Bash(curl:*)",
@@ -101,7 +105,6 @@
       "Bash(rmtrash:*)",
       "Bash(brew install:*)",
       "Bash(npm publish:*)",
-      "Bash(docker:*)",
       "Bash(kubectl:*)"
     ],
     "defaultMode": "default"

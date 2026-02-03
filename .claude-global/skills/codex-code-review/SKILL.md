@@ -1,7 +1,6 @@
 ---
 name: codex-code-review
-description: Cursor Agent (GPT-5.2-Codex) によるアーキテクチャ・設計レビュー。「codexレビュー」「アーキテクチャレビュー」「設計レビュー」と依頼された時に使用。4観点（Architecture、Test Strategy、API Design、Behavior）で評価。
-disable-model-invocation: true
+description: Cursor Agent (GPT-5.2-Codex) によるアーキテクチャ・設計レビュー。「codexレビュー」と依頼された時に使用。4観点（Architecture、Test Strategy、API Design、Behavior）で評価。
 ---
 
 # Codex Code Review

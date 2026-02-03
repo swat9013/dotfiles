@@ -85,6 +85,14 @@ bindkey '^m' do_enter
 #cd 後のlsの省略
 function chpwd() { ls }
 
+## Ctrl+v でカレントディレクトリをVSCodeで開く
+function open-vscode() {
+    code .
+    zle reset-prompt
+}
+zle -N open-vscode
+bindkey '^v' open-vscode
+
 #スクリーンロックを無効化
 stty stop undef
 
