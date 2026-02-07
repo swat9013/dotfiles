@@ -2,7 +2,11 @@
 
 ## 概要
 
-Claudeが実行するワークフローや手順を定義した再利用可能なコンポーネント。明示的な呼び出し（`/skill-name`）またはキーワードマッチで起動する。
+Claudeが実行するワークフローや、判断の基準となる知識を定義した再利用可能なコンポーネント。明示的な呼び出し（`/skill-name`）またはキーワードマッチで起動する。
+
+スキルには2つのタイプがある:
+- **ワークフロー系（Task Content）**: デプロイ、コミット、コード生成など、ステップバイステップで実行する手順
+- **知識系（Reference Content）**: API規約、設計パターン、ドメイン知識など、Claudeが判断時に参照する背景情報
 
 ## 設計原則
 
@@ -15,7 +19,7 @@ Claudeが実行するワークフローや手順を定義した再利用可能�
 
 ```
 skill-name/
-├── SKILL.md           # 必須: 手順・ガイドライン
+├── SKILL.md           # 必須: ワークフロー手順または知識内容
 ├── references/        # 参照ドキュメント（必要時のみ読み込み）
 ├── scripts/           # 実行スクリプト（読み込まず実行）
 └── assets/            # テンプレート・画像等
@@ -38,7 +42,7 @@ skill-name/
 
 | 観点 | skills/ | agents/ | rules/ |
 |------|---------|---------|--------|
-| 用途 | ワークフロー・手順定義 | カスタムサブエージェント | パス固有のルール |
+| 用途 | ワークフロー・手順定義、知識・参照情報 | カスタムサブエージェント | パス固有のルール |
 | 実行形態 | 対話型・相談型 | コンテキスト分離実行 | 自動適用 |
 | トリガー | Claude自動選択 or `/skill-name` | Task tool経由 | ディレクトリアクセス時 |
 
@@ -48,6 +52,40 @@ skill-name/
 |---------|--------|--------|
 | コンテキスト | 共有（会話継続） | 分離（独立実行） |
 | 適用場面 | 手順定義、ガイド | 並列実行、試行錯誤、専門役割 |
+
+## スキルタイプ: ワークフロー vs 知識
+
+| 観点 | ワークフロー系（Task Content） | 知識系（Reference Content） |
+|------|-------------------------------|---------------------------|
+| 目的 | 特定アクションの実行手順 | 判断基準・ドメイン知識 |
+| トリガー | `/skill-name` または明示的依頼 | 自動（description のキーワードマッチ） |
+| frontmatter | `disable-model-invocation: true` | `user-invocable: false` |
+| 実行形態 | 段階的ワークフロー | インライン参照 |
+| 例 | `/deploy`, `/commit`, `/refactor` | API規約、DB schema、スタイルガイド |
+
+### ワークフロー系スキルの特徴
+- 副作用を伴う操作（デプロイ、コミット等）
+- ユーザーが実行タイミングを制御したい
+- `disable-model-invocation: true` でClaude自動実行を禁止
+- 明確な「完了条件」がある
+
+### 知識系スキルの特徴
+- 副作用なし、参照情報のみ
+- Claudeが現在の会話に関連すると判断時に自動読み込み
+- `user-invocable: false` でメニューから非表示
+- ユーザーが直接実行する意味がない（コマンドではなく知識）
+
+### rules/ vs 知識系スキル
+
+| 観点 | rules/ | 知識系スキル |
+|------|--------|-------------|
+| 適用範囲 | パスマッチ時のみ | キーワードマッチで全プロジェクト |
+| コンテキストコスト | 中（パス条件で絞り込み） | 低（必要時のみ読み込み） |
+| 用途 | パス固有のルール | プロジェクト横断の知識 |
+
+**判断基準**:
+- 特定ディレクトリでのみ必要 → `rules/`
+- プロジェクト全体で参照 → 知識系スキル
 
 ## frontmatter仕様
 
@@ -72,8 +110,14 @@ skill-name/
 | `disable-model-invocation: true` | ○ | ✕ | deploy, commit等の副作用あり |
 | `user-invocable: false` | ✕ | ○ | 背景知識、コンテキスト |
 
+**判断基準**:
+- **タイミング制御が必要**: `disable-model-invocation: true`（例: デプロイ、データ削除）
+- **背景知識として常時利用**: `user-invocable: false`（例: API規約、legacy system解説）
+- **両方に該当**: 一般的にはワークフロー系が優先（副作用の制御が重要）
+
 ### frontmatter例
 
+**ワークフロー系スキル:**
 ```yaml
 ---
 name: my-skill
@@ -88,6 +132,28 @@ allowed-tools: Read, Glob, Grep, Task, WebSearch
 # Claude自動呼び出しを禁止（オプション）
 disable-model-invocation: true
 ---
+```
+
+**知識系スキル:**
+```yaml
+---
+name: api-conventions
+description: |
+  プロジェクトのAPI設計規約。
+  Claude がエンドポイント設計・レビュー時に参照する。
+user-invocable: false
+---
+# ↑ frontmatter ここまで / ↓ SKILL.md 本体
+
+## RESTful 命名規則
+- リソースは複数形: `/users`, `/posts`
+- サブリソース: `/users/:id/posts`
+
+## エラーレスポンス形式
+統一フォーマット: `{"error": {"code": "...", "message": "..."}}`
+
+## 参照
+詳細は `references/` に配置（認証、ページネーション、バリデーション等）
 ```
 
 ## 命名規則
@@ -118,6 +184,17 @@ description: ユーザーのPDF処理を手伝う  # 二人称
 description: |
   システム設計・アーキテクチャ評価を担当する専門エージェント。
   「設計して」「アーキテクチャを考えて」「plan.md作成」と依頼された時に使用。
+```
+
+### 知識系スキルの description 設計
+
+「いつ参照すべきか」を明示し、技術領域のキーワードを含める:
+
+```yaml
+# 良い例
+description: |
+  プロジェクトのAPI設計規約。
+  エンドポイント設計・レビュー・実装時に参照する。
 ```
 
 ## String substitutions
@@ -255,6 +332,18 @@ SKILL.md → examples.md
 ...
 ```
 
+### 知識系スキルでの Progressive Disclosure
+
+SKILL.md は概要のみ（50行以内推奨）、詳細は references/ に分離:
+
+```
+api-conventions/
+├── SKILL.md              # 概要と頻出パターン
+└── references/           # authentication.md, pagination.md 等
+```
+
+SKILL.md で参照先を明記: 「詳細は `references/xxx.md` を参照」
+
 ## _shared/ リソース配置
 
 複数スキルで共有するリソースは `_shared/` に配置。
@@ -375,6 +464,8 @@ v1 APIは `api.example.com/v1/` を使用していた。
 | 単純なルール | skills不要 | rules/で十分 |
 | 深い参照ネスト | 情報欠落 | 1階層までに制限 |
 | 選択肢の提示過多 | 混乱を招く | デフォルトを示す |
+| `/`で呼び出せない知識 | ユーザー混乱 | `user-invocable: false` |
+| 過度に詳細な SKILL.md | 常時読み込みコスト大 | references/ に分離 |
 
 ## トラブルシューティング
 

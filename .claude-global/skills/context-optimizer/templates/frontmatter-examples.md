@@ -83,17 +83,22 @@ allowed-tools:
 ---
 ```
 
-### 非公開スキル
+### 知識系スキル
 
 ```yaml
 ---
-name: internal-helper
+name: api-conventions
 description: |
-  内部処理用のヘルパースキル。
-  他のスキルから呼び出される。
+  プロジェクトのAPI設計規約。
+  Claude がエンドポイント設計・レビュー時に参照する。
 user-invocable: false
 ---
 ```
+
+**説明**:
+- Claude が自動で参照する知識・ガイドライン
+- ユーザーから直接呼び出せない（`/`メニュー非表示）
+- API規約、DBスキーマ、スタイルガイドなどが該当
 
 ---
 

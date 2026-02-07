@@ -1,10 +1,7 @@
 ---
-name: skill-creator
-description: |-
-  スキルの新規作成・更新を担当する支援エージェント。
-  「スキルを作って」「新しいスキルを追加」「スキルを作成したい」と依頼された時に使用。
-  Claude Codeの機能を拡張するスキルの設計・実装を支援。
-disable-model-invocation: true
+name: managing-skills
+description: Claude Codeスキルの作成・変更・更新に関する知識ガイド。frontmatter仕様、Progressive Disclosure、設計パターン、string substitutionsを含む。「スキルを作って」「スキルを変更」「スキルを更新」「新しいスキルを追加」と依頼された時に参照する。
+user-invocable: false
 ---
 
 # Skill Creator

@@ -1,7 +1,7 @@
 ---
 name: ghq
-description: ghqによるリポジトリ管理。「ghq」「リポジトリ管理」「リポジトリをクローン」と依頼された時に使用。ローカルリポジトリの取り込みワークフローも対応。
-disable-model-invocation: true
+description: ghqによるリポジトリ管理のガイド。コマンド仕様、ローカルリポジトリ取り込み手順を含む。「ghq」「リポジトリ管理」「リポジトリをクローン」と依頼された時に参照する。
+user-invocable: false
 ---
 
 # ghq

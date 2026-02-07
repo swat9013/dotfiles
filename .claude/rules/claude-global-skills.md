@@ -33,6 +33,8 @@ Enterprise > Personal (`~/.claude/skills/`) > Project (`.claude/skills/`) > Plug
 
 ## スキル一覧
 
+### ワークフロー系スキル
+
 | スキル | トリガー |
 |--------|---------|
 | architect | 「設計して」「plan.md作成」 |
@@ -48,7 +50,14 @@ Enterprise > Personal (`~/.claude/skills/`) > Project (`.claude/skills/`) > Plug
 | domain-context | 「学びを保存」「ドメイン知識更新」 |
 | context-optimizer | 「CLAUDE.md圧縮」「コンテキスト最適化」 |
 | config-optimizer | 「設定を最適化」 |
-| skill-creator | 「スキルを作って」 |
 | task | 「/task」「タスク追加」 |
-| ghq | 「ghq」「リポジトリ管理」「リポジトリをクローン」 |
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」「編集後linter実行」 |
+
+### 知識系スキル（user-invocable: false）
+
+| スキル | トリガーキーワード | 内容 |
+|--------|------------------|------|
+| managing-skills | 「スキルを作って」「スキルを変更」「スキルを更新」「新しいスキルを追加」 | スキル作成・変更・更新の知識ガイド |
+| ghq | 「ghq」「リポジトリ管理」「リポジトリをクローン」 | リポジトリ管理ツールガイド |
+| agent-browser | 「ブラウザ操作」「Webテスト」「スクリーンショット取得」「フォーム入力」 | ブラウザ自動化ツールガイド |
+| frontend-design | 「UI作成」「フロントエンド実装」「コンポーネント作成」「Webページ作成」 | UI/フロントエンド実装ガイド |
