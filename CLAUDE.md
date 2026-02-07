@@ -21,7 +21,7 @@ brew bundle --global        # Homebrewパッケージ更新
 ## アーキテクチャ概要
 
 - `.`で始まるファイル → `~`へシンボリックリンク
-- `sheldon/`, `ghostty/`, `yazi/` → `~/.config/`配下
+- `sheldon/`, `ghostty/`, `yazi/`, `starship/` → `~/.config/`配下
 - `.claude-global/` → `~/.claude/`配下
 
 ### Claude Code設定の3層構造

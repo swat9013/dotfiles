@@ -27,6 +27,18 @@ if [ ! -e "$HOME"/.config/ghostty ]; then
     ln -snfv "$HOME"/.dotfiles/ghostty "$HOME"/.config/ghostty
 fi
 
+# Alacritty設定
+if [ ! -e "$HOME"/.config/alacritty ]; then
+    mkdir -p "$HOME"/.config
+    ln -snfv "$HOME"/.dotfiles/alacritty "$HOME"/.config/alacritty
+fi
+
+# Starship設定
+if [ ! -e "$HOME"/.config/starship ]; then
+    mkdir -p "$HOME"/.config
+    ln -snfv "$HOME"/.dotfiles/starship "$HOME"/.config/starship
+fi
+
 # Yazi設定
 if [ ! -e "$HOME"/.config/yazi ]; then
     mkdir -p "$HOME"/.config

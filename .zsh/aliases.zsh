@@ -139,11 +139,6 @@ alias build="./script/build.sh"
 alias setup="./script/setup.sh"
 
 #
-# python
-#
-alias pip-upgrade-all="pip list -o | tail -n +3 | awk '{ print \$1 }' | xargs pip install -U"
-
-#
 # vibe-kanban
 #
 alias vk="~/.dotfiles/lib/vibe-kanban.sh"

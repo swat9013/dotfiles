@@ -24,7 +24,6 @@ paths: sheldon/**
 | zsh-syntax-highlighting | コマンド構文ハイライト | 遅延 |
 | zsh-completions | 高度な補完機能 | 遅延 |
 | ohmyzsh-lib | Oh-My-Zshのlib部分のみ使用 | 即時 |
-| pure | モダンプロンプト (非同期git情報) | 即時 |
 
 ## plugins.toml 構成
 
@@ -43,9 +42,6 @@ apply = ["defer"]
 [plugins.ohmyzsh-lib]
 github = "ohmyzsh/ohmyzsh"
 dir = "lib"
-
-[plugins.pure]
-github = "sindresorhus/pure"
 ```
 
 ## 初期化

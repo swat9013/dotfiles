@@ -13,5 +13,8 @@ logs
 # Local MCP settings (machine-specific)
 .claude-global/setup-mcp-local.sh
 
+# Alacritty themes (cloned separately)
+alacritty/themes/
+
 # Cache
 .cache/

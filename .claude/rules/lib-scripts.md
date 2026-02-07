@@ -30,6 +30,7 @@ paths: lib/**
 | 元 | リンク先 |
 |----|---------|
 | `sheldon/` | `~/.config/sheldon` |
+| `starship/` | `~/.config/starship` |
 | `ghostty/` | `~/.config/ghostty` |
 | `colima/colima.yaml` | `~/.colima/default/colima.yaml` |
 | `.claude-global/settings.json` | `~/.claude/settings.json` |

@@ -1,0 +1,29 @@
+format = """
+$directory$git_branch$git_status$git_state$cmd_duration
+$character"""
+
+add_newline = true
+
+[character]
+success_symbol = "[❯](purple)"
+error_symbol = "[❯](red)"
+
+[directory]
+style = "blue bold"
+truncation_length = 3
+truncate_to_repo = false
+
+[git_branch]
+style = "green"
+format = "[$branch]($style) "
+
+[git_status]
+style = "yellow"
+format = "[$all_status$ahead_behind]($style)"
+
+[git_state]
+style = "yellow bold"
+
+[cmd_duration]
+min_time = 5000
+style = "yellow dimmed"

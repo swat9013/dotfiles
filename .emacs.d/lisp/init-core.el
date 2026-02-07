@@ -56,6 +56,9 @@
   (mouse-wheel-progressive-speed nil)
   (mouse-wheel-follow-mouse t)
 
+  ;; C-v/M-v で限界に達したら先頭/末尾に移動
+  (scroll-error-top-bottom t)
+
   ;; 行の扱い
   (kill-whole-line t)  ; C-k で行全体を削除
   (truncate-lines nil)

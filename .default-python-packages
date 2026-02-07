@@ -1,2 +1,1 @@
-powerline-status
-sqlfluff
+# Intentionally empty - use 'uv tool install' for CLI tools

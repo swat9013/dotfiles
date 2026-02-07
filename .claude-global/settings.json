@@ -61,11 +61,12 @@
       "Read(~/.dotfiles/.claude-global/skills/**/*)",
       "Read(.claude/skills/**/*)",
       "Bash(~/.dotfiles/.claude-global/skills/**/*.sh:*)",
-      "Bash(find: *)",
+      "Bash(find:*)",
       "Bash(cursor agent:*)",
       "Bash(docker:*)",
       "Bash(comm:*)",
-      "Bash(sort:*)"
+      "Bash(sort:*)",
+      "Bash(test:*)"
     ],
     "deny": [
       "Read(./.env)",

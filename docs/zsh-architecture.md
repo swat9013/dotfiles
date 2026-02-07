@@ -24,6 +24,8 @@
   └── aliases.zsh  # エイリアス・関数定義
 sheldon/
   └── plugins.toml # プラグイン管理
+starship/
+  └── starship.toml # プロンプト設定
 ```
 
 ### 3. クロスプラットフォーム対応
@@ -58,7 +60,8 @@ macOSとLinuxの両方で動作するよう、OS検出による条件分岐を�
 2. `auto_update.sh &!` - バックグラウンドで自動更新チェック
 3. `compinit` - 補完システム初期化
 4. `sheldon source` - プラグイン読み込み
-5. `.zsh/*.zsh` - モジュール読み込み
+5. `starship init zsh` - プロンプト初期化
+6. `.zsh/*.zsh` - モジュール読み込み
 6. PATH追加 - 各種ツールのパス設定
 
 ### `.zsh/opt.zsh` - シェルオプション
@@ -106,7 +109,6 @@ macOSとLinuxの両方で動作するよう、OS検出による条件分岐を�
 | zsh-syntax-highlighting | コマンド構文ハイライト | 遅延 |
 | zsh-completions | 追加補完定義 | 即時 |
 | ohmyzsh-lib | 補完・ディレクトリ機能 | 即時 |
-| pure | プロンプトテーマ | 即時 |
 
 ---
 
@@ -136,6 +138,7 @@ macOSとLinuxの両方で動作するよう、OS検出による条件分岐を�
 │  • auto_update.sh &!  │
 │  • compinit           │
 │  • sheldon source     │
+│  • starship init zsh  │
 │  • .zsh/*.zsh 読み込み│
 │  • PATH追加           │
 └───────────────────────┘

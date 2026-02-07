@@ -18,6 +18,11 @@ fi
 
 sh lib/dotfilesLink.sh
 
+# TPM (Tmux Plugin Manager)
+if [ ! -d "$HOME"/.tmux/plugins/tpm ]; then
+    git clone https://github.com/tmux-plugins/tpm "$HOME"/.tmux/plugins/tpm
+fi
+
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
     if  [ `which brew` ]; then
