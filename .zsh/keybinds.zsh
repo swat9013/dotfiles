@@ -61,26 +61,36 @@ function cdup() {
 zle -N cdup
 bindkey '^^' cdup
 
-function do_enter() {
-    if [ -n "$BUFFER" ]; then
-        zle accept-line
-        return 0
+## Enter押下時の情報表示（accept-lineラップ方式）
+function custom_accept_line() {
+    if [[ -z "$BUFFER" ]]; then
+        # 空行の場合、マーカーをセット
+        EMPTY_LINE_ENTER=1
+    else
+        # コマンドがある場合、マーカーをクリア
+        EMPTY_LINE_ENTER=0
     fi
-    echo
-    ls
-    # ↓おすすめ
-    # ls_abbrev
-    if [ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" = 'true' ]; then
-        # echo -e "\e[0;33m--- git status ---\e[0m"
-        echo
-        git status --short --branch
-    fi
-    echo
-    zle reset-prompt
-    return 0
+    zle .accept-line
 }
-zle -N do_enter
-bindkey '^m' do_enter
+zle -N accept-line custom_accept_line
+
+# コマンド実行後の情報表示
+function precmd_show_info() {
+    if [[ "$EMPTY_LINE_ENTER" == "1" ]]; then
+        echo
+        ls
+        if [ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" = 'true' ]; then
+            echo
+            git status --short --branch
+        fi
+        echo
+    fi
+    # マーカーをリセット
+    EMPTY_LINE_ENTER=0
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd precmd_show_info
 
 #cd 後のlsの省略
 function chpwd() { ls }

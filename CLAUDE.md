@@ -34,6 +34,14 @@ brew bundle --global        # Homebrewパッケージ更新
 
 **重要**: `.claude/agents/` は使用しない。サブエージェントはskill内でTask toolを使ってadhocに呼び出す。
 
+#### skills/ の主要ワークフロー
+
+**requirements スキル** — ユーザー要件の整理・検証（トリガー: 「要件整理」「requirements」「何を作るべきか明確にして」）
+- 依頼内容を5W1Hで構造化し、XY問題を検出
+- 測定可能な成功基準を定義（「速い」→「5秒以内」）
+- スコープ・制約条件を明示した `requirements.md` を作成
+- ワークフロー: researcher → **requirements** → architect の中流役割
+
 ### docs/ と rules/ の責務分担
 
 | 観点 | docs/ | rules/ |

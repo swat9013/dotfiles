@@ -26,7 +26,7 @@ fi
 if [ "$(uname)" == 'Darwin' ]; then
     echo "=== Mac OS==="
     if  [ `which brew` ]; then
-        brew bundle --global --no-lock --cleanup
+        brew bundle --global --cleanup
     else
         echo "home brew requrired"
         echo "https://brew.sh/index_ja.html"

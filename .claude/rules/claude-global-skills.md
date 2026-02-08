@@ -44,6 +44,7 @@ Enterprise > Personal (`~/.claude/skills/`) > Project (`.claude/skills/`) > Plug
 | code-review | 「コードレビュー」「レビューして」 |
 | codex-code-review | 「codexレビュー」「アーキテクチャレビュー」「設計レビュー」 |
 | refactor | 「リファクタリング」「コード改善」「スメル検出」 |
+| requirements | 「要件整理」「requirements」「何を作るべきか明確にして」 |
 | researcher | 「調査して」「リサーチして」 |
 | debug | 「デバッグ」「バグ調査」 |
 | critical-think | 「批判的に見て」「自己レビュー」 |
