@@ -69,6 +69,16 @@ alias tmkss="tmux kill-session"
 alias ide="~/.dotfiles/lib/ide.sh"
 
 #
+# zellij
+#
+alias zj="zellij"
+alias zja="zellij attach"
+alias zjls="zellij list-sessions"
+alias zjk="zellij kill-session"
+alias zjka="zellij kill-all-sessions"
+alias zjide="zellij --layout ide"
+
+#
 # git
 #
 alias g='git'

@@ -23,14 +23,21 @@ window-save-state = always
 # デスクトップ通知（OSC 9/777対応）
 desktop-notifications = true
 
-# スプリット移動（矢印キー）
-keybind = shift+left=goto_split:left
-keybind = shift+right=goto_split:right
-keybind = shift+up=goto_split:up
-keybind = shift+down=goto_split:down
-
-# スプリット移動（Emacs風: n=down, p=up, b=left, f=right）
-keybind = ctrl+shift+b=goto_split:left
-keybind = ctrl+shift+f=goto_split:right
-keybind = ctrl+shift+p=goto_split:up
-keybind = ctrl+shift+n=goto_split:down
+# Zellij連携: Ghosttyのキーバインドを解除してZellijに転送
+# keybind = cmd+t=unbind
+# keybind = cmd+n=unbind
+# keybind = cmd+q=unbind
+# keybind = cmd+d=unbind
+# keybind = cmd+shift+d=unbind
+# keybind = ctrl+tab=csi:9;5u
+# keybind = ctrl+shift+tab=csi:9;6u
+# keybind = ctrl+tab=unbind
+# keybind = ctrl+shift+tab=unbind
+# keybind = ctrl+shift+b=unbind
+# keybind = ctrl+shift+f=unbind
+# keybind = ctrl+shift+p=unbind
+# keybind = ctrl+shift+n=unbind
+# keybind = shift+left=unbind
+# keybind = shift+right=unbind
+# keybind = shift+up=unbind
+# keybind = shift+down=unbind

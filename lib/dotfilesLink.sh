@@ -26,6 +26,7 @@ if [ ! -e "$HOME"/.config/ghostty ]; then
     mkdir -p "$HOME"/.config
     ln -snfv "$HOME"/.dotfiles/ghostty "$HOME"/.config/ghostty
 fi
+# sh "$HOME"/.dotfiles/ghostty/macos-defaults.sh
 
 # Alacritty設定
 if [ ! -e "$HOME"/.config/alacritty ]; then
@@ -43,6 +44,12 @@ fi
 if [ ! -e "$HOME"/.config/yazi ]; then
     mkdir -p "$HOME"/.config
     ln -snfv "$HOME"/.dotfiles/yazi "$HOME"/.config/yazi
+fi
+
+# Zellij設定
+if [ ! -e "$HOME"/.config/zellij ]; then
+    mkdir -p "$HOME"/.config
+    ln -snfv "$HOME"/.dotfiles/zellij "$HOME"/.config/zellij
 fi
 
 # Claude Code global settings

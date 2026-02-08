@@ -1,0 +1,37 @@
+copy_command "pbcopy"
+mouse_mode true
+session_serialization true
+show_startup_tips false
+support_kitty_keyboard_protocol true
+
+keybinds clear-defaults=true {
+    locked {
+        bind "Super g" { SwitchToMode "normal"; }
+    }
+    shared_except "locked" {
+        bind "Super g" { SwitchToMode "locked"; }
+        bind "Super q" { Quit; }
+        // ペイン追加
+        bind "Super d" { NewPane "right"; SwitchToMode "normal"; }
+        bind "Shift Super d" { NewPane "down"; SwitchToMode "normal"; }
+        bind "Super w" { CloseFocus; SwitchToMode "normal"; }
+        // ペイン移動
+        bind "Ctrl Shift b" { MoveFocus "left"; }
+        bind "Ctrl Shift f" { MoveFocus "right"; }
+        bind "Ctrl Shift p" { MoveFocus "up"; }
+        bind "Ctrl Shift n" { MoveFocus "down"; }
+        bind "Alt left" { MoveFocusOrTab "left"; }
+        bind "Alt right" { MoveFocusOrTab "right"; }
+        bind "Alt down" { MoveFocus "down"; }
+        bind "Alt up" { MoveFocus "up"; }
+        // タブ操作
+        bind "Super t" { NewTab; SwitchToMode "normal"; }
+        bind "Ctrl tab" { GoToNextTab; }
+        bind "Ctrl Shift tab" { GoToPreviousTab; }
+        bind "Shift tab" { GoToPreviousTab; }
+    }
+    shared_except "normal" "locked" {
+        bind "esc" { SwitchToMode "normal"; }
+        bind "enter" { SwitchToMode "normal"; }
+    }
+}
