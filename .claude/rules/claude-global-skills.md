@@ -62,3 +62,4 @@ Enterprise > Personal (`~/.claude/skills/`) > Project (`.claude/skills/`) > Plug
 | ghq | 「ghq」「リポジトリ管理」「リポジトリをクローン」 | リポジトリ管理ツールガイド |
 | agent-browser | 「ブラウザ操作」「Webテスト」「スクリーンショット取得」「フォーム入力」 | ブラウザ自動化ツールガイド |
 | frontend-design | 「UI作成」「フロントエンド実装」「コンポーネント作成」「Webページ作成」 | UI/フロントエンド実装ガイド |
+| claude-mem | 「claude-mem」「メモリ検索」「セッション履歴」「コンテキスト検索」「過去のセッション」 | claude-memプラグインの使用ガイド（MCPツール・3層ワークフロー・Progressive Disclosure） |

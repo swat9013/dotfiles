@@ -96,7 +96,7 @@ add_mcp_server "serena" \
     --from "git+https://github.com/oraios/serena" \
     serena \
     start-mcp-server \
-    --context ide-assistant \
+    --context claude-code \
     --project '$(pwd)'
 
 add_mcp_server "chrome-devtools" \

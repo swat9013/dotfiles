@@ -110,6 +110,7 @@
     ],
     "defaultMode": "default"
   },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.dotfiles/.claude-global/statusline.sh",
@@ -123,5 +124,6 @@
   },
   "language": "japanese",
   "spinnerTipsEnabled": false,
-  "promptSuggestionEnabled": false
+  "promptSuggestionEnabled": false,
+  "effortLevel": "medium"
 }
