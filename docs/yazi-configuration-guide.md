@@ -14,7 +14,7 @@ yaziは、Rustで書かれた高速なターミナルファイルマネージャ
 
 ### 既存ツールとの棲み分け
 
-- **fzy**: コマンド履歴検索（Ctrl+r）、ディレクトリジャンプ（Ctrl+s）、ghqリポジトリ選択（`gh`コマンド）
+- **fzf**: コマンド履歴検索（Ctrl+r、頻度順）、ディレクトリジャンプ（Ctrl+s）、ghqリポジトリ選択（`gf`コマンド）
 - **yazi**: ファイルブラウジング、プレビュー（画像・Markdown・コード）、ファイル操作、ディレクトリツリー表示
 
 ### デザイン哲学
@@ -269,12 +269,12 @@ function ygh() {
         return 1
     fi
 
-    if ! which fzy > /dev/null 2>&1; then
-        echo "Error: fzy is not installed"
+    if ! which fzf > /dev/null 2>&1; then
+        echo "Error: fzf is not installed"
         return 1
     fi
 
-    local repo=$(ghq list | fzy)
+    local repo=$(ghq list | fzf)
     if [ -n "$repo" ]; then
         y "$(ghq root)/$repo"
     fi
@@ -374,10 +374,10 @@ Ctrl+n/pなどのキーバインドが反応しない。
    # 期待結果: /Users/username/ghq
    ```
 
-3. **fzyがインストールされていない**（`ygh`コマンドのみ）:
+3. **fzfがインストールされていない**（`ygh`コマンドのみ）:
    ```bash
-   which fzy
-   # 期待結果: /opt/homebrew/bin/fzy
+   which fzf
+   # 期待結果: /opt/homebrew/bin/fzf
    ```
 
 ## 検証コマンド

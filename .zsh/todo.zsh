@@ -62,7 +62,7 @@ function bk() {
 }
 
 function tl() {
-    [[ -x /opt/homebrew/bin/fzy ]] || { echo "Error: fzy is required" >&2; return 1 }
+    [[ -x /opt/homebrew/bin/fzf ]] || { echo "Error: fzf is required" >&2; return 1 }
 
     local cache_file="$HOME/.dotfiles/.cache/todo-paths.txt"
 
@@ -106,7 +106,7 @@ function tl() {
     done
 
     # fzyで選択
-    local selected=$(printf '%s\n' "${sorted[@]}" | /opt/homebrew/bin/fzy -l 20)
+    local selected=$(printf '%s\n' "${sorted[@]}" | /opt/homebrew/bin/fzf --height=20)
     [[ -z "$selected" ]] && return 0
 
     [[ -n "${path_map[$selected]}" ]] && cd "${path_map[$selected]}"
@@ -135,7 +135,7 @@ function tll() {
 }
 
 function tt() {
-    (( $+commands[fzy] )) || { echo "Error: fzy is required" >&2; return 1 }
+    (( $+commands[fzf] )) || { echo "Error: fzf is required" >&2; return 1 }
     (( $+commands[claude] )) || { echo "Error: claude is required" >&2; return 1 }
 
     local todo_file=".work/todo.md"
@@ -145,8 +145,8 @@ function tt() {
     local tasks=$(grep -E '^[[:space:]]*[-*][[:space:]]+\[[[:space:]]\]' "$todo_file")
     [[ -z "$tasks" ]] && { echo "No incomplete tasks found" >&2; return 0 }
 
-    # fzy で選択
-    local selected=$(echo "$tasks" | fzy)
+    # fzf で選択
+    local selected=$(echo "$tasks" | fzf)
     [[ -z "$selected" ]] && return 0
 
     # チェックボックス部分を除去

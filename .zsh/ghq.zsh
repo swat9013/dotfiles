@@ -1,7 +1,7 @@
-# ghq + fzy 連携設定
+# ghq + fzf 連携設定
 
-# ghq + fzyでリポジトリを選択してcd（最近アクセスしたリポジトリを優先表示）
-function ghq-fzy() {
+# ghq + fzfでリポジトリを選択してcd（最近アクセスしたリポジトリを優先表示）
+function ghq-fzf() {
     local ghq_root="$(ghq root)"
     local repo=$(
         {
@@ -13,7 +13,7 @@ function ghq-fzy() {
                 fi
             done
             ghq list
-        } | awk '!seen[$0]++' | fzy
+        } | awk '!seen[$0]++' | fzf
     )
     if [ -n "$repo" ]; then
         cd "$ghq_root/$repo"
@@ -21,5 +21,5 @@ function ghq-fzy() {
 }
 
 # エイリアス
-alias gf='ghq-fzy'
+alias gf='ghq-fzf'
 alias gg='ghq get'

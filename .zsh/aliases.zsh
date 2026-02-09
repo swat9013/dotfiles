@@ -82,9 +82,9 @@ alias zjide="zellij --layout ide"
 # git
 #
 alias g='git'
-alias -g L='`git log --decorate --oneline | fzy | cut -d" " -f1`'
-alias -g LA='`git log --decorate --oneline --all | fzy | cut -d" " -f1`'
-alias -g R='`git reflog | fzy | cut -d" " -f1`'
+alias -g L='`git log --decorate --oneline | fzf | cut -d" " -f1`'
+alias -g LA='`git log --decorate --oneline --all | fzf | cut -d" " -f1`'
+alias -g R='`git reflog | fzf | cut -d" " -f1`'
 alias difit='npx difit . --include-untracked'
 
 #

@@ -15,7 +15,7 @@ brew bundle --global        # Homebrewパッケージ更新
 
 - Zsh + Sheldon（プラグイン管理）
 - ghostty（ターミナル、Tokyo Night）
-- yazi（ファイルマネージャー）+ fazif.yazi（fd/rg + fzy fuzzy検索）
+- yazi（ファイルマネージャー）+ fazif.yazi（fd/rg + fzf fuzzy検索）
 - Claude Code（.claude-global/に集約）
 
 ## アーキテクチャ概要

@@ -40,7 +40,7 @@ e() {
 ### Git関連エイリアス
 
 - `g='git'`: Git操作の基本短縮
-- `L`, `LA`, `R`: fzyによるブランチ選択・切り替え
+- `L`, `LA`, `R`: fzfによるコミット・reflog選択
 
 ### Docker Compose エイリアス (20+)
 

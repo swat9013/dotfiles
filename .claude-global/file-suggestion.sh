@@ -6,7 +6,7 @@ query=$(cat | jq -r '.query')
 cd "$CLAUDE_PROJECT_DIR" || exit 1
 
 # rgで全ファイルを取得、fzyでファジーマッチング
-# fzy -e: ノンインタラクティブモード（スコア順でソート）
+# fzf --filter: ノンインタラクティブモード（スコア順でソート）
 rg --files --hidden --no-ignore \
   --glob '!.git/' \
   --glob '!node_modules/' \
@@ -21,4 +21,4 @@ rg --files --hidden --no-ignore \
   --glob '!*.egg-info/' \
   --glob '!.venv/' \
   --glob '!venv/' \
-  | fzy -e "$query" -l 20
+  | fzf --filter "$query" | head -20

@@ -1,21 +1,18 @@
 ## zsh のキーバインドを環境変数 EDITOR に関わらず emacs 風にする
 bindkey -e
 
-if which fzy > /dev/null 2>&1; then
+if which fzf > /dev/null 2>&1; then
 
-    function fzy-select-history() {
-        local tac
-        if which tac > /dev/null; then
-            tac="tac"
-        else
-            tac="tail -r"
-        fi
-        BUFFER=$(\history -n 1 | eval $tac | awk '!a[$0]++'| fzy --query "$LBUFFER")
+    function fzf-select-history() {
+        BUFFER=$(\history -n 1 | \
+            tail -r | \
+            awk '!seen[$0]++' | \
+            fzf --no-sort --scheme=history --query "$LBUFFER")
         CURSOR=$#BUFFER
         zle reset-prompt
     }
-    zle -N fzy-select-history
-    bindkey '^r' fzy-select-history
+    zle -N fzf-select-history
+    bindkey '^r' fzf-select-history
 
     # cdrの有効化
     if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
@@ -26,7 +23,7 @@ if which fzy > /dev/null 2>&1; then
       zstyle ':chpwd:*' recent-dirs-max 1000
     fi
 
-    function fzy-go-to-dir () {
+    function fzf-go-to-dir () {
         local line
         local selected="$(
       {
@@ -39,7 +36,7 @@ if which fzy > /dev/null 2>&1; then
           done
         )
         for line in *(-/) ${^cdpath}/*(N-/); do echo "$line"; done | sort -u
-      } | fzy --query "$LBUFFER"
+      } | fzf --query "$LBUFFER"
     )"
         if [ -n "$selected" ]; then
             BUFFER="cd ${(q)selected}"
@@ -47,8 +44,32 @@ if which fzy > /dev/null 2>&1; then
         fi
         zle reset-prompt
     }
-    zle -N fzy-go-to-dir
-    bindkey '^s' fzy-go-to-dir
+    zle -N fzf-go-to-dir
+    bindkey '^s' fzf-go-to-dir
+
+    function fzf-preview-file() {
+        local file=$(rg --files --hidden --follow --glob '!.git' 2>/dev/null | \
+            fzf --height=100% --preview 'bat --color=always {}' --preview-window='right:60%')
+        if [ -n "$file" ]; then
+            BUFFER="bat ${(q)file}"
+            zle accept-line
+        fi
+        zle reset-prompt
+    }
+    zle -N fzf-preview-file
+    bindkey '\e[102;6u' fzf-preview-file
+
+    function fzf-edit-file() {
+        local file=$(rg --files --hidden --follow --glob '!.git' 2>/dev/null | \
+            fzf --preview 'bat --color=always --line-range :100 {}')
+        if [ -n "$file" ]; then
+            BUFFER="${EDITOR:-vim} ${(q)file}"
+            zle accept-line
+        fi
+        zle reset-prompt
+    }
+    zle -N fzf-edit-file
+    bindkey '\e[101;6u' fzf-edit-file
 fi
 
 ## C-^ で一つ上のディレクトリへ

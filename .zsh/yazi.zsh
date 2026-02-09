@@ -26,19 +26,19 @@ function yg() {
     fi
 }
 
-# ghqリポジトリ一覧からfzyで選択してyaziで開く
+# ghqリポジトリ一覧からfzfで選択してyaziで開く
 function ygh() {
     if ! which ghq > /dev/null 2>&1; then
         echo "Error: ghq is not installed"
         return 1
     fi
 
-    if ! which fzy > /dev/null 2>&1; then
-        echo "Error: fzy is not installed"
+    if ! which fzf > /dev/null 2>&1; then
+        echo "Error: fzf is not installed"
         return 1
     fi
 
-    local repo=$(ghq list | fzy)
+    local repo=$(ghq list | fzf)
     if [ -n "$repo" ]; then
         y "$(ghq root)/$repo"
     fi

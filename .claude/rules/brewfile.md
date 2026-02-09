@@ -19,7 +19,7 @@ Homebrew Bundle を使用して、50以上のパッケージを一元管理。
 | emacs | エディタ |
 | git | バージョン管理 |
 | jq | JSON処理 |
-| fzy | インタラクティブフィルタ（peco後継） |
+| fzf | 汎用ファジーファインダー |
 | ripgrep | 高速grep |
 | sheldon | Zshプラグインマネージャー |
 | tmux | ターミナルマルチプレクサ |

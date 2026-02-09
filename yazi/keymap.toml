@@ -44,9 +44,9 @@ prepend_keymap = [
     { on = "s", run = "search fd", desc = "Search files with fd" },
     { on = "S", run = "search rg", desc = "Search contents with ripgrep" },
 
-    # Fuzzy検索（fzy）
-    { on = "f", run = "plugin fazif faziffzy", desc = "Fuzzy find files with fzy" },
-    { on = "F", run = "plugin fazif fazifrgfzy", desc = "Fuzzy grep contents with fzy" },
+    # Fuzzy検索（fzf）
+    { on = "f", run = "plugin fazif faziffzy", desc = "Fuzzy find files with fzf" },
+    { on = "F", run = "plugin fazif fazifrgfzy", desc = "Fuzzy grep contents with fzf" },
 
     # タブ操作
     { on = "t", run = "tab_create --current", desc = "Create new tab" },

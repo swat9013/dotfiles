@@ -1,16 +1,16 @@
 # tmuxinator 連携設定
 
-# Ctrl+T: tmuxinatorプロジェクトをfzyで選択して起動
-function fzy-select-tmuxinator() {
-    local selected=$(tmuxinator list | tail -n +2 | sed 's/^ *//' | grep -v '^$' | fzy)
+# Ctrl+T: tmuxinatorプロジェクトをfzfで選択して起動
+function fzf-select-tmuxinator() {
+    local selected=$(tmuxinator list | tail -n +2 | sed 's/^ *//' | grep -v '^$' | fzf)
     if [ -n "$selected" ]; then
         BUFFER="tmuxinator start ${selected}"
         zle accept-line
     fi
     zle reset-prompt
 }
-zle -N fzy-select-tmuxinator
-bindkey '^t' fzy-select-tmuxinator
+zle -N fzf-select-tmuxinator
+bindkey '^t' fzf-select-tmuxinator
 
 # カレントディレクトリ用のtmuxinator設定を作成
 # Usage: init_tmuxinator [project_name]
