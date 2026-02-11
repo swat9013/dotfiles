@@ -1,24 +1,15 @@
 ---
 name: managing-skills
-description: Claude Codeスキルの作成・変更・更新に関する知識ガイド。frontmatter仕様、Progressive Disclosure、設計パターン、string substitutionsを含む。「スキルを作って」「スキルを変更」「スキルを更新」「新しいスキルを追加」と依頼された時に参照する。
+description: Claude Codeのスキルを設計・作成・更新する。frontmatter設計、Progressive Disclosure、自由度設定のガイダンスを提供。「スキルを作って」「スキルを変更」「スキルを更新」「新しいスキルを追加」と依頼された時に使用。
 user-invocable: false
 ---
 
 # Skill Creator
 
-## 概要
-
-Claude Codeの機能を拡張するスキルを作成・更新する。
-
 ## スキルの構成
 
-```
-skill-name/
-├── SKILL.md           # 必須: frontmatter + 手順
-├── references/        # 参照ドキュメント（必要時のみ読み込み）
-├── scripts/           # 実行スクリプト（読み込まず実行）
-└── assets/            # テンプレート・画像等
-```
+- `references/`: 必要時のみ読み込み（トークン節約）
+- `scripts/`: 読み込まず実行（出力のみコンテキスト消費）
 
 ## 作成フロー
 
@@ -44,50 +35,21 @@ skill-name/
 
 ### 4. 検証
 
-実際にスキルを呼び出してテスト。
-
-## frontmatter仕様
-
-### 必須フィールド
-
-```yaml
----
-name: skill-name        # gerund形式推奨（processing-pdfs等）、64文字以内
-description: ...        # 三人称で記述、1024文字以内、トリガーキーワードを含める
----
-```
-
-### オプションフィールド
-
-| フィールド | 説明 | 例 |
-|-----------|------|-----|
-| `argument-hint` | オートコンプリート時のヒント | `[issue-number]` |
-| `disable-model-invocation` | `true`でClaude自動呼び出し禁止 | `true` |
-| `user-invocable` | `false`で/メニュー非表示 | `false` |
-| `allowed-tools` | 許可確認なしで使用可能なツール | `Read, Grep, Glob` |
-| `model` | 実行モデル指定 | `claude-sonnet-4-20250514` |
-| `context` | `fork`でサブエージェント実行 | `fork` |
-| `agent` | fork時のサブエージェントタイプ | `Explore` |
-| `hooks` | スキルライフサイクルフック | (Hooks設定形式) |
-
-### 呼び出し制御
-
-| 設定 | ユーザー呼び出し | Claude呼び出し | 用途 |
-|------|----------------|---------------|------|
-| (デフォルト) | ○ | ○ | 汎用スキル |
-| `disable-model-invocation: true` | ○ | ✕ | deploy, commit等の副作用あり |
-| `user-invocable: false` | ✕ | ○ | 背景知識、コンテキスト |
+- 代表的なタスクでスキルを呼び出し、期待動作を確認
+- Claudeがreferencesを適切に参照するか観察
+- 不要なファイルを読みすぎていないか確認
+- 説明過多な箇所を削除（「Claudeは既にこれを知っているか？」）
 
 ## description設計
 
-descriptionはClaude自動選択のトリガー。**三人称で具体的に書く**。
+descriptionはClaude自動選択のトリガー。**三人称で「何をするか + いつ使うか」を書く**。
 
 ```yaml
-# 悪い例（曖昧 or 視点が不適切）
-description: ドキュメントを処理する
-description: ユーザーのPDF処理を手伝う  # 二人称
+# 悪い例
+description: ドキュメントを処理する              # 曖昧
+description: ユーザーのPDF処理を手伝う           # 二人称
 
-# 良い例（三人称 + 具体的）
+# 良い例
 description: PDFからテキスト・表を抽出し、フォーム入力、文書結合を行う。PDF操作、フォーム記入、文書抽出と依頼された時に使用。
 ```
 
@@ -96,96 +58,25 @@ description: PDFからテキスト・表を抽出し、フォーム入力、文�
 ## 設計原則
 
 1. **簡潔に**: SKILL.md本文は500行以下
-2. **Claudeは賢い**: 既知の情報は書かない
+2. **Claudeは賢い**: 既知の情報は書かない。各情報に「Claudeはこれを知っているか？」と問う
 3. **例 > 説明**: 冗長な説明より具体例
 4. **Progressive Disclosure**: 詳細はreferencesに（1階層まで）
 5. **参照深度制限**: SKILL.md → references/xxx.md（2階層以上は避ける）
+6. **用語の一貫性**: 1つの概念に1つの用語。混在させない
 
-詳細パターン: [patterns.md](references/patterns.md)
+## 自由度の設定
 
-## String substitutions
+スキル本文の記述粒度を、タスクの壊れやすさに合わせる。
 
-スキル内容で使用可能な置換変数:
+| 自由度 | 適用場面 | 記述スタイル |
+|--------|---------|-------------|
+| 高 | 複数アプローチが有効（レビュー、分析） | 方針・判断基準のみ |
+| 中 | 推奨パターンあり、変形も許容 | 擬似コード・パラメータ付きテンプレート |
+| 低 | 操作が壊れやすい（deploy、DB移行） | 具体的コマンド・厳密な手順 |
 
-| 変数 | 説明 | 例 |
-|------|------|-----|
-| `$ARGUMENTS` | 全引数 | `/fix-issue 123` → `123` |
-| `$ARGUMENTS[N]` | N番目の引数（0-indexed） | `$ARGUMENTS[0]` |
-| `$N` | `$ARGUMENTS[N]`の短縮形 | `$0`, `$1` |
-| `${CLAUDE_SESSION_ID}` | セッションID | ログ出力、ファイル名に使用 |
+**判断の比喩**: 崖に挟まれた細い橋（低自由度）vs 障害物のない平原（高自由度）
 
-```yaml
----
-name: fix-issue
----
-Fix GitHub issue $ARGUMENTS following our coding standards.
-# または
-Migrate $0 from $1 to $2.
-```
-
-## 動的コンテキスト注入
-
-`!｀command｀` 構文（｀は実際にはバッククォート）でシェルコマンド出力を事前注入:
-
-```yaml
----
-name: pr-summary
-context: fork
-agent: Explore
----
-## PR context
-- PR diff: !｀gh pr diff｀
-- Changed files: !｀gh pr diff --name-only｀
-
-Summarize this pull request...
-```
-
-※ 上記の ｀ は実際にはバッククォート(`)を使用
-
-コマンドはスキル実行前に実行され、出力がプレースホルダを置換する。
-
-## サブエージェント実行
-
-`context: fork` でスキルを分離コンテキストで実行:
-
-```yaml
----
-name: deep-research
-context: fork
-agent: Explore  # Explore, Plan, general-purpose, またはカスタム
----
-Research $ARGUMENTS thoroughly...
-```
-
-- スキル内容がサブエージェントのタスクになる
-- `agent` でサブエージェントタイプを指定
-- 会話履歴にアクセスしない独立実行
-
-## 配置場所
-
-| 場所 | パス | 優先度 |
-|------|------|--------|
-| Enterprise | 組織管理設定 | 1（最高） |
-| Personal | `~/.claude/skills/` | 2 |
-| Project | `.claude/skills/` | 3 |
-| Plugin | `plugin-name:skill-name` | 4（名前空間分離） |
-
-同名スキルは優先度の高い方が使用される。
-skills と commands が同名の場合、**skillsが優先**。
-
-## 具体例
-
-scenario-to-chapterスキルの構造:
-
-```
-scenario-to-chapter/
-├── SKILL.md              # 165行、手順と変換例
-└── references/
-    ├── manga-technique-guide.md
-    └── chapter.schema.json
-```
-
-SKILL.mdはワークフローと具体例に集中。詳細な技法はreferencesに分離。
+各自由度の具体例: [patterns.md](references/patterns.md)
 
 ## 成功基準
 
@@ -198,4 +89,8 @@ SKILL.mdはワークフローと具体例に集中。詳細な技法はreference
 - [ ] スキルディレクトリを作成した
 - [ ] SKILL.mdに必須フィールド（name, description）を記載した
 - [ ] descriptionが三人称形式で、トリガーキーワードを含む
+- [ ] 自由度レベルがタスクの性質に合っている
+- [ ] 「Claudeが既に知っている情報」を含めていない
 - [ ] 実際に呼び出して期待の動作をすることを確認した
+
+設計パターン詳細: [patterns.md](references/patterns.md)
