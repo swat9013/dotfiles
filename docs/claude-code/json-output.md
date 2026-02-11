@@ -42,7 +42,7 @@ SCHEMA='{"type":"object","properties":{"message":{"type":"string"}},"required":[
 
 claude --model haiku -p --output-format json --json-schema "$SCHEMA" \
   "Generate a greeting" 2>/dev/null | \
-  jq -r '[.[] | select(.type=="result")] | .[0].structured_output.message'
+  jq -r 'select(.type=="result") | .structured_output.message'
 ```
 
 ### 出力の抽出パターン
@@ -53,7 +53,7 @@ claude -p "query"
 
 # 構造化出力 - スキーマで指定したフィールドのみ
 claude -p --output-format json --json-schema "$SCHEMA" "query" | \
-  jq -r '[.[] | select(.type=="result")] | .[0].structured_output.FIELD'
+  jq -r 'select(.type=="result") | .structured_output.FIELD'
 ```
 
 ## 実用例: git aicommit
@@ -66,7 +66,7 @@ SCHEMA='{"type":"object","properties":{"message":{"type":"string"}},"required":[
 
 COMMITMSG=$(claude --model haiku -p --output-format json --json-schema "$SCHEMA" \
   'Based on `git diff --cached`, generate a commit message...' 2>/dev/null | \
-  jq -r '[.[] | select(.type=="result")] | .[0].structured_output.message')
+  jq -r 'select(.type=="result") | .structured_output.message')
 
 git commit -m "$COMMITMSG" -e
 ```
@@ -83,7 +83,7 @@ result の subtype でエラーを判定:
 ```bash
 # エラーチェック
 RESULT=$(claude -p --output-format json --json-schema "$SCHEMA" "query" | \
-  jq -r '[.[] | select(.type=="result")] | .[0]')
+  jq -s '[.[] | select(.type=="result")] | .[0]')
 
 if [[ $(echo "$RESULT" | jq -r '.subtype') == "success" ]]; then
   echo "$RESULT" | jq -r '.structured_output.message'
