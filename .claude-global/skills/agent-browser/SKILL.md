@@ -1,6 +1,6 @@
 ---
 name: agent-browser
-description: agent-browserツールのコマンドリファレンス。ブラウザ自動化、Webテスト、フォーム入力、スクリーンショット取得の操作方法を含む。「ブラウザ操作」「Webテスト」「スクリーンショット取得」「フォーム入力」と依頼された時に参照する。
+description: agent-browserツールのコマンドリファレンス。ブラウザ自動化、Webテスト、フォーム入力、スクリーンショット取得の操作方法を含む。「ブラウザ操作」「Webテスト」「スクリーンショット取得」「フォーム入力」「ブラウザ自動化」「画面確認」「ページ確認」「E2Eテスト」「UI確認」「Web確認」「画面テスト」「サイト確認」と依頼された時に参照する。
 user-invocable: false
 ---
 
@@ -142,16 +142,3 @@ agent-browser open example.com --headed  # Show browser window
 agent-browser console                    # View console messages
 agent-browser errors                     # View page errors
 ```
-
-## 成功基準
-
-1. 指定URLへ正常に遷移できた（`agent-browser get url`で確認）
-2. 目的の要素・情報を取得できた（snapshot/getコマンドで確認）
-3. 成果物が生成された（スクリーンショット/抽出データ）
-
-## 完了チェックリスト
-
-- [ ] ターゲットページに到達している（URLまたはタイトルで確認）
-- [ ] 必要な操作（クリック/入力/送信等）が完了している
-- [ ] 期待する結果が得られている（要素の存在/テキスト内容/画面状態）
-- [ ] 成果物が指定形式で保存されている（該当する場合）

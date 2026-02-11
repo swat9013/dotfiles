@@ -1,17 +1,11 @@
 ---
 name: todo-refiner
 description: |
-  .work/todo.mdをINVEST原則に沿って整理する。
-  「todo整理」「タスク整理」「todo-refiner」と依頼されたときに使用。
-  整理後のタスクは`tt`コマンドでClaude Codeに直接渡せる品質になる。
-disable-model-invocation: true
+  .work/todo.mdのタスクをINVEST原則で分解・具体化し、「価値+完了条件」形式に整理する。
+  「todo整理」「タスク整理」「タスク分解」「タスク分割」「タスクリファイン」「todo分解」「todoリファイン」「todo-refiner」と依頼されたときに使用。
 ---
 
 # Todo Refiner
-
-## 概要
-
-`.work/todo.md`のタスクを「価値+完了条件」形式に整理し、AIに直接渡して作業委譲できる品質にする。
 
 ## 前提条件
 
@@ -27,7 +21,7 @@ disable-model-invocation: true
 
 ### Step 1: 読み込み・分析
 
-カレントディレクトリの`.work/todo.md`を読み込み、各タスクを以下に分類:
+カレントディレクトリの`.work/todo.md`を読み込み、各タスクを以下に分類（判定基準の詳細: [invest-guide.md](references/invest-guide.md)）:
 
 | 分類 | 条件 | 処理 |
 |-----|------|------|
@@ -84,17 +78,6 @@ disable-model-invocation: true
 
 ## 成功基準
 
-1. 全タスクが「タスク内容。価値: 〜。完了: 〜」形式になっている
-2. 曖昧タスクがAskUserQuestionで具体化または[NEEDS CLARIFICATION]マーク済み
-3. `tt`コマンドでClaude Codeに渡せる粒度になっている
-
-## 完了チェックリスト
-
-- [ ] すべてのタスクが明確な形式に整理された
-- [ ] ネストの処理を適切に実施した
-- [ ] 曖昧タスクを具体化または保留マークした
-- [ ] .work/todo.mdに上書き保存した
-
-## 参照
-
-- `references/invest-guide.md`: INVEST原則の詳細
+- 全タスクが「タスク内容。価値: 〜。完了: 〜」形式
+- 曖昧タスクが具体化済みまたは`[NEEDS CLARIFICATION]`マーク済み
+- `.work/todo.md`に上書き保存済み

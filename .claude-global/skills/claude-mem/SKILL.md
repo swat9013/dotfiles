@@ -1,6 +1,6 @@
 ---
 name: claude-mem
-description: claude-memプラグインの使用ガイド。MCPツール仕様、3層ワークフロー、Progressive Disclosure、設定オプションを含む。「claude-mem」「メモリ検索」「セッション履歴」「コンテキスト検索」「過去のセッション」と依頼された時に参照する。
+description: claude-memプラグインの使用ガイド。MCPツール仕様、3層ワークフロー、Progressive Disclosure、設定オプションを含む。「claude-mem」「メモリ検索」「セッション履歴」「コンテキスト検索」「過去のセッション」「前回の作業」「以前やったこと」「履歴検索」「記憶」と依頼された時に参照する。
 user-invocable: false
 ---
 

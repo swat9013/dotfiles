@@ -1,7 +1,6 @@
 ---
 name: frontend-design
-description: プロダクション品質のフロントエンドUI作成ガイド。デザイン思考、美的原則、実装パターンを含む。「UI作成」「フロントエンド実装」「コンポーネント作成」「Webページ作成」と依頼された時に参照する。
-license: Complete terms in LICENSE.txt
+description: プロダクション品質のフロントエンドUI作成ガイド。デザイン思考、美的原則、実装パターンを含む。「UI作成」「フロントエンド実装」「コンポーネント作成」「Webページ作成」「画面作成」「LP作成」「ランディングページ」「デザイン実装」「UIデザイン」「Webデザイン」と依頼された時に参照する。
 user-invocable: false
 ---
 

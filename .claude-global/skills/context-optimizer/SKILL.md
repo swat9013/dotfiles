@@ -1,8 +1,8 @@
 ---
 name: context-optimizer
 description: |
-  CLAUDE.mdを最小化し、コンテキスト消費を最適化する。
-  「CLAUDE.md圧縮」「コンテキスト最適化」「context-optimizer」と依頼された時に使用。
+  CLAUDE.mdを最小化し、コンテキスト消費を最適化する。rules/skillsへの抽出計画を立て、段階的に実行する。
+  「CLAUDE.md圧縮」「CLAUDE.md整理」「CLAUDE.md肥大化」「CLAUDE.md最適化」「CLAUDE.md長い」「CLAUDE.md減らしたい」「コンテキスト最適化」「コンテキスト削減」「context-optimizer」と依頼された時に使用。
 disable-model-invocation: true
 ---
 
@@ -68,7 +68,7 @@ CLAUDE.mdを50行未満に削減し、コンテキスト消費を最適化する
 2. 正しいディレクトリに配置（rules/skills）
 3. dotfiles環境の場合はシンボリックリンクを確認
 
-frontmatter例: `~/.claude/skills/context-optimizer/templates/frontmatter-examples.md`
+frontmatter例: `templates/frontmatter-examples.md`
 
 ### Phase 5: リファクタ
 
@@ -84,7 +84,7 @@ CLAUDE.mdを圧縮:
 - 重要コマンド（最重要のみ）
 - 核心的コーディング原則（3-5項目）
 
-テンプレート: `~/.claude/skills/context-optimizer/templates/minimal-claude-md.md`
+テンプレート: `templates/minimal-claude-md.md`
 
 ### Phase 6: 報告
 
@@ -124,13 +124,12 @@ CLAUDE.mdを圧縮:
 git checkout HEAD -- CLAUDE.md .claude/
 ```
 
-## 参照ファイル
+## 補足資料
 
-| ファイル | 用途 |
-|---------|------|
-| `references/extraction-criteria.md` | 抽出先判断基準の詳細 |
-| `references/anti-patterns.md` | 避けるべきパターン |
-| `templates/minimal-claude-md.md` | 最小CLAUDE.mdテンプレート |
-| `templates/frontmatter-examples.md` | frontmatterテンプレート |
-| `templates/optimization-report.md` | レポートテンプレート |
-| `scripts/analyze-context.sh` | 行数分析スクリプト |
+必要時に参照:
+- `references/extraction-criteria.md` — 抽出先判断基準の詳細
+- `references/anti-patterns.md` — 避けるべきパターン
+- `templates/minimal-claude-md.md` — 最小CLAUDE.mdテンプレート
+- `templates/frontmatter-examples.md` — frontmatterテンプレート
+- `templates/optimization-report.md` — レポートテンプレート
+- `scripts/analyze-context.sh` — 行数分析スクリプト

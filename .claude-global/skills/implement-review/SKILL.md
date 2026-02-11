@@ -1,6 +1,6 @@
 ---
 name: implement-review
-description: 実装→レビュー→修正の統合ワークフロー。「/implement-review」「実装してレビューまで」と依頼された時に使用。issueゼロまで自動修正サイクルを実行。
+description: 実装→レビュー→修正の統合ワークフロー。issueゼロまで自動修正サイクルを実行。「/implement-review」「実装してレビューまで」「実装からレビューまで」「実装レビュー」「実装して品質チェックまで」「品質チェック付き実装」「実装から修正まで」「実装と自動レビュー」と依頼された時に使用。
 disable-model-invocation: true
 ---
 
@@ -113,7 +113,7 @@ prompt: |
 
 **自分では実行しない。サブエージェントに委譲する。**
 
-単一メッセージで2つのTask toolを並列起動:
+implementation.md の品質ゲート定義、またはプロジェクトの設定ファイル（package.json, Makefile等）からLint/Testコマンドを特定し、単一メッセージで2つのTask toolを並列起動:
 
 ```
 # Lint チェック

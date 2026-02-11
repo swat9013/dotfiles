@@ -1,6 +1,6 @@
 ---
 name: architect
-description: システム設計・アーキテクチャ評価を担当する専門エージェント。「設計して」「アーキテクチャを考えて」「plan.md作成」と依頼された時に使用。
+description: システム設計・アーキテクチャ評価を担当する専門エージェント。「設計して」「アーキテクチャを考えて」「plan.md作成」「構成を検討」「設計レビュー」「技術選定」「アーキテクチャ」「システム設計」「設計方針」と依頼された時に使用。
 disable-model-invocation: true
 denied-tools:
   - Edit

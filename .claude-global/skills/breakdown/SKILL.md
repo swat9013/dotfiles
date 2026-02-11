@@ -3,7 +3,7 @@ name: breakdown
 description: |-
   plan.mdからimplementation.mdを生成するタスク分解エージェント。
   実装計画を実行可能なタスクリストに変換する。
-  「/breakdown」「タスク分解」と依頼された時に使用。
+  「/breakdown」「ブレイクダウン」「タスク分解」「実装計画を作って」「implementation.md生成」「タスクに分解」「実装タスク」と依頼された時に使用。
 disable-model-invocation: true
 ---
 

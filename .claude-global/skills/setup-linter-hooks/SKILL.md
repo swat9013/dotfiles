@@ -1,7 +1,6 @@
 ---
 name: setup-linter-hooks
-description: プロジェクトに適したlinter/formatter hookを設定する。「linter hook作成」「formatter hook設定」と依頼された時に使用。プロジェクトの設定ファイルから自動検出してClaude Code hooks設定を生成。
-disable-model-invocation: true
+description: プロジェクトに適したlinter/formatter hookを設定する。「lint設定」「linter hook」「formatter hook」「フォーマッタ設定」「コード整形hook」「hooks設定」「自動フォーマット」「pre-commit」「コードフォーマット」「保存時整形」「lint自動実行」と依頼された時に使用。プロジェクトの設定ファイルから自動検出してClaude Code hooks設定を生成。
 ---
 
 # Setup Linter Hooks
@@ -39,43 +38,20 @@ ls -la package.json pyproject.toml Cargo.toml go.mod Gemfile composer.json 2>/de
 
 ## Phase 2: linter/formatter検出
 
-### JavaScript/TypeScript
+検出ファイル（`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`等）の依存関係・設定セクションからlinter/formatterを特定する。
 
-`package.json`の`devDependencies`から検出:
+### 検出のポイント
 
-| ツール | 検出キー | コマンド |
-|-------|---------|---------|
-| Prettier | `prettier` | `npx prettier --write` |
-| ESLint | `eslint` | `npx eslint --fix` |
-| Biome | `@biomejs/biome` | `npx biome check --write` |
-| dprint | `dprint` | `npx dprint fmt` |
+- **JS/TS**: `package.json`の`devDependencies`キーで判別（`prettier`, `eslint`, `@biomejs/biome`, `dprint`）
+- **Python**: `pyproject.toml`の`[tool.*]`セクション（`ruff`, `black`等）
+- **Rust**: `cargo fmt`, `cargo clippy`は標準搭載（設定ファイル不要）
+- **Go**: `gofmt`は標準搭載、`golangci-lint`は別途確認
 
-### Python
+### hook向けコマンド選定基準
 
-`pyproject.toml`の`[tool.*]`または`[project.optional-dependencies]`から検出:
-
-| ツール | 検出キー | コマンド |
-|-------|---------|---------|
-| Ruff | `ruff` | `ruff format && ruff check --fix` |
-| Black | `black` | `black` |
-| isort | `isort` | `isort` |
-| Flake8 | `flake8` | `flake8` (fix不可) |
-| mypy | `mypy` | `mypy` (fix不可) |
-
-### Rust
-
-| ツール | コマンド |
-|-------|---------|
-| rustfmt | `cargo fmt` |
-| clippy | `cargo clippy --fix --allow-dirty` |
-
-### Go
-
-| ツール | コマンド |
-|-------|---------|
-| gofmt | `gofmt -w` |
-| goimports | `goimports -w` |
-| golangci-lint | `golangci-lint run --fix` |
+- `--fix`/`--write`オプションがあるツールを優先（自動修正可能）
+- fix不可のツール（flake8, mypy等）はhookに含めない
+- 複数ツールがある場合: formatter → linterの順で実行
 
 ---
 
@@ -212,7 +188,7 @@ chmod +x .claude/hooks/format-and-lint.sh
 ## 注意事項
 
 - **既存設定の保持**: settings.jsonの他の設定を上書きしない
-- **exit 0**: hookスクリプトは必ず0で終了（2以外のエラーは無視される）
+- **exit 0**: hookスクリプトは必ず0で終了（非0終了はClaudeにエラーとして報告される）
 - **stderr抑制**: `2>/dev/null`でノイズを抑制
 - **パス**: `$CLAUDE_PROJECT_DIR`で絶対パス参照
 
@@ -234,4 +210,3 @@ chmod +x .claude/hooks/format-and-lint.sh
 ## 参考資料
 
 - [Hooks設計ガイド](~/.dotfiles/docs/claude-code/hooks.md)
-- [Claude Code Hooks公式](https://code.claude.com/docs/en/hooks)

@@ -1,6 +1,6 @@
 ---
 name: codex-code-review
-description: Cursor Agent (GPT-5.2-Codex) によるアーキテクチャ・設計レビュー。「codexレビュー」と依頼された時に使用。4観点（Architecture、Test Strategy、API Design、Behavior）で評価。
+description: Cursor Agent (GPT-5.2-Codex) によるアーキテクチャ・設計レビュー。4観点（Architecture、Test Strategy、API Design、Behavior）で評価。「codexレビュー」「設計レビュー」「アーキテクチャレビュー」「Cursorでレビュー」「Codex」と依頼された時に使用。
 ---
 
 # Codex Code Review
@@ -178,10 +178,7 @@ ${ファイルパスリスト}
 
 各agentの出力（JSON）を収集し、以下を実行:
 
-1. **JSONパース**: 出力ファイルを読み取り
-   ```bash
-   cat /tmp/codex-code.json /tmp/codex-doc.json
-   ```
+1. **JSONパース**: 出力ファイル（`/tmp/codex-code.json`, `/tmp/codex-doc.json`）をReadツールで読み取り
 
 2. **重複排除**: 同一ファイル・行の指摘をマージ
 

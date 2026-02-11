@@ -2,15 +2,11 @@
 name: doc-architect
 description: |
   Diátaxisフレームワークに基づき、サービス利用者向けドキュメントの構造設計・作成を支援する。
-  「ドキュメント設計」「docs設計」「Wiki構造」「Diátaxis」と依頼された時に使用。
+  「ドキュメント設計」「ドキュメント構成」「ドキュメント作成」「ドキュメント整理」「ドキュメント体系」「docs設計」「docs作成」「技術文書」「文書構成」「Wiki構造」「Diátaxis」と依頼された時に使用。
 disable-model-invocation: true
 ---
 
 # doc-architect
-
-## 概要
-
-社内ITサービス（データ基盤、API、ツール等）の利用者向けドキュメントを、Diátaxisフレームワークに基づいて設計・作成支援するスキル。
 
 ## 前提条件
 
@@ -29,40 +25,13 @@ disable-model-invocation: true
 1. **サービス概要**: 何をするサービスか（1-2文）
 2. **対象ユーザー**: 誰が読むか（開発者、データアナリスト、エンドユーザー等）
 3. **既存ドキュメント**: 現状のドキュメント有無と課題
-4. **優先タイプ**: 最初に作成すべきドキュメントタイプ
+4. **優先タイプ**: ユーザーの状態から判定
+   - 「始めたい」→ Tutorial / 「○○したい」→ How-to / 「仕様は？」→ Reference / 「なぜ？」→ Explanation
 
 ### Phase 2: 構造設計
 
-1. Diátaxisの4タイプを説明し、対象サービスに適用:
-   - **Tutorial**: 初心者向け学習コンテンツ
-   - **How-to**: 特定タスク達成の手順書
-   - **Reference**: 仕様・API一覧
-   - **Explanation**: 背景・設計思想
-
-2. ディレクトリ構造を提案:
-
-```
-docs/
-├── index.md                 # ランディングページ
-├── getting-started/         # Tutorials
-│   ├── overview.md
-│   ├── quickstart.md
-│   └── first-project.md
-├── guides/                  # How-to guides
-│   ├── common-tasks/
-│   └── troubleshooting.md
-├── reference/               # Reference
-│   ├── api/
-│   ├── configuration.md
-│   └── glossary.md
-├── concepts/                # Explanation
-│   ├── architecture.md
-│   └── data-model.md
-└── support/
-    ├── faq.md
-    └── changelog.md
-```
-
+1. Diátaxisの4タイプを対象サービスに適用（詳細は `references/diataxis-framework.md`）
+2. ディレクトリ構造を提案（推奨構造は `references/diataxis-framework.md` を参照）
 3. ユーザーと構造を合意
 
 ### Phase 3: ドキュメント作成
@@ -71,15 +40,6 @@ docs/
 2. 該当タイプのテンプレートを適用（→ `references/templates.md`）
 3. コンテンツを執筆
 4. 関連ドキュメントへのリンクを追加
-
-## ドキュメントタイプ判定ガイド
-
-| ユーザーの状態 | 適切なタイプ |
-|---------------|-------------|
-| 「始めたい」「試したい」 | Tutorial |
-| 「○○したい」「○○する方法」 | How-to |
-| 「仕様は？」「パラメータは？」 | Reference |
-| 「なぜ？」「仕組みは？」 | Explanation |
 
 ## 出力形式
 
@@ -107,7 +67,7 @@ docs/
 3. 各ドキュメントが一貫したフォーマットに従っている
 4. 関連ドキュメントへのリンクが適切に設定されている
 
-## 参考資料
+## 参照
 
-- `references/diataxis-framework.md`: フレームワーク詳細
-- `references/templates.md`: 各タイプのテンプレート
+- `references/diataxis-framework.md`: Diátaxisフレームワーク詳細・推奨ディレクトリ構造
+- `references/templates.md`: 各タイプのMarkdownテンプレート

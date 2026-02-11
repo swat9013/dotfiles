@@ -18,3 +18,4 @@ alacritty/themes/
 
 # Cache
 .cache/
+tmp

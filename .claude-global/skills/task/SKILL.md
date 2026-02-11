@@ -1,6 +1,6 @@
 ---
 name: task
-description: プロジェクトタスクの永続管理。「/task」「タスク追加」「タスク一覧」と依頼された時に使用。.claude/tasks.jsonにタスクを保存し、セッションをまたいで継続管理。
+description: プロジェクトタスクの永続管理。「/task」「タスク追加」「タスク一覧」「タスク管理」「タスク確認」「タスク完了」「タスク削除」「タスク更新」「残タスク」「やること確認」と依頼された時に使用。.claude/tasks.jsonにタスクを保存し、セッションをまたいで継続管理。
 disable-model-invocation: true
 ---
 
@@ -41,7 +41,7 @@ disable-model-invocation: true
 ### list - 一覧表示
 
 ```
-/task list                  # 全タスク
+/task list                  # 未完了タスク一覧
 /task list pending          # 未着手のみ
 /task list in_progress      # 進行中のみ
 /task list bug              # bug のみ
@@ -121,11 +121,13 @@ d4e5f6g7 [pending] [none] 種別なしタスク
 - IDは8桁16進数（例: a1b2c3d4）
 - スクリプトパスは絶対パス: `~/.dotfiles/.claude-global/skills/task/scripts/task.sh`
 - タスク内容が不明な場合は、AskUserQuestion ツールを使用して詳細を確認すること
+- doneで完了したタスクは`.claude/tasks.json`から`.claude/completed.json`に移動される
+- clearは`.claude/completed.json`を空にする。`clear all`は両ファイルを空にする
 
 ## 成功基準
 
 1. add後に`.claude/tasks.json`が更新されている
-2. listで追加/更新したタスクが表示される
+2. listで追加/更新したタスクが表示される（completedフィルタ時は`.claude/completed.json`から読み込み）
 3. update/done/deleteの操作が反映される
 
 ## 完了チェックリスト

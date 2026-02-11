@@ -1,6 +1,6 @@
 ---
 name: refactor
-description: 既存コードの安全なリファクタリング。「リファクタリング」「コード改善」「スメル検出」と依頼された時に使用。振る舞いを変えず内部構造を改善する3フェーズワークフロー。
+description: 既存コードの安全なリファクタリング。振る舞いを変えず内部構造を改善する3フェーズワークフロー。「リファクタリング」「リファクタ」「コード改善」「コード整理」「構造改善」「スメル検出」「内部設計改善」「コードの質を上げたい」と依頼された時に使用。
 disable-model-invocation: true
 ---
 
@@ -125,7 +125,7 @@ Option A選択時は `guides/legacy-code.md` を参照してテスト作成を�
 1変更1コミット単位でステップを分解:
 
 **分解の原則**:
-- 各ステップは15-30分で完了可能なサイズ
+- 各ステップは単一の論理的変更に収まるサイズ
 - 各ステップ後にテストが通る状態を維持
 - 依存関係を考慮した順序づけ
 
@@ -143,7 +143,6 @@ refactor-plan.md生成後、以下を出力してユーザー承認を待つ:
 **保存先**: refactor-plan.md
 **検出スメル**: X個
 **実施ステップ数**: X
-**推定所要時間**: 合計 Xh
 
 **計画内容**:
 - [スメル1]: [対処法] - [対象ファイル]
@@ -152,7 +151,7 @@ refactor-plan.md生成後、以下を出力してユーザー承認を待つ:
 **次のステップ**:
 計画を確認し、実行する場合は以下を指示してください:
 - `refactor-plan.mdを実行して`
-- または `/refactor --execute`
+- `実行して`
 
 中止する場合: `中止`
 修正が必要な場合: 修正内容を指示
@@ -164,7 +163,6 @@ refactor-plan.md生成後、以下を出力してユーザー承認を待つ:
 
 **開始条件**: ユーザーから以下のいずれかの指示があった場合のみ実行
 - `refactor-plan.mdを実行して`
-- `/refactor --execute`
 - `実行して`
 - 明示的な実行指示
 
@@ -242,12 +240,6 @@ refactor: [手法名] - [対象]
 
 → `references/smell-catalog.md`
 
-**主要カテゴリ**:
-- **Bloaters（肥大化）**: Long Method, Large Class, Long Parameter List
-- **Change Preventers（変更の障害）**: Divergent Change, Shotgun Surgery
-- **Dispensables（不要な要素）**: Duplicate Code, Dead Code
-- **Couplers（結合度の問題）**: Feature Envy, Inappropriate Intimacy
-
 ## 安全性チェックリスト
 
 → `references/safety-checklist.md`
@@ -255,11 +247,6 @@ refactor: [手法名] - [対象]
 ## レガシーコード対応
 
 → `guides/legacy-code.md`
-
-**主要テクニック**:
-- **Characterization Test**: 既存の振る舞いを記録するテスト
-- **Seam**: コードを変更せずに振る舞いを変えられる場所
-- **Humble Object**: テストしにくい部分を薄く隔離
 
 ## 成功基準
 
@@ -280,12 +267,3 @@ refactor-plan.md
 /code-review（推奨）
 ```
 
-## よくあるパターン
-
-| パターン | スメル | 手法 |
-|---------|-------|------|
-| 長すぎるメソッド | Long Method | Extract Method |
-| 神クラス | Large Class | Extract Class |
-| 機能の横恋慕 | Feature Envy | Move Method |
-| データの群れ | Data Clumps | Introduce Parameter Object |
-| 重複コード | Duplicate Code | Extract Method/Class |

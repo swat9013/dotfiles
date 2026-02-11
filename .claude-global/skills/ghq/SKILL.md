@@ -1,6 +1,6 @@
 ---
 name: ghq
-description: ghqによるリポジトリ管理のガイド。コマンド仕様、ローカルリポジトリ取り込み手順を含む。「ghq」「リポジトリ管理」「リポジトリをクローン」と依頼された時に参照する。
+description: ghqによるリポジトリ管理のガイド。コマンド仕様、ローカルリポジトリ取り込み手順を含む。「ghq」「ghq get」「ghq list」「リポジトリ管理」「リポジトリをクローン」「リポジトリ取得」「リポジトリ一覧」と依頼された時に参照する。
 user-invocable: false
 ---
 
@@ -48,59 +48,11 @@ ghq rm <repo>                     # 削除（確認あり）
 
 ## ローカルリポジトリの取り込み
 
-ghq 管理外のローカルリポジトリを管理下に移動するワークフロー。
+ghq 管理外のローカルリポジトリを管理下に移動する。
 
-### 前提条件
+**前提**: 対象が git リポジトリであること。リモート origin 設定推奨。
 
-- 対象ディレクトリが git リポジトリであること
-- リモート origin が設定されていること（推奨）
-
-### 手順
-
-#### 1. 情報収集
-
-```bash
-# ghq ルートを確認
-GHQ_ROOT=$(ghq root)
-
-# リモート URL を取得
-cd /path/to/local/repo
-REMOTE_URL=$(git remote get-url origin 2>/dev/null)
-```
-
-#### 2. 移動先パスの決定
-
-**リモートがある場合**:
-```bash
-# URL からホスト/オーナー/リポジトリを抽出
-# 例: git@github.com:owner/repo.git → github.com/owner/repo
-# 例: https://gitlab.com/owner/repo → gitlab.com/owner/repo
-```
-
-**リモートがない場合**:
-```bash
-# ローカル専用として配置
-# $GHQ_ROOT/local/<repo-name>
-```
-
-#### 3. 移動実行
-
-```bash
-# 移動先ディレクトリを作成
-mkdir -p "$(dirname "$GHQ_ROOT/<host>/<owner>/<repo>")"
-
-# リポジトリを移動
-mv /path/to/local/repo "$GHQ_ROOT/<host>/<owner>/<repo>"
-```
-
-#### 4. 確認
-
-```bash
-# ghq list に表示されることを確認
-ghq list | grep <repo>
-```
-
-### 移動スクリプト例
+### 移動スクリプト
 
 ```bash
 #!/bin/bash
