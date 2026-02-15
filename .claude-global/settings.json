@@ -124,6 +124,5 @@
   },
   "language": "japanese",
   "spinnerTipsEnabled": false,
-  "promptSuggestionEnabled": false,
-  "effortLevel": "medium"
+  "promptSuggestionEnabled": false
 }

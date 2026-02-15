@@ -56,7 +56,8 @@ function tre() {
 
 function bk() {
     _init-work
-    local d=".work/$(date +%Y%m%d_%H%M%S)"
+    local branch=$(git symbolic-ref --short HEAD 2>/dev/null | tr '/' '-')
+    local d=".work/$(date +%Y%m%d_%H%M%S)${branch:+_$branch}"
     mkdir -p "$d"
     mv review.md plan.md implementation.md report.md "$d/" 2>/dev/null
 }
