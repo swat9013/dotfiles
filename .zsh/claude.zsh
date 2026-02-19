@@ -32,6 +32,9 @@ function ccl() {
     printf "%s\n" "$(printf '%.0s-' {1..80})"
   fi
 
+  local sub_count=0
+  local sub_rss=0
+
   for pid in "${pids[@]}"; do
     local args=$(ps -p $pid -o args= 2>/dev/null)
     [[ -z "$args" ]] && continue
@@ -40,6 +43,9 @@ function ccl() {
     local type="main"
     if [[ "$args" == *"stream-json"* ]]; then
       type="sub"
+      local rss=$(ps -p $pid -o rss= 2>/dev/null)
+      sub_count=$((sub_count + 1))
+      sub_rss=$((sub_rss + ${rss:-0}))
       $show_all || continue
     fi
 
@@ -59,6 +65,13 @@ function ccl() {
       printf "%-7s %-4s %-40s %s\n" "$pid" "$type" "$cwd" "$started"
     fi
   done
+
+  # Always show subagent summary when subagents exist
+  if [[ $sub_count -gt 0 ]]; then
+    local rss_mb=$((sub_rss / 1024))
+    echo ""
+    echo "Subagents: $sub_count (RSS: ${rss_mb} MB) — use 'cck --sub' to clean up"
+  fi
 }
 
 # Kill Claude Code sessions

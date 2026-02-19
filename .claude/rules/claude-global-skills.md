@@ -65,3 +65,4 @@ Enterprise > Personal (`~/.claude/skills/`) > Project (`.claude/skills/`) > Plug
 | claude-mem | 「claude-mem」「メモリ検索」「セッション履歴」「コンテキスト検索」「過去のセッション」 | claude-memプラグインの使用ガイド（MCPツール・3層ワークフロー・Progressive Disclosure） |
 | playwright-cli | 「Playwright」「playwright test」「E2Eテスト実行」「codegen」「トレース」 | Playwright CLIコマンドリファレンス |
 | marimo | 「marimo」「マリモ」「リアクティブノートブック」「marimo edit」 | リアクティブPythonノートブック操作ガイド |
+| slidev | 「Slidev」「スライド作成」「プレゼン作成」「sli.dev」 | Slidevスライド内容生成ガイド |
