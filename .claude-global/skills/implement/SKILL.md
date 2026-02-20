@@ -7,6 +7,21 @@ description: implementation.mdのタスクを並列実行。品質ゲート付�
 
 implementation.md のタスクを Phase 別に実行する。並列実行可能タスク（Pマーク）は同時実行し、品質ゲートで各フェーズの品質を担保する。
 
+## 二層構造
+
+| 層 | 担当 | 役割 |
+|----|------|------|
+| implementation.md | 実装計画 | How（タスク定義・成功基準・依存関係。読み取り専用） |
+| TaskCreate/TaskUpdate | 実行追跡 | Status（進捗管理・依存グラフ・UI可視化） |
+
+implementation.md はタスクの仕様源として読み込むが、ステータス更新は行わない。実行追跡は Tasks API に一元化する。
+
+**ワークフロー上の位置**:
+```
+plan.md (What/Why) → implementation.md (How) → TaskCreate (Status)
+  architect が生成     breakdown が生成         implement が登録・実行
+```
+
 ## 役割: オーケストレーター
 
 **あなたはマネージャーであり、エージェントオーケストレーターです。**
@@ -19,9 +34,9 @@ implementation.md のタスクを Phase 別に実行する。並列実行可能�
 
 ### 行動の3分類
 
-| 分類 | 行動 | ツール例 |
-|------|------|---------|
-| **自身で行う** | implementation.md読込、タスク分析、進捗監視、ステータス更新、報告 | Read, Edit（ステータス更新のみ）, 出力 |
+| 分類 | 行動 | ツール |
+|------|------|--------|
+| **自身で行う** | implementation.md読込、タスク分析、TaskCreate登録、進捗監視、報告 | Read, TaskCreate, TaskUpdate, TaskList, TaskGet, 出力 |
 | **サブエージェント委譲** | 実装、修正、テスト実行、Lint、ビルド | Task tool |
 | **スキル委譲** | 複雑なサブワークフロー | Skill tool |
 
@@ -39,64 +54,123 @@ implementation.md のタスクを Phase 別に実行する。並列実行可能�
 Read tool で implementation.md を読み込み、以下を確認:
 - ファイルが存在するか
 - タスクに種別・成功基準が明記されているか
-- 各タスクのステータス（pending/in_progress/completed）を集計
 
 **→ 問題があれば中止し理由を報告**
 
-### 2. タスク分析（自身で実行）
+### 2. タスク登録（自身で実行）
 
-implementation.md の内容から以下を把握:
-- 全タスク一覧（ID、タイトル、種別、ステータス）
-- 依存関係
-- 並列実行可能タスク（Pマーク）の特定
-- Phase別のグルーピング
+implementation.md の内容から全タスクを TaskCreate で登録する。
 
-### 3. Phase別実行サイクル
+**登録フロー**:
+1. 全タスクを読み取り（ID、タイトル、種別、Phase、依存関係、並列可否）
+2. 各タスクを TaskCreate で登録
+3. Phase ごとの品質ゲートタスクを作成
+4. 依存関係を TaskUpdate の `addBlockedBy` で設定
+
+**TaskCreate 登録パターン**:
 
 ```
-Phase開始 → サブエージェント並列起動 → 完了待機 → 品質ゲート委譲 → 結果判定 → ステータス更新 → 進捗報告 → 次Phase
+# 実装タスク
+TaskCreate:
+  subject: "TASK-001: ログインAPI実装"
+  description: |
+    種別: 新機能実装
+    成功基準: ${implementation.mdの成功基準}
+    制約: ${implementation.mdの制約}
+  activeForm: "TASK-001 実装中"
+  metadata: { phase: 1, type: "impl", taskId: "TASK-001" }
+
+# 品質ゲートタスク
+TaskCreate:
+  subject: "Phase 1 品質ゲート"
+  description: "Phase 1 の全タスク完了後に Lint/Test/Build を実行"
+  activeForm: "Phase 1 品質チェック中"
+  metadata: { phase: 1, type: "gate" }
+```
+
+**依存関係の設定**:
+
+```
+# 品質ゲートは Phase 内の全タスクに依存
+TaskUpdate: { taskId: "gate-1", addBlockedBy: ["task-1", "task-2", ...] }
+
+# 次 Phase のタスクは前 Phase の品質ゲートに依存
+TaskUpdate: { taskId: "task-3", addBlockedBy: ["gate-1"] }
+```
+
+**subject 設計の注意**: TaskList は description を返さない。subject にタスクID・タイトルを含め、一覧だけで識別できるようにする。
+
+### 3. Phase 別実行サイクル
+
+```
+TaskList → 実行可能タスク特定 → サブエージェント並列起動 → 完了待機
+→ TaskUpdate(completed) → 品質ゲート自動アンブロック → 品質チェック委譲
+→ Phase完了報告 → 次Phase
 ```
 
 ### 4. タスク実行（すべてサブエージェントに委譲）
 
 #### 並列実行（Pマーク付きタスク）
 
-**単一メッセージで複数のTask toolを同時呼び出し**:
+**単一メッセージで複数の Task tool を同時呼び出し**:
 
 ```
-# タスクごとに1つのサブエージェントを起動
-Task tool × N（並列実行可能タスク数）
+Task tool × N（並列実行可能タスク数、最大7）
 
 subagent_type: general-purpose
-model: sonnet  # 実装タスクは基本sonnet
+model: sonnet  # タスク種別に応じて選択（guides/task-roles.md 参照）
 prompt: |
-  あなたは実装担当エージェントです。
+  あなたは${ロール名}です。
+
+  ## コンテキスト
+  ${何を・なぜ — 背景と目的}
 
   ## タスク
   ID: ${task_id}
   タイトル: ${title}
   種別: ${type}
 
-  ## 成功基準
-  ${success_criteria}
-
-  ## 制約条件
-  ${constraints}
-
   ## 指示
-  1. 該当コードを特定
-  2. 実装を完了
-  3. 成功基準を満たすことを確認
-  4. 完了報告（変更ファイル、変更内容の要約）
+  ${範囲・制約 — 何をやるか・やらないか}
+
+  ## 関連ファイル
+  ${具体的なファイルパスのリスト}
+
+  ## 成功基準
+  ${期待アウトプット形式}
+
+  ## 完了報告
+  以下を含めて報告:
+  - 変更ファイル一覧
+  - 変更内容の要約
+  - 成功基準の充足状況
 ```
+
+**委譲プロンプトの必須4要素**:
+
+| 要素 | 内容 | 省略時のリスク |
+|------|------|---------------|
+| コンテキスト | 何を・なぜ | 誤った前提で実装 |
+| 明示的な指示 | 範囲・制約 | スコープ超過 |
+| 関連ファイルパス | 具体的パス | 無駄な探索 |
+| 成功基準 | 期待アウトプット | 不完全な成果物 |
 
 #### 順次実行（依存タスク）
 
-依存タスク完了を確認後、同様にサブエージェントに委譲。
+DAG 依存により自動制御される。TaskList で blockedBy が空のタスクのみ実行対象。
+
+#### 実行前後のステータス更新
+
+```
+TaskUpdate(taskId, status: "in_progress")  # 開始前
+→ サブエージェント委譲
+→ TaskUpdate(taskId, status: "completed")  # 成功時
+# 失敗時は in_progress のまま維持し、修正サブエージェントを起動
+```
 
 ### 5. 品質ゲート（並列サブエージェント委譲）
 
-各Phase完了時に**単一メッセージで3つのTask toolを並列起動**:
+品質ゲートタスクが自動アンブロックされたら、**単一メッセージで並列起動**:
 
 ```
 # Lint チェック
@@ -121,26 +195,21 @@ prompt: |
   結果を報告（成功/失敗、エラー詳細）
 ```
 
-**失敗時**: 修正サブエージェントを起動して修正を委譲
+**全パス時**: 品質ゲートタスクを completed → 次Phase のタスクが自動アンブロック
+**失敗時**: 修正サブエージェントを起動し、修正後に再実行
 
-### 6. ステータス更新（自身で実行）
-
-Edit tool で implementation.md のタスクステータスを更新:
-- 完了タスク: `completed`
-- 失敗タスク: `failed`（原因をコメント追記）
-
-### 7. Phase完了報告
+### 6. Phase完了報告
 
 ```markdown
 ## Phase X 完了報告
 
 ### 実施内容
-- ✅ TASK-001: [タイトル]（完了）
-- ✅ TASK-002: [タイトル]（完了）
+- TASK-001: [タイトル]（完了）
+- TASK-002: [タイトル]（完了）
 
 ### 品質ゲート結果
-- ✅ Lint: 成功
-- ✅ テスト: 全XX件通過
+- Lint: 成功
+- テスト: 全XX件通過
 
 ### 次Phase概要
 - 並列実行可能タスク: X件
@@ -165,16 +234,23 @@ Edit tool で implementation.md のタスクステータスを更新:
 
 このコマンドの実行は以下を満たしたとき成功とみなす:
 
-1. 全タスクが completed ステータスになっている
+1. TaskList で全タスクが completed ステータスになっている
 2. 全 Phase の品質ゲートをクリアしている
 3. implementation.md に記載された成功基準を満たしている
 
 ## 完了チェックリスト
 
-- [ ] 全Phaseのタスクが completed
+- [ ] 全Phaseのタスクが completed（TaskList で確認）
 - [ ] 全品質ゲートをクリア
-- [ ] implementation.md のステータスが更新済み
 - [ ] implementation.md の成功基準を満たしている
+
+## Gotchas
+
+- **TaskList は description を返さない**: subject にタスクID・タイトルを含め、一覧で識別可能にする
+- **サブエージェントは孫エージェントをスポーンできない**: 1段階のみ。複雑なサブワークフローは Skill 委譲で対応
+- **同時サブエージェント上限**: ~7。超過分は次のバッチで実行
+- **Task* ツールは hooks をバイパス**: PreToolUse/PostToolUse フックが適用されない
+- **失敗時のステータス**: completed にしない。in_progress のまま維持し修正を試みる
 
 ## 出力形式
 
