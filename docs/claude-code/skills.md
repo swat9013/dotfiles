@@ -38,6 +38,17 @@ skill-name/
 - **skills と commands が同名の場合、skillsが優先**
 - `.claude/commands/` は引き続き動作するが、skillsへの移行を推奨
 
+## Skills vs Commands
+
+| 観点 | Skill | Command |
+|------|-------|---------|
+| 用途 | 対話・相談・ワークフロー | アクション実行（定型プロンプト） |
+| 呼び出し | Claude自動選択 or `/skill-name` | `/コマンド名`（明示のみ） |
+| 構造 | ディレクトリ（複数ファイル可） | 単一ファイル |
+| 例 | code-review, debug | commit, deploy |
+
+**注意**: skillsはcommandsの上位互換。新規作成時はskillsを推奨。
+
 ## skills vs agents vs rules
 
 | 観点 | skills/ | agents/ | rules/ |
@@ -171,6 +182,8 @@ user-invocable: false
 - スキルの目的（1行目）
 - トリガーキーワード（「〜と依頼されたら」形式）
 
+**フォーマット**: `Verb+what. Use when+trigger1, trigger2, or trigger3.`
+
 **記述ルール:**
 - **三人称で記述する**（一人称・二人称は発見に問題を起こす）
 - システムプロンプトに注入されるため、視点の一貫性が重要
@@ -178,12 +191,16 @@ user-invocable: false
 ```yaml
 # 悪い例（曖昧 or 視点が不適切）
 description: ドキュメントを処理する
+description: Helps with code review  # 曖昧
 description: ユーザーのPDF処理を手伝う  # 二人称
 
 # 良い例（三人称 + 具体的）
 description: |
   システム設計・アーキテクチャ評価を担当する専門エージェント。
   「設計して」「アーキテクチャを考えて」「plan.md作成」と依頼された時に使用。
+description: |
+  Reviews code for security and performance issues.
+  Use when reviewing PRs, checking code quality, or after major changes.
 ```
 
 ### 知識系スキルの description 設計
@@ -281,6 +298,28 @@ description: |
 - `references/detail.md` - 詳細ガイド
 ```
 
+### Task Skill テンプレート（副作用あり）
+
+```yaml
+---
+name: deploy
+description: |
+  アプリケーションを本番環境にデプロイ。
+  「デプロイ」「本番反映」と依頼された時に使用。
+disable-model-invocation: true  # ユーザー明示呼び出しのみ
+---
+
+# デプロイ
+
+対象: $ARGUMENTS
+
+## 手順
+1. テストスイート実行
+2. アプリケーションビルド
+3. デプロイターゲットにプッシュ
+4. デプロイ成功を確認
+```
+
 ## Progressive Disclosure
 
 SKILL.mdは概要と手順に集中し、詳細は分離する。
@@ -365,43 +404,8 @@ skills/
 
 ## サブエージェント呼び出し
 
-skill内でTask toolを使ってサブエージェントを動的に起動する。
-
-### 基本パターン
-
-```markdown
-## Step 2: 並列レビュー
-
-以下のサブエージェントを**単一メッセージで並列起動**:
-
-### Agent 1: セキュリティチェック（Opus）
-Task tool:
-- model: opus
-- prompt: |
-    あなたはセキュリティ専門のレビュアーです。
-    diffのみに集中。フラグすべき: SQLインジェクション、XSS
-
-### Agent 2: ロジックチェック（Sonnet）
-Task tool:
-- model: sonnet
-- prompt: |
-    あなたはロジック専門のレビュアーです。
-    ...
-```
-
-### モデル選択基準
-
-| タスク種別 | モデル | 例 |
-|-----------|--------|-----|
-| 軽量チェック | Haiku | 前提条件チェック、ファイル検索 |
-| 中程度の分析 | Sonnet | サマリー生成、コンプライアンスチェック |
-| 複雑な判断 | Opus | バグ検出、セキュリティ分析 |
-
-### 並列実行のガイドライン
-
-- **単一メッセージ**で複数Task tool呼び出し
-- 同時実行数は5-7程度を目安
-- 依存関係がなければ並列、あれば順次
+skill内でTask toolを使ってサブエージェントを動的に起動できる。
+詳細は [サブエージェントオーケストレーション](./subagent-orchestration.md) を参照。
 
 ## フィードバックループ
 

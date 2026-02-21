@@ -2,6 +2,8 @@
 
 skill/command内でTask toolを使ってサブエージェントを動的に起動するパターン集。
 
+Task tool（サブエージェント起動）と Tasks API（タスク管理）は別物。Tasks APIについては [task-management.md](./task-management.md) を参照。
+
 ## 概要
 
 ### なぜskill内でadhocに呼び出すか
@@ -10,15 +12,21 @@ skill/command内でTask toolを使ってサブエージェントを動的に起�
 - **コンテキスト最適化**: 呼び出し時に必要な情報だけを渡す
 - **管理コスト削減**: 別ファイルでの定義が不要
 
-### コンテキスト設計
+### Skills vs Subagents
 
-Claude Codeのコンテキスト設計は3層のみ:
+コンテキスト設計の全体像は [context-architecture.md](./context-architecture.md) を参照。
 
-| 層 | 用途 |
-|----|------|
-| CLAUDE.md | プロジェクト全体の方針 |
-| rules/ | パス固有のガイドライン |
-| skills/ | ワークフロー（サブエージェント呼び出し含む） |
+```
+「作業中に継続的な対話が必要？」
+├─ YES → Skills（コンテキスト共有）
+│   例: コードレビューでフィードバックを受けながら修正
+│
+└─ NO → 「試行錯誤や並列実行が必要？」
+    ├─ YES → Subagents（コンテキスト分離）
+    │   例: 5観点を並列でレビュー、調査タスク
+    │
+    └─ NO → Skills
+```
 
 ---
 
@@ -29,6 +37,38 @@ Claude Codeのコンテキスト設計は3層のみ:
 | 軽量チェック | Haiku | 高速・低コスト | 前提条件チェック、ファイル検索 |
 | 中程度の分析 | Sonnet | バランス型 | サマリー生成、コンプライアンスチェック |
 | 複雑な判断 | Opus | 高精度 | バグ検出、セキュリティ分析、複雑な推論 |
+
+---
+
+## Skill内でのサブエージェント呼び出し
+
+### 基本パターン
+
+```markdown
+## Step 2: 並列レビュー
+
+以下のサブエージェントを**単一メッセージで並列起動**:
+
+### Agent 1: セキュリティチェック（Opus）
+Task tool:
+- model: opus
+- prompt: |
+    あなたはセキュリティ専門のレビュアーです。
+    diffのみに集中。フラグすべき: SQLインジェクション、XSS
+
+### Agent 2: ロジックチェック（Sonnet）
+Task tool:
+- model: sonnet
+- prompt: |
+    あなたはロジック専門のレビュアーです。
+    ...
+```
+
+### 並列実行のガイドライン
+
+- **単一メッセージ**で複数Task tool呼び出し
+- 同時実行数は5-7程度を目安
+- 依存関係がなければ並列、あれば順次
 
 ---
 
@@ -230,3 +270,36 @@ PR全体の変更サマリーを取得
 ## Step 7: 出力
 高信号issueのみをインラインコメントで投稿
 ```
+
+---
+
+## カスタムエージェントテンプレート
+
+```yaml
+# .claude/agents/security-reviewer.md
+---
+name: security-reviewer
+description: |
+  セキュリティ観点でコードをレビュー。
+  OWASP Top 10に基づいて脆弱性を検出。
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+skills:
+  - code-review
+---
+
+# セキュリティレビュアー
+
+## 役割
+OWASP Top 10 に基づいてセキュリティ脆弱性を検出。
+
+## チェック項目
+- インジェクション攻撃
+- 認証・認可の不備
+- 機密データの露出
+- XSS（クロスサイトスクリプティング）
+```
+
+**注意**: 組み込みエージェント（Explore、Plan、general-purpose）は Skills にアクセスできない。カスタムエージェントのみ `skills` フィールドで指定可能。

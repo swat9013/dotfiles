@@ -20,18 +20,7 @@ CLAUDE.mdはプロジェクト固有のコンテキストをClaudeに提供す�
 
 ## CLAUDE.md vs rules/ vs skills/
 
-| 判断基準 | CLAUDE.md | rules/ | skills/ |
-|---------|-----------|--------|---------|
-| 適用範囲 | プロジェクト全体 | パス固有 | 明示的呼び出し |
-| 適用タイミング | 常時 | パスマッチ時 | 手動 or キーワード |
-| 内容 | 全体的な方針・構造 | 特定ファイル種別の制約 | ワークフロー・手順 |
-| 例 | 「KISSを優先」 | 「API層ではエラーログ必須」 | 「コードレビュー実施」 |
-
-### 使い分け判断
-
-- **特定パスでのみ適用?** → rules/
-- **プロジェクト全体で常に適用?** → CLAUDE.md
-- **手順やワークフロー?** → skills/
+比較表と使い分け判断フローは [context-architecture.md](./context-architecture.md) を参照。
 
 ## CLAUDE.md vs README.md
 
