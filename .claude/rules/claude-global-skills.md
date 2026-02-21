@@ -66,3 +66,4 @@ Enterprise > Personal (`~/.claude/skills/`) > Project (`.claude/skills/`) > Plug
 | playwright-cli | 「Playwright」「playwright test」「E2Eテスト実行」「codegen」「トレース」 | Playwright CLIコマンドリファレンス |
 | marimo | 「marimo」「マリモ」「リアクティブノートブック」「marimo edit」 | リアクティブPythonノートブック操作ガイド |
 | slidev | 「Slidev」「スライド作成」「プレゼン作成」「sli.dev」 | Slidevスライド内容生成ガイド |
+| log-designing | 「ログ設計」「構造化ログ」「ログ基盤」「verbosity」 | ログ設計7原則・CLIパターン・段階的導入ガイド |

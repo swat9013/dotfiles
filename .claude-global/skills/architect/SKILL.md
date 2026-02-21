@@ -35,7 +35,7 @@ Phase 1 エージェントへの探索ヒントとして活用:
 
 - **ディレクトリ構造**: !`find . -maxdepth 2 -type d -not -path '*/node_modules/*' -not -path '*/.git/*' 2>/dev/null | head -30`
 - **最近の変更**: !`git log --oneline -10 2>/dev/null`
-- **主要設定**: !`ls package.json pyproject.toml Cargo.toml go.mod Gemfile pom.xml build.gradle Makefile docker-compose.yml 2>/dev/null`
+- **主要設定**: !`ls package.json pyproject.toml Cargo.toml go.mod Gemfile pom.xml build.gradle Makefile docker-compose.yml 2>/dev/null || echo "(なし)"`
 
 ## ワークフロー
 

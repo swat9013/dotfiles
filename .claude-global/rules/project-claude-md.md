@@ -59,6 +59,21 @@ npm test
 - 詳細すぎる実装ガイド → rules/ or docs/
 - 長いコード例 → 別ファイル参照
 
+## `@` import構文
+
+```markdown
+@README.md              # 同階層ファイル参照
+@docs/architecture.md   # パス指定
+```
+
+- 再帰インポート最大5ホップ
+- 大きなファイルを丸ごとインポートするより、要約をCLAUDE.mdに書く方が効率的
+
+## CLAUDE.local.md
+
+- 個人用プロジェクト設定（自動で `.gitignore` に追加される）
+- CLAUDE.mdの後に読み込まれ上書き可能
+
 ## アンチパターン
 
 | パターン | 対策 |
@@ -66,3 +81,4 @@ npm test
 | 150行超 | 圧縮 or 分離 |
 | 一般原則のみ | 固有情報を追加 |
 | README重複 | 補完関係に |
+| 大ファイルを@import | 要約をCLAUDE.mdに書く |

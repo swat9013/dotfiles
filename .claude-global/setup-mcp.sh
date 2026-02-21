@@ -99,10 +99,6 @@ add_mcp_server "serena" \
     --context claude-code \
     --project '$(pwd)'
 
-add_mcp_server "chrome-devtools" \
-    -- npx \
-    chrome-devtools-mcp@latest
-
 add_mcp_server "drawio" \
     -- npx \
     @drawio/mcp

@@ -12,6 +12,14 @@ paths: **/.claude/rules/**
 | 命名規則 | kebab-case |
 | 形式 | Markdown + frontmatter |
 
+## 既知の不具合
+
+| Issue | 影響 | 対策 |
+|-------|------|------|
+| #16299 | path指定rulesがセッション開始時に全件ロードされる | ファイル数・サイズを最小限に |
+| #21858 | `~/.claude/rules/` のpathsは無視される | pathsに依存しない |
+| #13905 | YAML配列形式（ハイフン複数行）が動作しない | カンマ区切りワンライナー |
+
 ## frontmatter
 
 ```yaml
@@ -26,11 +34,26 @@ paths: src/api/**, !**/__mocks__/**
 ---
 ```
 
+### paths記法
+
+```yaml
+# NG: 動作しない（#13905）
+paths:
+  - src/**
+  - test/**
+
+# OK: カンマ区切りワンライナー
+paths: src/**, test/**
+
+# ブレース含む場合はクォート必要
+paths: "src/**/*.{ts,tsx}"
+```
+
 ## Rules vs CLAUDE.md vs skills
 
 | 判断基準 | rules/ | CLAUDE.md | skills/ |
 |---------|--------|-----------|---------|
-| 適用 | パス固有・自動 | 全体・常時 | 明示的呼び出し |
+| 適用 | 全件ロード（※#16299） | 全体・常時 | 明示的呼び出し |
 | 内容 | ファイル種別の制約 | 全体方針 | ワークフロー |
 
 ## 良いRulesの特徴
@@ -64,3 +87,4 @@ paths: src/api/**
 | `paths: "**/*"` | CLAUDE.mdへ |
 | 300行超 | skills/へ |
 | 複数ルールで重複 | CLAUDE.mdに集約 |
+| YAML配列形式のpaths | カンマ区切りワンライナーに |

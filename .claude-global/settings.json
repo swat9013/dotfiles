@@ -111,6 +111,18 @@
     "defaultMode": "default"
   },
   "model": "opus",
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/session-cleanup.sh"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "~/.dotfiles/.claude-global/statusline.sh",
@@ -124,17 +136,5 @@
   },
   "language": "japanese",
   "spinnerTipsEnabled": false,
-  "promptSuggestionEnabled": false,
-  "hooks": {
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.dotfiles/.claude-global/hooks/session-cleanup.sh"
-          }
-        ]
-      }
-    ]
-  }
+  "promptSuggestionEnabled": false
 }

@@ -4,11 +4,21 @@ paths: **/.claude/skills/**
 
 # Skills 作成ルール
 
+## 呼び出し制御
+
+| 設定 | ユーザー | Claude自動 | 用途 |
+|------|---------|-----------|------|
+| デフォルト | ○ | ○ | 汎用 |
+| `disable-model-invocation: true` | ○ | ✕ | deploy, commit等の副作用あり |
+| `user-invocable: false` | ✕ | ○ | 背景知識・参照ガイド |
+
 ## 必須制約
 
 - **SKILL.md**: 500行以下
+- **コンテンツ予算**: 15,000文字（スキル全体）
 - **frontmatter**: name（gerund形式推奨）+ description（三人称・トリガー必須）
 - **Progressive Disclosure**: 詳細は `references/` に分離（1階層まで）
+- **100行超のreferences**: 先頭にTOC必須
 
 ## ディレクトリ構成
 
@@ -51,9 +61,38 @@ description: |
 | ワークフロー・手順 | パス固有のルール |
 | 対話型・明示的呼び出し | 自動適用 |
 
+## 高度な機能
+
+### 文字列置換
+
+| 変数 | 内容 |
+|------|------|
+| `$ARGUMENTS` | 呼び出し時の引数全体 |
+| `$ARGUMENTS[0]`, `[1]` | 位置指定アクセス |
+| `${CLAUDE_SESSION_ID}` | セッションID |
+
+### 動的コンテキスト注入
+
+`` !`git branch --show-current` `` — スキルロード時にコマンド出力を展開
+
+### Extended Thinking
+
+SKILL.md内に `ultrathink` を含めると拡張思考モード有効化
+
+### コンテキスト分離
+
+```yaml
+context: fork
+agent: true
+```
+
+サブエージェントとして隔離実行する場合に設定
+
 ## アンチパターン
 
 - 500行超 → references/に分離
+- 15,000文字超 → 圧縮またはreferences/に分離
+- 100行超referencesにTOCなし → 先頭にTOC追加
 - トリガーなし → 自動選択されない
 - 汎用description → 誤マッチ
 - 深い参照ネスト → 1階層までに制限
