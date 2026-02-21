@@ -54,6 +54,33 @@ user-invocable: false
 
 `trace.playwright.dev` でブラウザ上からも閲覧可能（インストール不要）。
 
+## ARIA Snapshot（ページ構造の確認）
+
+ページ構造の確認にはスクリーンショットよりARIAスナップショットを優先する。
+アクセシビリティツリーを構造化テキストで取得でき、AIエージェントにとって解析しやすい。
+
+| 場面 | 利点 |
+|------|------|
+| ページ構造の理解 | DOM全体を読まずにセマンティック構造を把握 |
+| 要素階層の検証 | 親子関係をツリー形式で確認 |
+| ロケーター問題のデバッグ | 要素の role/name を直接確認 |
+
+```typescript
+// 取得
+const snapshot = await page.locator('body').ariaSnapshot();
+
+// アサーション
+await expect(page.locator('body')).toMatchAriaSnapshot(`
+  - navigation "Main":
+    - link "Home"
+    - link "About"
+  - main:
+    - heading "Welcome" [level=1]
+`);
+```
+
+スクリーンショットはビジュアルリグレッション検出用。構造的な検証にはARIAスナップショットを使う。
+
 ## CI/CD で間違えやすい設定
 
 ```typescript

@@ -10,14 +10,16 @@ paths: .claude-global/**
 
 ```
 .claude-global/
-├── settings.json              # Claude Code動作設定
-├── CLAUDE.md                  # Claudeへの行動指針
-├── rules/                     # パス固有のガイドライン
-├── hooks/                     # イベント駆動の自動処理
-├── skills/                    # 対話的ワークフロー定義
-├── statusline.sh              # ステータスライン表示
-├── file-suggestion.sh         # @参照時のファイル候補
-└── setup-mcp.sh               # MCPサーバー初期化
+├── settings.json                # Claude Code動作設定
+├── settings.local.json.template # ローカル設定テンプレート
+├── CLAUDE.md                    # Claudeへの行動指針
+├── rules/                       # パス固有のガイドライン
+├── hooks/                       # イベント駆動の自動処理
+├── skills/                      # 対話的ワークフロー定義
+├── statusline.sh                # ステータスライン表示
+├── file-suggestion.sh           # @参照時のファイル候補
+├── setup-mcp.sh                 # MCPサーバー初期化
+└── setup-mcp-local.sh.example   # ローカルMCP設定テンプレート
 ```
 
 ## 各設定の責務
@@ -27,7 +29,7 @@ paths: .claude-global/**
 | 動作設定 | `settings.json` | permissions、hooks登録、UI、MCP |
 | 行動指針 | `CLAUDE.md` | コーディング哲学、環境制約 |
 | ガイドライン | `rules/` | パス固有のルール |
-| 自動処理 | `hooks/` | イベント駆動実行 |
+| 自動処理 | `hooks/` | イベント駆動実行（SessionStart, PreToolUse, PostToolUse, Stop 等） |
 | ワークフロー | `skills/` | 対話的タスク定義（サブエージェント呼び出し含む） |
 | 動的情報 | `*.sh` | 状態取得スクリプト |
 
@@ -43,8 +45,9 @@ paths: .claude-global/**
 | 階層 | 読み込みタイミング | コスト |
 |-----|------------------|-------|
 | CLAUDE.md | 常時 | 高 |
-| rules/ | パスマッチ時 | 中 |
+| rules/ | パスマッチ時（※#16299で全件ロード） | 中 |
 | skills/ | 必要時のみ | 低 |
+| Subagents | Task tool経由 | 分離（トークン消費なし） |
 
 ### 配置判断
 - 「この情報は常に必要か？」→ No なら下位層へ
@@ -53,7 +56,7 @@ paths: .claude-global/**
 
 ## パス参照の規則
 
-スキル内でのパス参照は用途によって使い分ける:
+スキル・hooks・スクリプト内でのパス参照は用途によって使い分ける:
 
 | 用途 | パス形式 | 理由 |
 |------|----------|------|
@@ -63,17 +66,11 @@ paths: .claude-global/**
 
 ## DRY原則
 
-- 複数スキルで共有する内容 → 各スキルの責務に応じて配置
-- rules/ と CLAUDE.md の重複を避ける
-- 重複を見つけたら適切な階層に集約
+- **禁止**: rules/ と CLAUDE.md に同じ指示を重複記載
+- **禁止**: 複数スキルに同一のreferences/を個別コピー → `_shared/` に集約
+- **推奨**: 共通のアクション指向ルールは上位層（CLAUDE.md）に集約し、パス固有の補足のみrules/に記載
 
 ## 命名規則
 
-- **全体**: kebab-case（例: `config-optimizer`, `setup-mcp.sh`）
+- **全体**: kebab-case（例: `context-optimizer`, `setup-mcp.sh`）
 - **frontmatter**: ハイフンケース、64文字以内
-
-## 参考資料
-
-- 設定ベストプラクティス: `docs/config-best-practices.md`
-- タスク分解ガイド: `skills/breakdown/guides/task-breakdown.md`
-- サブエージェントオーケストレーション: `docs/skill-subagent-orchestration.md`

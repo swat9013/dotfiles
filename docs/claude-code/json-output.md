@@ -42,7 +42,7 @@ SCHEMA='{"type":"object","properties":{"message":{"type":"string"}},"required":[
 
 claude --model haiku -p --output-format json --json-schema "$SCHEMA" \
   "Generate a greeting" 2>/dev/null | \
-  jq -r '.[] | select(.type=="result") | .structured_output.message'
+  jq -s -r '.[] | select(.type=="result") | .structured_output.message'
 ```
 
 ### 出力の抽出パターン
@@ -66,7 +66,7 @@ SCHEMA='{"type":"object","properties":{"message":{"type":"string"}},"required":[
 
 COMMITMSG=$(claude --model haiku -p --output-format json --json-schema "$SCHEMA" \
   'Based on `git diff --cached`, generate a commit message...' 2>/dev/null | \
-  jq -r '.[] | select(.type=="result") | .structured_output.message')
+  jq -s -r '.[] | select(.type=="result") | .structured_output.message')
 
 git commit -m "$COMMITMSG" -e
 ```
