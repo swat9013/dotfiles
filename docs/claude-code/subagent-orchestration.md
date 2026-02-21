@@ -30,6 +30,31 @@ Task tool（サブエージェント起動）と Tasks API（タスク管理）�
 
 ---
 
+## Task tool パラメータ一覧
+
+| パラメータ | 必須 | 型 | 説明 |
+|-----------|------|-----|------|
+| `subagent_type` | ✓ | string | 使用するエージェントタイプ |
+| `prompt` | ✓ | string | タスク内容 |
+| `description` | 推奨 | string | 3-5語のタスク説明（ログ・進捗表示用） |
+| `model` | - | `sonnet` / `opus` / `haiku` / `inherit` | 使用モデル（デフォルト: `inherit`） |
+| `run_in_background` | - | boolean | バックグラウンド実行（デフォルト: `false`） |
+| `isolation` | - | `"worktree"` | git worktreeで分離実行 |
+| `resume` | - | string | 既存セッションを再開（session ID） |
+| `max_turns` | - | number | 最大ターン数 |
+
+### 利用可能な subagent_type
+
+| タイプ | ツール | 用途 |
+|--------|--------|------|
+| `general-purpose` | 全ツール | 複雑な多段階タスク、探索+修正 |
+| `Explore` | 読み取り専用 | コードベース探索・検索（高速・低コスト） |
+| `Plan` | 読み取り専用 | プランモードでの調査 |
+| `Bash` | Bash のみ | コマンド実行（独立コンテキスト） |
+| カスタム名 | 設定次第 | `.claude/agents/` で定義したエージェント |
+
+---
+
 ## モデル選択ガイド
 
 | タスク種別 | モデル | 特徴 | 例 |
@@ -126,6 +151,63 @@ Task tool:
 ```
 
 重要: 「単一メッセージで」を明記することで、Claudeが複数のTask toolを1回のAPIコールで呼び出す。
+
+---
+
+## バックグラウンド実行（run_in_background）
+
+`run_in_background: true` でサブエージェントを非同期実行し、`TaskOutput` で結果を取得:
+
+```markdown
+## Step 1: バックグラウンドで並列起動
+
+以下を**単一メッセージで**起動:
+
+### Agent 1（セキュリティ分析）
+Task tool:
+- subagent_type: general-purpose
+- model: sonnet
+- run_in_background: true
+- prompt: セキュリティ脆弱性を分析...
+
+### Agent 2（パフォーマンス分析）
+Task tool:
+- subagent_type: general-purpose
+- model: sonnet
+- run_in_background: true
+- prompt: パフォーマンスボトルネックを分析...
+
+## Step 2: 結果を収集
+
+TaskOutput で各エージェントの完了を待機（block: true）。
+```
+
+### フォアグラウンド vs バックグラウンドの使い分け
+
+| | フォアグラウンド | バックグラウンド |
+|--|--|--|
+| 権限プロンプト | 実行中に表示 | 事前承認が必要（なければ失敗） |
+| MCP ツール | 利用可 | 利用不可 |
+| 推奨用途 | 短時間・インタラクティブ | 長時間・CPU集約型・完全自律 |
+| 同時実行目安 | 5-7個 | 3-5個 |
+
+---
+
+## Worktree分離（isolation: "worktree"）
+
+並列エージェントが同一リポジトリで独立して作業:
+
+```markdown
+Task tool:
+- isolation: "worktree"
+- run_in_background: true
+- prompt: authentication モジュールをリファクタリング...
+```
+
+- `.claude/worktrees/` 以下に一時的な git worktree を作成（HEAD ベース）
+- 変更がない場合は実行後に自動削除
+- 複数エージェントが同一ファイルを修正しても競合しない
+- 変更があった場合はブランチ名とworktreeパスが返される
 
 ---
 
@@ -275,19 +357,40 @@ PR全体の変更サマリーを取得
 
 ## カスタムエージェントテンプレート
 
+カスタムエージェントは `.claude/agents/` または `~/.claude/agents/` に Markdown ファイルとして定義する。
+
+### frontmatter 完全仕様
+
+| フィールド | 必須 | 説明 |
+|-----------|------|------|
+| `name` | ✓ | 小文字とハイフンのみ。エージェント識別子 |
+| `description` | ✓ | Claudeによる自動選択の判断材料 |
+| `tools` | - | 許可ツールリスト（省略時: 全ツール継承） |
+| `disallowedTools` | - | 拒否ツールリスト |
+| `model` | - | `sonnet` / `opus` / `haiku` / `inherit`（デフォルト: `inherit`） |
+| `permissionMode` | - | `default` / `acceptEdits` / `dontAsk` / `bypassPermissions` / `plan` |
+| `maxTurns` | - | 最大ターン数 |
+| `skills` | - | 起動時にコンテキストへ注入するスキル |
+| `mcpServers` | - | 使用可能なMCPサーバー |
+| `hooks` | - | ライフサイクルフック（PreToolUse, PostToolUse, Stop） |
+| `memory` | - | 永続メモリスコープ: `user` / `project` / `local` |
+| `background` | - | `true` で常にバックグラウンド実行 |
+| `isolation` | - | `worktree` で一時的なgit worktree内で実行 |
+
+### 定義例
+
 ```yaml
 # .claude/agents/security-reviewer.md
 ---
 name: security-reviewer
 description: |
-  セキュリティ観点でコードをレビュー。
-  OWASP Top 10に基づいて脆弱性を検出。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
+  セキュリティ観点でコードをレビュー。OWASP Top 10に基づいて脆弱性を検出。
+  Use PROACTIVELY after code changes.
+tools: Read, Grep, Glob
+model: sonnet
+permissionMode: dontAsk
 skills:
-  - code-review
+  - security-patterns
 ---
 
 # セキュリティレビュアー
@@ -302,4 +405,90 @@ OWASP Top 10 に基づいてセキュリティ脆弱性を検出。
 - XSS（クロスサイトスクリプティング）
 ```
 
-**注意**: 組み込みエージェント（Explore、Plan、general-purpose）は Skills にアクセスできない。カスタムエージェントのみ `skills` フィールドで指定可能。
+### エージェントスコープ
+
+| ロケーション | スコープ | 優先度 |
+|-------------|--------|--------|
+| `--agents` CLI引数 | 現在セッション限定 | 最高 |
+| `.claude/agents/` | プロジェクト共有 | 高 |
+| `~/.claude/agents/` | 全プロジェクト共通 | 低 |
+
+- プロジェクトエージェント (`.claude/agents/`) は git に含めてチーム共有を推奨
+- グローバルエージェント (`~/.claude/agents/`) は全プロジェクトで再利用
+
+### description 設計
+
+Claudeによる**自動選択**を制御するキーワード:
+
+```yaml
+# 積極的な自動選択
+description: Use PROACTIVELY when code is written or modified.
+
+# 必須呼び出し
+description: MUST BE USED for all security-related code reviews.
+
+# 即座に呼び出し
+description: Invoke IMMEDIATELY after writing authentication code.
+```
+
+### Skills preloading
+
+`skills` フィールドでスキルのフル内容を起動時に注入:
+
+```yaml
+---
+name: api-developer
+description: API エンドポイントの実装
+skills:
+  - api-conventions
+  - error-handling-patterns
+---
+```
+
+- スキルは起動時に完全ロードされる（遅延ロードではない）
+- 親セッションのスキルは継承されない。明示的にリストすること
+- **組み込みエージェント（Explore、Plan、general-purpose）は `skills` フィールドを持たない**
+
+### サブエージェント生成制限
+
+`tools` フィールドで起動可能なサブエージェントを制限:
+
+```yaml
+---
+name: coordinator
+description: 専門エージェントへのタスク振り分け
+tools: Task(worker, researcher), Read, Bash
+---
+```
+
+- `Task(worker, researcher)`: `worker` と `researcher` のみ生成可能
+- `Task` のみ: 全サブエージェントを許可
+- `Task` を省略: サブエージェント生成禁止
+
+### permissionMode
+
+| モード | 動作 |
+|--------|------|
+| `default` | 標準的な権限チェック |
+| `acceptEdits` | ファイル編集を自動承認 |
+| `dontAsk` | 権限プロンプトを自動拒否（読み取り専用分析向け） |
+| `bypassPermissions` | 全権限チェックをスキップ（⚠️ 信頼できる環境のみ） |
+| `plan` | 読み取り専用（プランモード） |
+
+### 永続メモリ（memory フィールド）
+
+```yaml
+---
+name: code-reviewer
+memory: project
+---
+
+レビューを通じて発見したパターンや慣習をメモリに記録すること。
+次回のレビュー前にメモリを参照して過去の知識を活用すること。
+```
+
+| スコープ | 保存先 | 用途 |
+|---------|---------|------|
+| `user` | `~/.claude/agent-memory/<name>/` | 全プロジェクト共通の知識 |
+| `project` | `.claude/agent-memory/<name>/` | プロジェクト固有・チーム共有 |
+| `local` | `.claude/agent-memory-local/<name>/` | プロジェクト固有・個人用 |

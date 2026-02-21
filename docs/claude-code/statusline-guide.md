@@ -55,10 +55,10 @@ Status Line スクリプトは stdin から JSON 形式でセッション情報�
 {
   "hook_event_name": "Status",
   "session_id": "abc123...",
-  "transcript_path": "/path/to/transcript.json",
+  "transcript_path": "/path/to/transcript.jsonl",
   "cwd": "/current/working/directory",
   "model": {
-    "id": "claude-opus-4-5-20251101",
+    "id": "claude-opus-4-6",
     "display_name": "Opus"
   },
   "workspace": {
@@ -80,15 +80,38 @@ Status Line スクリプトは stdin から JSON 形式でセッション情報�
     "total_input_tokens": 15234,
     "total_output_tokens": 4521,
     "context_window_size": 200000,
+    "used_percentage": 8,
+    "remaining_percentage": 92,
     "current_usage": {
       "input_tokens": 8500,
       "output_tokens": 1200,
       "cache_creation_input_tokens": 5000,
       "cache_read_input_tokens": 2000
     }
+  },
+  "exceeds_200k_tokens": false,
+  "vim": {
+    "mode": "NORMAL"
+  },
+  "agent": {
+    "name": "security-reviewer"
   }
 }
 ```
+
+**条件付きフィールド（常に存在しない）:**
+
+| フィールド | 出現条件 |
+|-----------|---------|
+| `vim` | vim mode 有効時のみ |
+| `agent` | `--agent` フラグ使用時またはエージェント設定時のみ |
+
+**Nullable フィールド:**
+
+| フィールド | null になるケース |
+|-----------|----------------|
+| `context_window.current_usage` | 初回 API 呼び出し前 |
+| `context_window.used_percentage` | セッション初期段階 |
 
 ### 主要フィールド一覧
 
@@ -120,12 +143,22 @@ Status Line スクリプトは stdin から JSON 形式でセッション情報�
 | `.context_window.context_window_size` | 最大コンテキストサイズ |
 | `.context_window.total_input_tokens` | 累積入力トークン |
 | `.context_window.total_output_tokens` | 累積出力トークン |
+| `.context_window.used_percentage` | コンテキスト使用率（%） |
+| `.context_window.remaining_percentage` | コンテキスト残量（%） |
 | `.context_window.current_usage.input_tokens` | 現在の入力トークン |
 | `.context_window.current_usage.output_tokens` | 現在の出力トークン |
 | `.context_window.current_usage.cache_creation_input_tokens` | キャッシュ作成トークン |
 | `.context_window.current_usage.cache_read_input_tokens` | キャッシュ読み込みトークン |
 
 **重要:** コンテキスト使用率の計算には `total_input_tokens`（累積）ではなく `current_usage` を使用する。
+
+### その他のフィールド
+
+| フィールド | 説明 |
+|-----------|------|
+| `.exceeds_200k_tokens` | 200k トークン閾値超過フラグ（boolean） |
+| `.vim.mode` | vim モード状態（"NORMAL", "INSERT" 等）※vim 有効時のみ |
+| `.agent.name` | エージェント名 ※`--agent` 使用時のみ |
 
 ## 実装例
 
@@ -254,33 +287,43 @@ Status Line は ANSI エスケープシーケンスをサポート:
 
 ### ccstatusline
 
-高機能な TUI ベースの設定ツール。
+高機能な TUI ベースの設定ツール（v2.0.16+）。
 
 ```bash
 # npm
 npx ccstatusline@latest
 
-# Bun（推奨）
+# Bun（推奨・高速）
 bunx ccstatusline@latest
 ```
 
 **特徴:**
-- Powerline スタイルのセパレータ
-- マルチライン対応
-- 24+ ウィジェット
+- Powerline スタイルのセパレータ・キャップ
+- 無制限のマルチライン対応（v2.0.11+）
+- Git Worktree ウィジェット（v2.0.10+）
+- fish-style path 省略表示トグル（v2.0.16+）
+- コンテキスト使用率の remaining モード切替（v2.0.14+）
 - リアルタイムプレビュー
 - React/Ink ベースの対話型 TUI
+- Windows/macOS/Linux クロスプラットフォーム対応
 
 **公式:** https://github.com/sirmalloc/ccstatusline
 
 ### claude-code-statusline
 
-TOML ベースの設定ファイルを使用。
+TOML ベースの設定ファイルを使用（v2.10.0+）。
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/rz1989s/claude-code-statusline/main/install.sh | bash
+```
 
 **特徴:**
-- `~/.claude/statusline/Config.toml` で一元管理
-- テーマシステム
-- 設定のライブリロード
+- `~/.claude/statusline/Config.toml` で一元管理（227 設定項目）
+- 18 atomic components で 1-9 行を柔軟に構成
+- Block Metrics System（コストのバーンレート・時間あたり費用・月次予測）
+- MCP サーバー監視・接続状態表示
+- 18+ テーマ（Catppuccin Mocha 等）
+- Sub-50ms 実行（多層キャッシュ戦略）
 
 **公式:** https://github.com/rz1989s/claude-code-statusline
 
@@ -295,8 +338,9 @@ TOML ベースの設定ファイルを使用。
 ### 出力制限
 
 - **stdout のみ:** stderr は無視される
-- **1行のみ:** 複数行出力は最初の1行のみ表示
+- **複数行対応:** 複数の echo/print 文で複数行表示が可能
 - **端末幅:** 長すぎる出力は切り詰められる
+- **OSC 8 ハイパーリンク:** iTerm2, Kitty, WezTerm などの対応ターミナルでクリッカブルリンクが使用可能
 
 ### Git 操作
 
@@ -374,5 +418,8 @@ chmod +x ~/.dotfiles/.claude-global/statusline.sh
 - [公式ドキュメント](https://code.claude.com/docs/en/statusline)
 - [ccstatusline](https://github.com/sirmalloc/ccstatusline)
 - [claude-code-statusline](https://github.com/rz1989s/claude-code-statusline)
+- [ccusage statusline ガイド](https://ccusage.com/guide/statusline)
+- [@wyattjoh/claude-status-line (JSR)](https://jsr.io/@wyattjoh/claude-status-line)
 - [カスタマイズ解説記事](https://www.lexo.ch/blog/2025/12/customize-your-claude-code-status-line/)
-- [Status Line 活用記事](https://medium.com/@joe.njenga/how-im-using-claude-code-status-line-new-feature-to-keep-context-96a4adf21728)
+- [alexop.dev: Status Line カスタマイズ](https://alexop.dev/posts/customize_claude_code_status_line/)
+- [Status Line 活用記事 (2026-02)](https://medium.com/@joe.njenga/i-found-this-claude-code-statusline-that-makes-my-terminal-magically-beautiful-2413fa8effe7)

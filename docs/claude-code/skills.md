@@ -38,6 +38,23 @@ skill-name/
 - **skills と commands が同名の場合、skillsが優先**
 - `.claude/commands/` は引き続き動作するが、skillsへの移行を推奨
 
+## Skill 権限制御
+
+`settings.json` の `permissions` で特定スキルへのアクセスを `Skill(name)` 形式で制御できる:
+
+```json
+{
+  "permissions": {
+    "allow": ["Skill(commit)", "Skill(review-pr *)"],
+    "deny": ["Skill(deploy *)"]
+  }
+}
+```
+
+- `Skill(name)` — 特定スキルを許可/拒否
+- `Skill(name *)` — ワイルドカードで複数スキルを対象
+- `deny` が `allow` より優先（通常の permission ルールと同様）
+
 ## Skills vs Commands
 
 | 観点 | Skill | Command |
@@ -108,7 +125,7 @@ skill-name/
 | disable-model-invocation | No | Claude自動呼び出しを禁止 | `true`でユーザー専用 |
 | user-invocable | No | /メニュー表示 | `false`で非表示 |
 | allowed-tools | No | 許可確認なしで使用可能なツール | カンマ区切り |
-| model | No | モデル指定 | claude-sonnet-4等 |
+| model | No | モデル指定 | エイリアスのみ: `sonnet`, `opus`, `haiku`, `inherit` |
 | context | No | 実行コンテキスト | `fork` でサブエージェント |
 | agent | No | fork時のサブエージェントタイプ | `Explore`, `Plan`, `general-purpose` |
 | hooks | No | スキルライフサイクルフック | Hooks設定形式 |
@@ -255,6 +272,22 @@ Summarize this pull request...
 
 - コマンドはスキル実行前に実行され、出力がプレースホルダを置換
 - Claudeはコマンドではなく、実行結果のみを受け取る
+
+## Extended Thinking（ultrathink）
+
+スキル内に `ultrathink` というキーワードを含めるだけで Extended Thinking が有効になる:
+
+```markdown
+---
+name: deep-analysis
+description: コードを深く分析する専門エージェント。
+---
+
+このコードを解析する際は ultrathink で論理を丁寧に追う。
+```
+
+- 明示的な設定不要 — キーワードが存在するだけで自動的に有効化
+- 複雑な推論・設計判断・根本原因分析に適したスキルに追加
 
 ## SKILL.md 構成テンプレート
 
@@ -407,6 +440,24 @@ skills/
 skill内でTask toolを使ってサブエージェントを動的に起動できる。
 詳細は [サブエージェントオーケストレーション](./subagent-orchestration.md) を参照。
 
+### サブエージェントへの skills プリロード
+
+サブエージェント（`.claude/agents/` または `context: fork`）の `skills` フィールドで、起動時にスキル内容をコンテキストへ注入できる:
+
+```yaml
+---
+name: api-developer
+description: チーム規約に従いAPIエンドポイントを実装する。
+skills:
+  - api-conventions
+  - error-handling-patterns
+---
+```
+
+- 指定したスキルの**完全な内容**がサブエージェント起動時にコンテキストに注入される
+- サブエージェントは親セッションのスキルを**継承しない** — 必要なスキルは明示的に指定
+- 「利用可能にする」ではなく「実際にコンテキストへロード」する点に注意
+
 ## フィードバックループ
 
 品質向上には「実行→検証→修正→繰り返し」パターンが効果的:
@@ -493,4 +544,5 @@ v1 APIは `api.example.com/v1/` を使用していた。
 ## 参考資料
 
 - [Extend Claude with skills](https://code.claude.com/docs/en/skills) - 公式ドキュメント
+- [Sub-agents](https://code.claude.com/docs/en/sub-agents) - サブエージェント公式ドキュメント（skills プリロード仕様）
 - [A complete guide to building skills for Claude](https://claude.com/blog/complete-guide-to-building-skills-for-claude) - 公式ガイド

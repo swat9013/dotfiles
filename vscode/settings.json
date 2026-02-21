@@ -1,0 +1,349 @@
+{
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[python]": {
+    "editor.formatOnType": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "vue.volar"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "cSpell.enabledLanguageIds": [
+    "asciidoc",
+    "c",
+    "cpp",
+    "csharp",
+    "css",
+    "git-commit",
+    "go",
+    "graphql",
+    "handlebars",
+    "html",
+    "java",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "latex",
+    "less",
+    "markdown",
+    "plaintext",
+    "python",
+    "scss",
+    "text",
+    "typescript",
+    "typescriptreact",
+    "yaml",
+    "yml",
+    "ruby"
+  ],
+  "cSpell.userWords": [
+    "airbyte",
+    "applescript",
+    "arpu",
+    "astype",
+    "BIGQUERY",
+    "boto",
+    "comic",
+    "comicfesta",
+    "coolmic",
+    "Crowi",
+    "dask",
+    "dataframe",
+    "datahub",
+    "datetime",
+    "dateutil",
+    "dbeaver",
+    "denormalize",
+    "Digdag",
+    "dotenv",
+    "dtype",
+    "dtypes",
+    "EMBULK",
+    "EPUB",
+    "Fargate",
+    "festa",
+    "frontmost",
+    "fukushi",
+    "getenv",
+    "gitlab",
+    "hankaku",
+    "ISUCON",
+    "jkiss",
+    "keishikimeishi",
+    "Metabase",
+    "onenote",
+    "osascript",
+    "packwerk",
+    "PORO",
+    "postgresql",
+    "proofdict",
+    "psycopg",
+    "Qiita",
+    "redash",
+    "rubocop",
+    "sbps",
+    "slackmacgap",
+    "ssid",
+    "sslmode",
+    "SSOT",
+    "textlint",
+    "tinyspeck",
+    "Todoist",
+    "usecase",
+    "venv",
+    "watanabe",
+    "wwwave",
+    "zaratan",
+    "zenkaku"
+  ],
+  "editor.accessibilitySupport": "off",
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.detectIndentation": false,
+  "editor.fontFamily": "'PlemolJP35', SourceHanCodeJP-Regular, 'Source Code Pro for Powerline', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontWeight": "500",
+  "editor.mouseWheelZoom": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.renderWhitespace": "selection",
+  "editor.cursorBlinking": "solid",
+  "editor.suggest.localityBonus": true,
+  "editor.stickyScroll.enabled": false,
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "emacs-mcx.cursorMoveOnFindWidget": true,
+  "emmet.triggerExpansionOnTab": true,
+  "explorer.confirmDelete": false,
+  "extensions.ignoreRecommendations": true,
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "files.associations": {
+    "*.yml.liquid": "yaml"
+  },
+  "files.autoGuessEncoding": true,
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.autofetch": false,
+  "github.copilot.chat.agent.thinkingTool": true,
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    { "text": "必ず日本語で記述せよ" },
+    {
+      "text": "Conventional Commitsの規約に基づいたコミットメッセージを日本語で生成せよ"
+    },
+    {
+      "text": "以下のフォーマットに従ってください: `タイプ(オプション): <内容>`"
+    },
+    {
+      "text": "タイプは以下のいずれかを使用してください: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`"
+    },
+    {
+      "text": "なぜこの変更が必要なのか、どのような問題を解決するのかを簡潔に説明してください。"
+    }
+  ],
+  "github.copilot.chat.editor.temporalContext.enabled": true,
+  "github.copilot.chat.edits.temporalContext.enabled": true,
+  "github.copilot.chat.enableRetryAfterFilteredResponse": true,
+  "github.copilot.chat.localeOverride": "ja",
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "chat.agent.maxRequests": 50,
+  "chat.agentSessionsViewLocation": "view",
+  "chat.mcp.discovery.enabled": {
+    "claude-desktop": false,
+    "windsurf": false,
+    "cursor-global": false,
+    "cursor-workspace": false
+  },
+  "chat.renderRelatedFiles": true,
+  "chat.tools.terminal.autoApprove": {
+    "head": true,
+    "pwd": true,
+    "/scripts\/.*.sh/": true,
+    "sed": true,
+    "git": true,
+    "mkdir": true,
+    "npx": true,
+    "npm": true,
+    "markdownlint-cli2": true,
+    "cd": true,
+    "grep": true,
+    "osascript": true,
+    "find": true,
+    "mv": true,
+    "cp": true,
+    "wc": true,
+    "echo": true,
+    "ls": true,
+    "textlint": true,
+    "cat": true,
+    "node": true,
+    "uv": true,
+    "rmdir": false,
+    "del": false,
+    "kill": false,
+    "curl": false,
+    "wget": false,
+    "eval": false,
+    "chmod": false,
+    "chown": false,
+    "/^Remove-Item\\b/i": false
+  },
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "gitlens.menus": {
+    "editor": {
+      "blame": false,
+      "clipboard": true,
+      "compare": true,
+      "history": false,
+      "remote": false
+    },
+    "editorGroup": false,
+    "editorTab": {
+      "clipboard": true,
+      "compare": true,
+      "history": true,
+      "remote": true
+    },
+    "explorer": {
+      "clipboard": true,
+      "compare": true,
+      "history": true,
+      "remote": true
+    },
+    "scm": {
+      "authors": true
+    },
+    "scmGroup": {
+      "compare": true,
+      "openClose": true,
+      "stash": true
+    },
+    "scmGroupInline": {
+      "stash": true
+    },
+    "scmItem": {
+      "clipboard": true,
+      "compare": true,
+      "history": true,
+      "remote": false,
+      "stash": true
+    }
+  },
+  "gitlens.mode.active": "zen",
+  "gitlens.statusBar.enabled": false,
+  "hediet.vscode-drawio.theme": "Kennedy",
+  "jupyter.askForKernelRestart": false,
+  "markdown.copyFiles.destination": {
+    "*": "images/${fileName}"
+  },
+  "markdown.extension.toc.levels": "2..6",
+  "markdown.preview.breaks": true,
+  "markdownlint.config": {
+    "MD033": false
+  },
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  "notebook.output.textLineLimit": 500,
+  "notebook.outline.showMarkdownHeadersOnly": false,
+  "python.languageServer": "Pylance",
+  "python.terminal.activateEnvironment": false,
+  "redhat.telemetry.enabled": false,
+  "remote.SSH.connectTimeout": 30,
+  "scm.autoReveal": false,
+  "search.showLineNumbers": true,
+  "security.promptForRemoteFileProtocolHandling": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.scrollback": 500,
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "XXX",
+    "[ ]",
+    "[x]",
+    "NOTE"
+  ],
+  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.value": 10,
+  "workbench.editor.closeOnFileDelete": true,
+  "workbench.activityBar.location": "top",
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  },
+  "workbench.panel.defaultLocation": "bottom",
+  "window.restoreWindows": "one",
+  "workbench.startupEditor": "newUntitledFile",
+  "update.mode": "manual",
+  "update.showReleaseNotes": false,
+  "telemetry.telemetryLevel": "off",
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/dist/**": true,
+    "**/.venv/**": true,
+    "**/venv/**": true,
+    "**/.next/**": true,
+    "**/coverage/**": true,
+    "**/__generated__/**": true,
+    "**/build/**": true,
+    "**/tmp/**": true
+  },
+  "search.exclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/coverage/**": true,
+    "**/.next/**": true,
+    "**/__generated__/**": true,
+    "**/tmp/**": true,
+    "**/*.min.js": true,
+    "**/*.min.css": true,
+    "**/package-lock.json": true,
+    "**/yarn.lock": true,
+    "**/pnpm-lock.yaml": true
+  },
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "workbench.colorTheme": "One Dark Modern",
+  "vscode-office.editorTheme": "One Dark"
+}

@@ -19,6 +19,7 @@
 	dc = diff --cached
 	di = diff
 	dic = diff --cached
+	difit = !npx difit . --include-untracked
 	dw = diff --word-diff
 	dcw = diff --cached --word-diff
 	diw = diff --word-diff

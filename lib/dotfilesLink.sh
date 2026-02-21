@@ -72,3 +72,10 @@ if [ -f "$HOME"/.dotfiles/colima/colima.yaml ]; then
     mkdir -p "$HOME"/.colima/default
     ln -snfv "$HOME"/.dotfiles/colima/colima.yaml "$HOME"/.colima/default/colima.yaml
 fi
+
+# VS Code設定
+VSCODE_USER="$HOME/Library/Application Support/Code/User"
+if [ -d "$VSCODE_USER" ]; then
+    ln -snfv "$HOME/.dotfiles/vscode/settings.json" "$VSCODE_USER/settings.json"
+    ln -snfv "$HOME/.dotfiles/vscode/keybindings.json" "$VSCODE_USER/keybindings.json"
+fi

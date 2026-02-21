@@ -1,17 +1,19 @@
 # Claude Code コンテキストアーキテクチャ
 
-Claude Code の5層コンテキスト機構と最適化戦略。
+Claude Code の4層コンテキスト機構と最適化戦略。
 
-## 5層コンテキスト機構
+## コンテキスト層構造（4層）
 
 ```
 読み込みタイミング: 早い ←────────────────────────→ 遅い
 コンテキスト消費:   常時 ←────────────────────────→ オンデマンド
 
-CLAUDE.md → Rules → Skills → Slash Commands → Subagents
-  ↓          ↓        ↓           ↓              ↓
- 全体指針   パス条件  自動判断    明示的実行    コンテキスト分離
+CLAUDE.md → Rules → Skills ──────────────── Subagents
+  ↓          ↓        ↓                        ↓
+ 全体指針   パス条件  自動判断 or /slash実行   コンテキスト分離
 ```
+
+> **[2025年変更]** Slash Commands（`.claude/commands/`）は Skills（`.claude/skills/`）に統合済み。`/skillname` でユーザー明示実行も可能。既存の `.claude/commands/` は後方互換性を維持して動作し続ける。
 
 ### CLAUDE.md vs Rules vs Skills（正規版比較表）
 
@@ -25,7 +27,8 @@ CLAUDE.md → Rules → Skills → Slash Commands → Subagents
 | 例 | 「KISSを優先」 | 「API層ではエラーログ必須」 | 「コードレビュー実施」 |
 
 **補足**:
-- Slash Commands: ユーザー明示実行のみ。実行時のみコンテキスト消費。定型プロンプトショートカット
+- Skills の呼び出しモード: デフォルトは自動＋/slash両対応。`disable-model-invocation: true` でユーザー専用（/slash のみ）、`user-invocable: false` で自動専用（/slash メニュー非表示）
+- `context: fork` フロントマター: Skills から Subagent を宣言的に起動するパターン。SKILL.md の内容がサブエージェントへのプロンプトになる（`agent: Explore` 等で種別指定）
 - Subagents: Task tool経由。分離コンテキスト。並列実行・専門タスク。詳細は [subagent-orchestration.md](./subagent-orchestration.md)
 
 各層の詳細設計ガイドは個別ドキュメントを参照:
@@ -92,6 +95,23 @@ CLAUDE.md → Rules → Skills → Slash Commands → Subagents
                                    低 ───────→ 高（分離）
 ```
 
+### コンテキスト消費のコスト感
+
+```
+CLAUDE.md（常時ロード）      : 高コスト（全文常時）
+rules/（パスマッチ時）        : 中コスト（条件付き）
+skills/ descriptions のみ    : 低コスト（~100 tokens/スキル）
+skills/ 本文（呼び出し時）    : 中コスト（<5k tokens）
+skills/ references/（必要時） : ほぼゼロ（読み込まれるまでトークン消費なし）
+```
+
+### /compact vs /clear の使い分け
+
+| コマンド | 動作 | 使うタイミング |
+|---------|------|--------------|
+| `/compact` | 会話履歴をサマリーに圧縮 | 同じ作業を続けながらコンテキストを削減（使用率 70% 目安） |
+| `/clear` | 会話履歴を完全リセット | 全く別タスクへ切り替える時、コミット完了後 |
+
 ### トークン節約のチェックリスト
 
 - [ ] CLAUDE.md は150行以下か
@@ -99,6 +119,7 @@ CLAUDE.md → Rules → Skills → Slash Commands → Subagents
 - [ ] ワークフローは Skills に分離したか
 - [ ] Skills の詳細は `references/` に分離したか
 - [ ] 並列実行可能なタスクは Subagents を使用しているか
+- [ ] コンテキスト使用率 70% 到達前に `/compact` を検討したか
 
 ---
 
@@ -169,16 +190,39 @@ description: データベースクエリのベストプラクティス
 - カラム名: snake_case
 ```
 
+### MCP スコープ（2025年名称変更）
+
+| 旧称 | 新称 | 保存先 | 用途 |
+|------|------|--------|------|
+| `global` | `user` | `~/.claude/mcp_servers.json` | ユーザー全体 |
+| `project` | `local` | `.claude/mcp_servers.json` | プロジェクト固有・非共有 |
+| (新) | `project` | `.mcp.json` | プロジェクト固有・バージョン管理対象 |
+
+> **注意**: 旧称 `project` は新称 `local` に変更。バージョン管理共有用の新スコープ `project`（`.mcp.json`）が追加。
+
+### MCP Tool Search（新機能）
+
+MCP サーバーが多数存在する場合、ツール説明がコンテキストウィンドウの 10% を超えると自動的に有効化:
+
+```bash
+ENABLE_TOOL_SEARCH=auto    # デフォルト（10%超で自動有効）
+ENABLE_TOOL_SEARCH=auto:5  # カスタム閾値5%
+ENABLE_TOOL_SEARCH=true    # 常に有効
+ENABLE_TOOL_SEARCH=false   # 無効
+```
+
 ---
 
 ## 参考資料
 
 ### 公式ドキュメント
-- [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) - Skills作成ベストプラクティス
-- [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+- [Claude Code Skills](https://code.claude.com/docs/en/skills) - Skills 仕様・フロントマター全フィールド
+- [Custom subagents](https://code.claude.com/docs/en/sub-agents) - サブエージェント設計
+- [MCP integration](https://code.claude.com/docs/en/mcp) - MCP スコープ・Tool Search
 - [Claude Code: Best practices for agentic coding](https://www.anthropic.com/engineering/claude-code-best-practices)
 
 ### コミュニティ記事
+- [Stop Bloating Your CLAUDE.md: Progressive Disclosure for AI Coding Tools](https://alexop.dev/posts/stop-bloating-your-claude-md-progressive-disclosure-ai-coding-tools/) (2025) - 54%トークン削減の実測値
 - [Tidy Tidy Tidy! Claude Codeの設定最適化ルールを作ったら、Kent BeckのCLAUDE.mdを1プロンプトで10行、追加手直しで1行にできた](https://blog.atusy.net/2025/12/17/minimizing-claude-md/)
-- [nwiizo/workspace_2026 - memory_optimizer](https://github.com/nwiizo/workspace_2026/tree/main/tools/memory_optimizer)
 - [Claude Code customization guide](https://marioottmann.com/articles/claude-code-customization-guide)
+- [nwiizo/workspace_2026 - memory_optimizer](https://github.com/nwiizo/workspace_2026/tree/main/tools/memory_optimizer)

@@ -124,5 +124,17 @@
   },
   "language": "japanese",
   "spinnerTipsEnabled": false,
-  "promptSuggestionEnabled": false
+  "promptSuggestionEnabled": false,
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/session-cleanup.sh"
+          }
+        ]
+      }
+    ]
+  }
 }

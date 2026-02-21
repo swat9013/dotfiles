@@ -85,7 +85,6 @@ alias g='git'
 alias -g L='`git log --decorate --oneline | fzf | cut -d" " -f1`'
 alias -g LA='`git log --decorate --oneline --all | fzf | cut -d" " -f1`'
 alias -g R='`git reflog | fzf | cut -d" " -f1`'
-alias difit='npx difit . --include-untracked'
 
 #
 # ls

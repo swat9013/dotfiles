@@ -117,7 +117,7 @@ function cck() {
       for pid in "${pids[@]}"; do
         local args=$(ps -p $pid -o args= 2>/dev/null)
         if [[ "$args" == *"stream-json"* ]]; then
-          kill $pid 2>/dev/null && ((count++))
+          kill -9 $pid 2>/dev/null && ((count++))
         fi
       done
       echo "Killed $count subagent(s)"

@@ -163,6 +163,15 @@ CLAUDE_CODE_ENABLE_TASKS=false claude
 
 # ヘッドレスモードでタスク有効化
 CLAUDE_CODE_ENABLE_TASKS=true claude -p "..."
+
+# チーム名指定（Agent Teams）
+CLAUDE_CODE_TEAM_NAME="my-team" claude
+
+# 1M contextウィンドウを無効化（v2.1.50〜）
+CLAUDE_CODE_DISABLE_1M_CONTEXT=true claude
+
+# スキル・エージェント・フックを除いたシンプルモード（v2.1.50〜）
+CLAUDE_CODE_SIMPLE=true claude
 ```
 
 ### Agent Teams（実験的、v2.1.32〜）
@@ -176,6 +185,26 @@ CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
 - **Teammates**: 独立コンテキストでタスク実行
 - **共有タスクリスト**: 全メンバーがクレーム・更新可能
 
+#### 適切な使用ケース
+
+| ケース | Agent Teams | Subagents |
+|--------|-------------|-----------|
+| 並列レビュー（セキュリティ/パフォーマンス/テスト） | ✅ 推奨 | - |
+| 複数仮説の並列検証・討論 | ✅ 推奨 | - |
+| 独立モジュールの並列開発 | ✅ 推奨 | - |
+| 短期集中タスク（ファイル1〜3個） | - | ✅ 推奨 |
+| 依存関係の多い順序実行 | ❌ | ✅ 推奨 |
+| 同一ファイルの並列編集 | ❌ 競合リスク | ❌ |
+
+#### Subagents との比較
+
+| 項目 | Subagents | Agent Teams |
+|------|-----------|-------------|
+| 実行環境 | メインセッション内 | 独立セッション |
+| コミュニケーション | リードへの報告のみ | チームメイト同士が直接メッセージ |
+| トークンコスト | 低 | 高（各メンバーが独立） |
+| セッション再開 | 対応 | チームメイト喪失 |
+
 ### 関連フックイベント
 
 | イベント | 発火タイミング | 用途 |
@@ -183,6 +212,9 @@ CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
 | `TaskCompleted` | タスク完了遷移時 | 品質ゲート（exit 2で完了ブロック） |
 | `TeammateIdle` | チームメイトのアイドル直前 | 追加作業の指示 |
 | `SubagentStop` | サブエージェント停止時 | 出力品質検証 |
+| `ConfigChange` | 設定ファイル変更時（v2.1.49〜） | セキュリティ監査・設定変更ブロック |
+| `WorktreeCreate` | Worktree 作成時（v2.1.50〜） | カスタム VCS セットアップ |
+| `WorktreeRemove` | Worktree 削除時（v2.1.50〜） | カスタム VCS ティアダウン |
 
 ## UIショートカット
 
@@ -190,6 +222,7 @@ CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
 |------|------|
 | `Ctrl+T` | タスクリスト表示/非表示 |
 | `Shift+Down` | チームメート間サイクル（Agent Teams） |
+| `Ctrl+F` | バックグラウンドエージェント終了（v2.1.49〜） |
 
 ## ストレージ
 
@@ -255,7 +288,9 @@ TaskCreate/TaskUpdate/TaskGet/TaskListは `PreToolUse`/`PostToolUse` フック�
 | v2.1.20 | 2026-01-27 | `status: "deleted"` によるタスク削除 |
 | v2.1.32 | 2026-02頃 | Agent Teams リサーチプレビュー |
 | v2.1.33 | 2026-02-06 | TeammateIdle / TaskCompleted フックイベント追加 |
-| v2.1.47 | 2026-02-19 | バックグラウンドエージェントのメッセージ履歴トリム |
+| v2.1.47 | 2026-02-19 | バックグラウンドエージェントのメッセージ履歴トリム、Stop/SubagentStop hook inputs に `last_assistant_message` 追加 |
+| v2.1.49 | 2026-02頃 | subagent の `isolation: "worktree"` 対応、ConfigChange hook 追加、Ctrl+F でバックグラウンドエージェント終了 |
+| v2.1.50 | 2026-02頃 | WorktreeCreate/WorktreeRemove hook 追加、1M context 制御（CLAUDE_CODE_DISABLE_1M_CONTEXT）、メモリリーク修正 |
 
 ## 参考資料
 
@@ -267,3 +302,6 @@ TaskCreate/TaskUpdate/TaskGet/TaskListは `PreToolUse`/`PostToolUse` フック�
 - [Claude Code CHANGELOG — GitHub](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md)
 - [Hook bypass issue #20243 — GitHub](https://github.com/anthropics/claude-code/issues/20243) (2026-01)
 - [Headless mode issue #20463 — GitHub](https://github.com/anthropics/claude-code/issues/20463) (2026-01)
+- [Claude Code Agent Teams 完全ガイド — claudefa.st](https://claudefa.st/blog/guide/agents/agent-teams) (2026-02)
+- [Claude Code 環境変数リファレンス — Medium](https://medium.com/@dan.avila7/claude-code-environment-variables-a-complete-reference-guide-41229ef18120) (2026-02)
+- [Multi-Session Task Coordination — DeepWiki](https://deepwiki.com/FlorianBruniaux/claude-code-ultimate-guide/8.4-multi-session-task-coordination) (2026-02)
