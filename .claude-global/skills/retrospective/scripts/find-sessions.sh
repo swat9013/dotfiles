@@ -41,7 +41,12 @@ SESSION_DIR="$HOME/.claude/projects/$PROJECT_DIR"
 # セッションディレクトリが存在しない場合は空出力で正常終了
 [ -d "$SESSION_DIR" ] || exit 0
 
-# mtimeベースでフィルタ（find -newermt）、新しい順でソート
-find "$SESSION_DIR" -maxdepth 1 -name "*.jsonl" -not -name "agent-*" \
-  -newermt "$SINCE_DATE" 2>/dev/null | sort -r | \
+# mtimeベースでフィルタ（find -newermt）
+files=$(find "$SESSION_DIR" -maxdepth 1 -name "*.jsonl" -not -name "agent-*" \
+  -newermt "$SINCE_DATE" 2>/dev/null)
+
+[ -z "$files" ] && exit 0
+
+# mtime の新しい順にソート（ls -t）
+echo "$files" | xargs ls -1t | \
   if [ "$LIMIT" -gt 0 ]; then head -"$LIMIT"; else cat; fi

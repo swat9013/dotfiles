@@ -122,7 +122,7 @@ agent: true
 | troubleshooting | 「デバッグ」「バグ調査」 |
 | critical-think | 「批判的に見て」「自己レビュー」 |
 | discovery | 「壁打ちしたい」「問題を整理したい」 |
-| domain-context | 「学びを保存」「ドメイン知識更新」 |
+| retrospective | 「学びを保存」「ドメイン知識更新」「振り返り」「retrospective」 |
 | context-optimizer | 「CLAUDE.md圧縮」「コンテキスト最適化」 |
 | doc-architect | 「ドキュメント設計」「docs作成」 |
 | task | 「/task」「タスク追加」 |

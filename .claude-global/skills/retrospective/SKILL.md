@@ -29,11 +29,15 @@ argument-hint: "[--since=Nd] [--limit=N]"
 
 親エージェントが直接実行する。サブエージェントは不要。
 
-ユーザーが指定した知見を適切な保存先に振り分ける。保存先ごとに以下を適用:
+### 手順
+
+1. ユーザーが指定した知見のカテゴリと保存先を判断
+2. 既存 CLAUDE.md・rules/ との重複・矛盾を確認
+3. 保存先ごとの確認フローに従って保存
 
 | 保存先 | 確認フロー |
 |--------|-----------|
-| CLAUDE.md | 確認なし（即時追記） |
+| CLAUDE.md | 重複確認後、即時追記（既存セクションに追記 or 新規セクション作成） |
 | rules/ | 差分提示 + AskUserQuestion で確認 |
 | skills/ | 提案表示のみ（`/managing-skills` に委譲） |
 | settings.local.json | JSON検証 + 差分提示 + 確認 |
@@ -59,38 +63,56 @@ argument-hint: "[--since=Nd] [--limit=N]"
 
 ### 3. メッセージ抽出
 
-各セッションファイルに対して実行:
+全セッションを一括で抽出・サイズフィルタする（Bash 1回）:
 
 ```bash
-~/.dotfiles/.claude-global/skills/retrospective/scripts/extract-messages.sh {session_file}
+for f in {session_files}; do
+  outfile="/tmp/retro_$(basename "$f" .jsonl).txt"
+  ~/.dotfiles/.claude-global/skills/retrospective/scripts/extract-messages.sh "$f" --max-chars=30000 > "$outfile"
+  size=$(wc -c < "$outfile")
+  if [ "$size" -gt 2000 ]; then
+    echo "$size $outfile"
+  else
+    rm -f "$outfile"
+  fi
+done
 ```
+
+2000バイト未満のセッションはスキップ（内容が少なく知見抽出の価値が低い）。
 
 ### 4. サブエージェント委譲
 
-**重要**: セッション単位でサブエージェントを並列起動する。1つのサブエージェントに複数セッションを渡さない（コンテキスト圧迫回避）。
+セッション単位でサブエージェントを**foreground**並列起動する。1つのサブエージェントに複数セッションを渡さない（コンテキスト圧迫回避）。
+
+**実行制約**:
+- **foreground**（`run_in_background`未指定）で起動すること。結果は直接返却される
+- **backgroundは使用禁止**（TaskOutput並列取得が衝突して全失敗するため）
+- 1メッセージ内のTask呼び出しは**最大5個**。超過分は前バッチ完了後に次バッチ起動
 
 | 設定 | 値 |
 |------|-----|
 | subagent_type | general-purpose |
 | model | sonnet |
 
-prompt 構造:
+**prompt構造**:
+
+親エージェントが事前に `classification-criteria.md` と `reflect-output.md` をReadし、その内容をpromptに直接埋め込む（サブエージェントのRead回数削減）。
 
 ```
 ドメイン知識を抽出してください。
 
 ## セッションデータ
-{extract-messages.sh の出力}
+{extract-messages.sh の出力（/tmp/retro_*.txt の内容）}
 
 ## 既存コンテキスト
 - CLAUDE.md: ./CLAUDE.md の概要（セクション見出しのみ）
 - rules/: ./.claude/rules/ のファイル一覧
 
 ## 分類基準
-Read ~/.claude/skills/retrospective/references/classification-criteria.md
+{classification-criteria.md の内容を直接埋め込み}
 
 ## 出力フォーマット
-Read ~/.claude/skills/retrospective/templates/reflect-output.md
+{reflect-output.md の内容を直接埋め込み}
 この形式に従って出力してください。
 ```
 

@@ -5,10 +5,22 @@
 
 set -euo pipefail
 
-JSONL_FILE="${1:-}"
+JSONL_FILE=""
+MAX_CHARS=0
+
+for arg in "$@"; do
+  case "$arg" in
+    --max-chars=*)
+      MAX_CHARS="${arg#--max-chars=}"
+      ;;
+    *)
+      JSONL_FILE="$arg"
+      ;;
+  esac
+done
 
 if [[ -z "$JSONL_FILE" ]]; then
-  echo "Usage: $0 <session.jsonl>" >&2
+  echo "Usage: $0 <session.jsonl> [--max-chars=N]" >&2
   exit 1
 fi
 
@@ -21,7 +33,7 @@ fi
 # 構造:
 #   user/assistant: .message.content が string または array
 #   tool_result: .content が string または array（.messageラッパーなし）
-jq -r '
+output=$(jq -r '
   select(.type == "user" or .type == "assistant" or .type == "tool_result") |
   .type as $type |
 
@@ -58,7 +70,14 @@ jq -r '
 
   select($text != "") |
   "## \($type | ascii_upcase)\n\($text)\n"
-' "$JSONL_FILE" 2>/dev/null || {
+' "$JSONL_FILE" 2>/dev/null) || {
   echo "Error: Failed to parse JSONL" >&2
   exit 1
 }
+
+if [[ "$MAX_CHARS" -gt 0 ]] && [[ ${#output} -gt "$MAX_CHARS" ]]; then
+  printf '%s' "${output:0:$MAX_CHARS}"
+  printf '\n\n[...truncated]\n'
+else
+  printf '%s\n' "$output"
+fi
