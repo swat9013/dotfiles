@@ -48,6 +48,11 @@ paths: lib/**
 | vibe-kanban.sh | npx vibe-kanban の起動・停止管理 | start/stop |
 | fortivpn.sh | OpenFortiVPN ラッパー | なし |
 | ssh_host_color.sh | SSH ホスト色分け | ホスト名 |
+| git-aicommit.sh | Claude CLI でコミットメッセージ生成 | なし |
+
+### git-aicommit.sh
+
+`g aicommit` git エイリアスの実体。Claude Code CLI の `--output-format json`（NDJSON形式）を `jq -s` で処理してコミットメッセージを抽出する。
 
 ## dotfilesLink.sh の詳細動作
 

@@ -153,6 +153,15 @@ fi
 - NG: `catppuccin-mocha`
 - OK: `Catppuccin Mocha`
 
+### Homebrew アップグレードエラー
+
+`ghostty@tip` アップグレード時に `/Applications/Ghostty.app` が存在しないとエラー（手動アンインストール後など）:
+
+```bash
+brew uninstall --cask ghostty@tip --force  # 古い記録をクリーンアップ
+brew install --cask ghostty@tip            # 再インストール
+```
+
 ### globalキーバインドが効かない (macOS)
 
 システム環境設定 > プライバシーとセキュリティ > アクセシビリティでGhosttyを許可。

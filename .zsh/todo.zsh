@@ -54,12 +54,22 @@ function tre() {
     echo "Found $count todo.md files" >&2
 }
 
+# bk() の退避対象ファイル（追加はここに）
+_bk_targets=(
+    review.md
+    plan.md
+    implementation.md
+    report.md
+    review-fix.md
+    discovery.md
+)
+
 function bk() {
     _init-work
     local branch=$(git symbolic-ref --short HEAD 2>/dev/null | tr '/' '-')
     local d=".work/$(date +%Y%m%d_%H%M%S)${branch:+_$branch}"
     mkdir -p "$d"
-    mv review.md plan.md implementation.md report.md "$d/" 2>/dev/null
+    mv "${_bk_targets[@]}" "$d/" 2>/dev/null
 }
 
 function tl() {

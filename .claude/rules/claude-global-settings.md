@@ -62,7 +62,23 @@ paths: .claude-global/settings.json
 
 主要イベント: `SessionStart`, `PreToolUse`, `PostToolUse`, `Stop`, `SubagentStart`, `SessionEnd`
 
-hook type: `command`（シェル実行）, `prompt`（LLM評価）, `agent`（マルチターン）
+hook type と使い分け:
+
+| type | 用途 | 特徴 |
+|------|------|------|
+| `command` | 静的・形式検証 | シェル実行、最速 |
+| `prompt` | 定型チェック | Haiku 1ターン、低コスト |
+| `agent` | 深いレビュー（ファイル読み込みあり） | マルチターン、最大50ターン |
+
+応用例: `PreToolUse` の matcher に `ExitPlanMode` を指定 → plan提案前にレビュー自動挿入
+
+## settings.local.json の安全な更新フロー
+
+1. 現在の設定を読み込み
+2. 提案する変更を生成
+3. `jq .` で JSON 構文検証
+4. 現在値 → 提案値の差分を提示
+5. 承認後に `jq` でマージ更新（直接書き込み禁止）
 
 ## Skill権限制御
 

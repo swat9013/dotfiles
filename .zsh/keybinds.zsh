@@ -70,6 +70,30 @@ if which fzf > /dev/null 2>&1; then
     }
     zle -N fzf-edit-file
     bindkey '\e[101;6u' fzf-edit-file
+
+    function fzf-grep-edit() {
+        local result=$(
+            fzf --ansi --disabled \
+                --height=100% \
+                --delimiter=: \
+                --bind "change:reload:rg --line-number --color=always --hidden --glob '!.git' -- {q} 2>/dev/null || true" \
+                --preview 'bat --color=always --highlight-line {2} {1} 2>/dev/null' \
+                --preview-window='right:60%:+{2}-5'
+        )
+        if [ -n "$result" ]; then
+            local file=$(echo "$result" | cut -d: -f1)
+            local line=$(echo "$result" | cut -d: -f2)
+            if [[ "$EDITOR" == *code* ]]; then
+                BUFFER="code --goto ${(q)file}:${line}"
+            else
+                BUFFER="${EDITOR:-vim} +${line} ${(q)file}"
+            fi
+            zle accept-line
+        fi
+        zle reset-prompt
+    }
+    zle -N fzf-grep-edit
+    bindkey '\e[103;6u' fzf-grep-edit
 fi
 
 ## C-^ で一つ上のディレクトリへ

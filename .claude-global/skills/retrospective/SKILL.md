@@ -60,29 +60,41 @@ argument-hint: "[--since=Nd] [--limit=N]"
 ```
 
 セッションファイルのパス一覧（改行区切り）を取得する。
+30件を超える場合は `--limit=30` を付与して再取得し、ユーザーに通知する。
 
-### 3. メッセージ抽出
+### 3. メッセージ抽出とキャッシュチェック
 
-全セッションを一括で抽出・サイズフィルタする（Bash 1回）:
+全セッションを一括で抽出・サイズフィルタ・キャッシュ判定する（Bash 1回）:
 
 ```bash
+CACHE_DIR=".claude/retrospective-cache"
+mkdir -p "$CACHE_DIR"
+
 for f in {session_files}; do
-  outfile="/tmp/retro_$(basename "$f" .jsonl).txt"
-  ~/.dotfiles/.claude-global/skills/retrospective/scripts/extract-messages.sh "$f" --max-chars=30000 > "$outfile"
-  size=$(wc -c < "$outfile")
-  if [ "$size" -gt 2000 ]; then
-    echo "$size $outfile"
+  cache_file="$CACHE_DIR/$(basename "$f" .jsonl).txt"
+
+  if [ -f "$cache_file" ]; then
+    echo "CACHED $(wc -c < "$cache_file") $cache_file"
   else
-    rm -f "$outfile"
+    outfile="/tmp/retro_$(basename "$f" .jsonl).txt"
+    ~/.dotfiles/.claude-global/skills/retrospective/scripts/extract-messages.sh "$f" --max-chars=100000 > "$outfile"
+    size=$(wc -c < "$outfile")
+    if [ "$size" -le 2000 ]; then
+      rm -f "$outfile"
+    else
+      echo "NEW $size $outfile"
+    fi
   fi
 done
 ```
 
-2000バイト未満のセッションはスキップ（内容が少なく知見抽出の価値が低い）。
+- 2000バイト未満: スキップ（知見抽出の価値が低い）
+- `CACHED`: Stage 1 済み。cache_file を直接使用
+- `NEW`: Stage 1 サブエージェントで抽出が必要
 
-### 4. サブエージェント委譲
+### 4. Two-Stage サブエージェント処理
 
-セッション単位でサブエージェントを**foreground**並列起動する。1つのサブエージェントに複数セッションを渡さない（コンテキスト圧迫回避）。
+**原則**: 親エージェントはセッション内容もテンプレートも読まない。ファイルパスだけを渡す。
 
 **実行制約**:
 - **foreground**（`run_in_background`未指定）で起動すること。結果は直接返却される
@@ -94,35 +106,79 @@ done
 | subagent_type | general-purpose |
 | model | sonnet |
 
-**prompt構造**:
+#### Stage 1: Extract（Map）— NEW セッションのみ
 
-親エージェントが事前に `classification-criteria.md` と `reflect-output.md` をReadし、その内容をpromptに直接埋め込む（サブエージェントのRead回数削減）。
+§3 で `NEW` と判定されたセッションごとに1つのサブエージェントを起動する。
+1つのサブエージェントに複数セッションを渡さない。
 
+**Stage 1 prompt**:
 ```
-ドメイン知識を抽出してください。
+プロジェクト固有のドメイン知識候補を抽出してください。
 
-## セッションデータ
-{extract-messages.sh の出力（/tmp/retro_*.txt の内容）}
+## 指示
+1. 以下のファイルを Read tool で読み込む: {/tmp/retro_XXXXX.txt のパス}
+2. プロジェクト固有の知見を箇条書きで抽出する
+3. 汎用的なベストプラクティス・一時的な作業メモは除外する
 
-## 既存コンテキスト
-- CLAUDE.md: ./CLAUDE.md の概要（セクション見出しのみ）
-- rules/: ./.claude/rules/ のファイル一覧
+## 既存コンテキスト（重複回避用）
+- CLAUDE.md セクション見出し: {見出しのみ}
+- rules/ ファイル一覧: {ファイル名のみ}
 
-## 分類基準
-{classification-criteria.md の内容を直接埋め込み}
+## 出力形式
+- **[カテゴリ]** 内容の1行要約 | 根拠: 引用（1-2文）| 保存先候補: CLAUDE.md / rules/ / skills/ / settings / 不明
 
-## 出力フォーマット
-{reflect-output.md の内容を直接埋め込み}
-この形式に従って出力してください。
+カテゴリ: アーキテクチャ / 技術選択 / コーディング規約 / 落とし穴 / コマンド / 依存関係 /
+データ構造 / 環境・設定 / 用語 / 境界条件 / パフォーマンス / 権限設定 / ワークフロー摩擦 / 設定改善
+
+知見が0件なら「知見なし」とだけ出力。
 ```
+
+**Stage 1 エラー処理**: 個別失敗は警告してスキップ（部分結果でも価値あり）。
+全セッション「知見なし」の場合は「抽出可能な知見なし」と表示して終了。
+
+**Stage 1 完了後**: 結果をキャッシュに保存する（§5参照）。
+
+#### Stage 2: Classify（Reduce）— 1つのサブエージェント
+
+Stage 1 の全結果（キャッシュ済み + 新規）を連結し、単一のサブエージェントに渡す。
+
+**Stage 2 prompt**:
+```
+ドメイン知識候補を分類・構造化してください。
+
+## 指示
+1. 以下のファイルを Read tool で読み込む:
+   - ~/.dotfiles/.claude-global/skills/retrospective/references/classification-criteria.md
+   - ~/.dotfiles/.claude-global/skills/retrospective/templates/reflect-output.md
+2. 下記の抽出結果を classification-criteria.md の基準で分類する
+3. reflect-output.md の形式で出力する
+
+## 抽出結果（全セッション統合）
+{Stage 1 全結果を連結}
+
+## 処理ルール
+- 重複する知見はマージ（複数セッション言及 → 信頼度UP）
+- 矛盾する知見は両方記載し矛盾を明記
+- 既存コンテキストと重複するものは除外
+```
+
+**Stage 2 エラー処理**: 1回リトライ → 失敗時は Stage 1 結果を直接表示する。
 
 ### 5. 親エージェント処理
 
-サブエージェントの結果を受け取った後:
+#### Stage 1 完了後
 
-1. 複数セッションの結果をマージ + 重複排除
-2. 既存 CLAUDE.md との重複チェック
-3. 既存 .claude/rules/ との矛盾チェック
+1. 各 NEW セッションの Stage 1 結果を Write tool でキャッシュに保存する:
+   - パス: `.claude/retrospective-cache/{session-uuid}.txt`
+   - 内容: Stage 1 サブエージェントの出力テキスト
+2. `CACHED` セッションの cache_file を Read して Stage 1 結果に加える
+3. 全 Stage 1 結果を連結して Stage 2 に渡す
+
+#### Stage 2 完了後
+
+Stage 2 の出力（構造化された分類結果）を受け取り、4層保存ロジックに進む。
+
+Stage 2 失敗時は Stage 1 結果を直接表示し、ユーザーに手動分類を促す。
 
 ## 4層保存ロジック
 

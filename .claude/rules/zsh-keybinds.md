@@ -10,6 +10,9 @@ paths: .zsh/keybinds.zsh
 |------|------|------|
 | Ctrl+r | fzf頻度順履歴検索 | コマンド履歴を使用頻度順に表示・検索 |
 | Ctrl+s | fzfディレクトリナビゲーション | ディレクトリをインタラクティブに選択・移動 |
+| Ctrl+Shift+E | fzfファイル選択→編集 | rg --filesでファイル検索、$EDITORで開く |
+| Ctrl+Shift+F | fzfファイルプレビュー | rg --filesでファイル検索、batでプレビュー |
+| Ctrl+Shift+G | fzfリポジトリ内grep→編集 | rgで内容検索、マッチ行を$EDITORで開く |
 | Ctrl+^ | 一つ上のディレクトリへ | `cd ..` の短縮 |
 | Ctrl+m | 入力なし→ls+git status | 空行でEnter時に自動実行 |
 | Ctrl+v | VSCode起動 | カレントディレクトリをVSCodeで開く |
@@ -28,6 +31,16 @@ paths: .zsh/keybinds.zsh
 ### Ctrl+s (ディレクトリナビゲーション)
 
 カレントディレクトリ配下のディレクトリを検索し、選択したディレクトリに移動。
+
+### Ctrl+Shift+G (リポジトリ内grep)
+
+rg + fzf の動的リロード方式。入力のたびに `rg` を再実行し、結果を fzf でフィルタリング。
+選択したマッチ行のファイルを `$EDITOR +行番号` で開く（VS Code の場合は `--goto` 構文）。
+
+- `--disabled`: fzf自身のfuzzy matchを無効化、rgの検索結果のみ使用
+- `--bind "change:reload:rg ..."`: 入力変更のたびにrgを再実行
+- `--highlight-line {2}`: batプレビューでマッチ行をハイライト
+- CSI u: `\e[103;6u` (g=103, modifier 6=Ctrl+Shift)
 
 ## 設計方針
 

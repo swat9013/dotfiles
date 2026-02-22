@@ -93,6 +93,16 @@ agent: true
 - 100行超のreferencesは**先頭にTOC必須**
 - 2つ以上のスキルで共有するreferences → `_shared/` に配置
 
+## 設計注意事項
+
+- **スキルリネーム時の同時更新箇所**: ディレクトリ名・frontmatter name・タイトル・使用例コマンド名・スキルカタログ（claude-global-skills.md）の5箇所
+- **`[NEEDS CLARIFICATION]` マーカー**: 非対話的成果物（レポート等）向け。対話型スキルでは直接質問する
+- **知識系スキルの判断基準**: 利用場面が特定コンテキストのみ → 既存スキルの `references/` に内包。複数コンテキスト → 独立スキル
+- **references に書かない内容**: Claude の一般知識（ライブラリ名・バージョン等）の列挙は価値低。プロジェクト固有の判断基準・フローチャートのみ
+- **references のハードコード日付**: 例に具体的な日付を入れると腐る。相対表現を使う
+- **調査→スキル化後**: 元の report.md 等を削除するか参照に更新。放置すると二重管理
+- **`$ARGUMENTS` 展開の注意**: 長い引き継ぎ文をそのまま渡すと TaskCreate の subject が肥大化。要約して渡す
+
 ## アンチパターン
 
 | パターン | 対策 |
@@ -114,6 +124,7 @@ agent: true
 | breakdown | 「/breakdown」「タスク分解」 |
 | implement | 「/implement」「タスク実行」 |
 | implement-review | 「/implement-review」「実装してレビューまで」 |
+| review-fix | 「/review-fix」「レビュー修正」「実装後レビュー」 |
 | code-review | 「コードレビュー」「レビューして」 |
 | codex-code-review | 「codexレビュー」「アーキテクチャレビュー」 |
 | refactor | 「リファクタリング」「コード改善」 |
@@ -143,3 +154,4 @@ agent: true
 | slidev | 「Slidev」「スライド作成」 | Slidevスライド内容生成ガイド |
 | log-designing | 「ログ設計」「構造化ログ」 | ログ設計7原則・CLIパターンガイド |
 | serena | 「Serena」「シンボル検索」 | セマンティックコード検索MCPガイド |
+| todoist | 「Todoist」「タスク追加」「タスク一覧」 | Todoist CLIタスク管理ガイド |

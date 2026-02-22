@@ -69,3 +69,10 @@ brew bundle --global        # Homebrewパッケージ更新
 - **サブエージェント残存**: Task toolで起動したサブエージェントは親セッション終了後も残存しメモリ消費。定期的に`cck --sub`でクリーンアップ
 - **zsh サブシェル内 PATH**: `$()` 内でPATH解決失敗の可能性。フルパス使用（例: yaziプラグインで `/opt/homebrew/bin/fd`）
 - **zsh NULLCMD の罠**: `> file` だけの行は `cat > file` として実行される（NULLCMD デフォルト）。stdin待ちでハング。解決策: `: > file`
+- **Task tool 並列制限**: `run_in_background` + TaskOutput並列取得は全失敗（Sibling error）。foreground で最大5並列が安全上限
+- **Task tool 制約**: 孫エージェントスポーン不可（1段階のみ）。PreToolUse/PostToolUse hooks はバイパスされる
+- **NDJSON 出力**: `--output-format json` は NDJSON（1行1JSON）。`jq -s` で配列化してから処理
+- **Skill tool 連鎖不可**: Skill tool で他スキルを呼び出すと失敗。スキル間連携はユーザーに次スキルを案内
+- **スキル間参照**: 自動読み込みされない。references/ は同一スキル内のみ機能。スキル間参照はデッドリンク化
+- **ToolSearch**: claude-haiku-4-5 では利用不可（tool_reference blocks 非対応）
+- **スキル内 `!` バッククォート**: インライン実行で失敗時エラー停止。`|| true` や `|| echo "(なし)"` でフォールバック必要
