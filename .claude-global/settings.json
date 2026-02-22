@@ -61,6 +61,7 @@
       "Read(~/.dotfiles/.claude-global/skills/**/*)",
       "Read(.claude/skills/**/*)",
       "Bash(~/.dotfiles/.claude-global/skills/**/*.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/skills/**/*.py:*)",
       "Bash(find:*)",
       "Bash(cursor agent:*)",
       "Bash(docker:*)",

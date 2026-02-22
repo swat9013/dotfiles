@@ -106,27 +106,44 @@ def cmd_list(api: TodoistAPI, _args: argparse.Namespace) -> None:
         return
 
     def sort_key(t):
-        # priority: higher number = higher priority in API (4=p1, 1=p4)
         pri = -(t.priority or 1)
         due = str(t.due.date) if t.due else "9999-99-99"
         return (pri, due)
 
-    tasks.sort(key=sort_key)
-
-    # priority display: API 4=p1, 3=p2, 2=p3, 1=p4
     def fmt_priority(p: int) -> str:
         return f"p{5 - p}" if p else "p4"
 
-    def fmt_due(t) -> str:
-        if not t.due:
-            return "(none)"
-        return str(t.due.date)
-
-    header = f"{'ID':<18} {'P':<3} {'Due':<12} Content"
-    print(header)
+    # Build parent-child tree
+    by_id = {t.id: t for t in tasks}
+    children: dict[str, list] = {t.id: [] for t in tasks}
+    roots: list = []
     for t in tasks:
-        line = f"{t.id:<18} {fmt_priority(t.priority):<3} {fmt_due(t):<12} {t.content}"
-        print(line)
+        if t.parent_id and t.parent_id in by_id:
+            children[t.parent_id].append(t)
+        else:
+            roots.append(t)
+
+    for group in children.values():
+        group.sort(key=sort_key)
+    roots.sort(key=sort_key)
+
+    def render_task(t, depth: int = 0) -> None:
+        indent = "  " * depth
+        meta_parts = [fmt_priority(t.priority)]
+        if t.due:
+            meta_parts.append(f"due:{t.due.date}")
+        if t.labels:
+            meta_parts.append(f"labels:{','.join(t.labels)}")
+        meta = " ".join(meta_parts)
+        print(f"{indent}- [{t.id}] {t.content} ({meta})")
+        if t.description:
+            for line in t.description.strip().splitlines():
+                print(f"{indent}  {line}")
+        for child in children.get(t.id, []):
+            render_task(child, depth + 1)
+
+    for t in roots:
+        render_task(t)
 
 
 def cmd_add(api: TodoistAPI, args: argparse.Namespace) -> None:
