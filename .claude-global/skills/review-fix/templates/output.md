@@ -1,7 +1,7 @@
 # Review-Fix: {{TARGET}}
 
 **Date**: {{DATE}}
-**Reviewer**: Claude Opus (direct)
+**Reviewer**: Claude Opus (subagent, context-isolated)
 **Scope**: {{SCOPE_DESCRIPTION}}
 **Cycle**: {{CURRENT_CYCLE}} / 3
 
