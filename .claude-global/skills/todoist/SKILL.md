@@ -11,6 +11,8 @@ disable-model-invocation: true
 
 `projects/<basename>` でリポジトリ単位のタスク管理を行うワークフロー。Python SDK（REST API v1）を使用。
 
+**重要**: このスキルでの「タスク」は全て **Todoist（外部サービス）** のタスクを指す。Claude内部のTaskCreate/TaskUpdate/TaskListツールは使用しない。タスクの追加・一覧・更新・完了・削除は全て `todoist.py` スクリプト経由で実行する。
+
 ## スクリプト
 
 パス: `~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py`
