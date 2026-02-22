@@ -136,8 +136,7 @@ agent: true
 | retrospective | 「学びを保存」「ドメイン知識更新」「振り返り」「retrospective」 |
 | context-optimizer | 「CLAUDE.md圧縮」「コンテキスト最適化」 |
 | doc-architect | 「ドキュメント設計」「docs作成」 |
-| task | 「/task」「タスク追加」 |
-| todo-refiner | 「todo整理」「タスクリファイン」 |
+| todoist | 「Todoist」「タスク追加」「タスクリファイン」「タスク整理」 |
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」 |
 
 ### 知識系スキル（user-invocable: false）
@@ -154,4 +153,3 @@ agent: true
 | slidev | 「Slidev」「スライド作成」 | Slidevスライド内容生成ガイド |
 | log-designing | 「ログ設計」「構造化ログ」 | ログ設計7原則・CLIパターンガイド |
 | serena | 「Serena」「シンボル検索」 | セマンティックコード検索MCPガイド |
-| todoist | 「Todoist」「タスク追加」「タスク一覧」 | Todoist CLIタスク管理ガイド |
