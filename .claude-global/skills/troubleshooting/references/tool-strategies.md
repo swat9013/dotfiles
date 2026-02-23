@@ -30,10 +30,10 @@
 
 ## フロントエンド/UI問題
 
-- **表示の問題**: agent-browser の `snapshot` でARIAスナップショット取得
-- **操作の問題**: agent-browser の `click`/`fill` で操作を再現
-- **ネットワーク/API問題**: agent-browser の `console` でコンソールエラー確認
-- **再現テスト**: playwright-cli でE2Eテスト作成（`npx playwright codegen`）
+- **表示の問題**: `npx playwright snapshot` でアクセシビリティツリー取得
+- **操作の問題**: `npx playwright click`/`fill` で ref 指定して操作を再現
+- **ネットワーク/API問題**: `npx playwright console` でコンソールエラー確認
+- **再現テスト**: `npx playwright codegen` でE2Eテスト作成
 
 ## プロセス/ネットワーク問題
 

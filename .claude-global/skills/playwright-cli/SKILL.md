@@ -1,18 +1,74 @@
 ---
 name: playwright-cli
-description: Playwright CLIのコマンドリファレンス。テスト実行、コード生成、デバッグ、レポート、ブラウザ管理の操作方法を含む。「Playwright」「playwright test」「E2Eテスト実行」「テストコード生成」「codegen」「トレース」「playwright設定」「テストレポート」と依頼された時に参照する。
+description: Playwright CLIのコマンドリファレンス。テスト実行、コード生成、デバッグ、レポート、インタラクティブブラウザ操作の方法を含む。「Playwright」「playwright test」「E2Eテスト実行」「テストコード生成」「codegen」「トレース」「playwright設定」「テストレポート」「ブラウザ操作」「UI確認」「スナップショット」と依頼された時に参照する。
 user-invocable: false
 ---
 
 # Playwright CLI
 
-## agent-browser との使い分け
+## 2つのモード
 
-| 観点 | playwright-cli | agent-browser |
-|------|---------------|---------------|
-| 用途 | テスト作成・実行・CI | アドホックなブラウザ操作・確認 |
-| 実行形態 | テストファイル (.spec.ts) を書いて実行 | 対話的にコマンド発行 |
-| 選択基準 | 再現可能なテストスイートが必要 | 一度きりの操作・スクレイピング・画面確認 |
+| モード | 用途 | 実行形態 |
+|--------|------|---------|
+| テスト | E2Eテスト作成・実行・CI | `.spec.ts` ファイルを書いて実行 |
+| インタラクティブ | アドホックUI確認・ブラウザ操作 | CLIコマンド直接発行 |
+
+選択基準: 再現可能なテストスイートが必要 → テストモード。一度きりの確認・操作 → インタラクティブモード。
+
+---
+
+## インタラクティブCLI
+
+元 `microsoft/playwright-cli` の機能。現在は `npx playwright` に統合済み。
+
+### ワークフロー
+
+1. **open** → ブラウザ起動・ページ遷移
+2. **snapshot** → アクセシビリティツリー取得（要素に ref 付与）
+3. **interact** → ref を指定してクリック・入力等
+4. **close** → セッション終了
+
+### 要素参照システム
+
+`snapshot` を実行すると、各要素に `ref=e1`, `ref=e2` 等の参照IDが付与される。
+以降のコマンドではこの ref でターゲットを指定する（CSSセレクター不要）。
+
+```
+$ npx playwright snapshot
+- link "Home" [ref=e1]
+- button "Submit" [ref=e2]
+- textbox "Email" [ref=e3]
+
+$ npx playwright click e2
+```
+
+### 主要コマンド
+
+| コマンド | 説明 | 例 |
+|----------|------|-----|
+| `open [url]` | ブラウザ起動・遷移 | `open https://example.com` |
+| `snapshot` | アクセシビリティツリー取得 | `snapshot` |
+| `click ref` | 要素クリック | `click e2` |
+| `fill ref value` | フォーム入力（既存値を置換） | `fill e3 "test@example.com"` |
+| `type ref text` | テキスト入力（キーストローク） | `type e3 "hello"` |
+| `press key` | キー送信 | `press Enter` |
+| `screenshot` | スクリーンショット取得 | `screenshot page.png` |
+| `close` | ブラウザ終了 | `close` |
+
+### セッション管理
+
+```bash
+npx playwright -s mySession open https://example.com  # 名前付きセッション
+npx playwright -s mySession snapshot                    # 同一セッションで操作継続
+npx playwright list                                     # アクティブセッション一覧
+npx playwright close-all                                # 全セッション終了
+```
+
+`--persistent` で Cookie/localStorage を永続化。認証状態の再利用に有効。
+
+全コマンド詳細: `references/cli-commands.md`
+
+---
 
 ## パッケージマネージャー
 

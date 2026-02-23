@@ -145,10 +145,9 @@ agent: true
 |--------|------------------|------|
 | managing-skills | 「スキルを作って」「スキル更新」 | スキル作成・変更ガイド |
 | ghq | 「ghq」「リポジトリ管理」 | リポジトリ管理ツールガイド |
-| agent-browser | 「ブラウザ操作」「Webテスト」 | ブラウザ自動化ツールガイド |
 | frontend-design | 「UI作成」「フロントエンド実装」 | UI/フロントエンド実装ガイド |
 | claude-mem | 「claude-mem」「メモリ検索」 | claude-memプラグイン使用ガイド |
-| playwright-cli | 「Playwright」「E2Eテスト」 | Playwright CLIリファレンス |
+| playwright-cli | 「Playwright」「E2Eテスト」「ブラウザ操作」「UI確認」 | Playwright CLI + ブラウザ操作リファレンス |
 | marimo | 「marimo」「リアクティブノートブック」 | リアクティブPython操作ガイド |
 | slidev | 「Slidev」「スライド作成」 | Slidevスライド内容生成ガイド |
 | log-designing | 「ログ設計」「構造化ログ」 | ログ設計7原則・CLIパターンガイド |

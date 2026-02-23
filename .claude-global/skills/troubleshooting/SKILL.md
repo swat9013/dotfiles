@@ -77,7 +77,7 @@ disable-model-invocation: true
 | 最近の変更確認 | Bash (`git log`/`blame`) | 問題箇所の変更履歴 |
 | プロセス/ポート確認 | Bash (`lsof -a`, `ps`) | ランタイム状態調査 |
 | シンボル参照追跡 | Serena MCP | 大規模コードベースでの影響範囲調査 |
-| UI/表示問題 | agent-browser / playwright-cli | ブラウザ上の確認・再現 |
+| UI/表示問題 | playwright-cli | ブラウザ上の確認・再現 |
 
 詳細な調査パターンは `references/tool-strategies.md` を参照。
 
@@ -90,7 +90,7 @@ disable-model-invocation: true
 | 状況 | 参照先 |
 |------|--------|
 | ログ不足・ログ設計見直し | log-designing スキル |
-| UI/表示問題の再現 | playwright-cli / agent-browser スキル |
+| UI/表示問題の再現 | playwright-cli スキル |
 | 大規模コードのシンボル追跡 | serena スキル |
 
 ## Phase 3: 対応判定
