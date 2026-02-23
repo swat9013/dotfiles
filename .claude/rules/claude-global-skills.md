@@ -136,6 +136,7 @@ agent: true
 | retrospective | 「学びを保存」「ドメイン知識更新」「振り返り」「retrospective」 |
 | context-optimizer | 「CLAUDE.md圧縮」「コンテキスト最適化」 |
 | doc-architect | 「ドキュメント設計」「docs作成」 |
+| commit | 「/commit」「コミットして」「コミット作成」 |
 | todoist | 「Todoist」「タスク追加」「タスクリファイン」「タスク整理」 |
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」 |
 
