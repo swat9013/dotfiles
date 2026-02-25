@@ -52,7 +52,7 @@ paths: lib/**
 
 ### git-aicommit.sh
 
-`g aicommit` git エイリアスの実体。Claude Code CLI の `--output-format json`（NDJSON形式）を `jq -s` で処理してコミットメッセージを抽出する。
+`g aicommit` git エイリアスの実体。Claude Code CLI の `--output-format json`（単一結果オブジェクト）から `jq` で `.structured_output.message` を抽出する。
 
 ## dotfilesLink.sh の詳細動作
 

@@ -2,7 +2,11 @@
 #==============================================================================
 # claude-statusline.sh - Claude Code Statusline Script
 #==============================================================================
-# Display: dir git:branch* | Model | Ctx:XX% | "session title..."
+# Two-line layout:
+#   Line 1: dir git:branch*              (location context)
+#   Line 2: Ctx:XX% | Model | "title..." (session state)
+#
+# Dir/branch names are capped to prevent Line 2 from being pushed off-screen.
 #
 # Color scheme:
 #   - Directory: Green
@@ -20,11 +24,25 @@ RED='\033[31m'
 CYAN='\033[36m'
 RESET='\033[0m'
 
+# Max lengths for dir/branch (fixed caps to keep lines short)
+MAX_DIR=20
+MAX_BRANCH=20
+
 # Check jq dependency
 if ! command -v jq &> /dev/null; then
     echo "[Claude]"
     exit 0
 fi
+
+# Truncate string with ellipsis
+truncate() {
+    local str="$1" max="$2"
+    if [ "${#str}" -gt "$max" ]; then
+        printf '%s…' "${str:0:$((max-1))}"
+    else
+        printf '%s' "$str"
+    fi
+}
 
 # Read JSON from stdin
 input=$(cat)
@@ -34,7 +52,7 @@ CURRENT_DIR=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // "."')
 TRANSCRIPT_PATH=$(echo "$input" | jq -r '.transcript_path // ""')
 MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"')
 
-# Expand transcript path once (used for both context and session title)
+# Expand transcript path once (used for session title)
 EXPANDED_TRANSCRIPT=""
 if [ -n "$TRANSCRIPT_PATH" ]; then
     EXPANDED_TRANSCRIPT="${TRANSCRIPT_PATH/#\~/$HOME}"
@@ -51,16 +69,15 @@ else
 fi
 
 # Get git branch and dirty status
-GIT_INFO=""
+GIT_BRANCH=""
+GIT_DIRTY=""
 if git -C "$CURRENT_DIR" rev-parse --git-dir > /dev/null 2>&1; then
-    BRANCH=$(git -C "$CURRENT_DIR" --no-optional-locks branch --show-current 2>/dev/null || echo "")
-    if [ -n "$BRANCH" ]; then
-        DIRTY=""
+    GIT_BRANCH=$(git -C "$CURRENT_DIR" --no-optional-locks branch --show-current 2>/dev/null || echo "")
+    if [ -n "$GIT_BRANCH" ]; then
         if ! git -C "$CURRENT_DIR" --no-optional-locks diff --quiet 2>/dev/null || \
            ! git -C "$CURRENT_DIR" --no-optional-locks diff --cached --quiet 2>/dev/null; then
-            DIRTY="*"
+            GIT_DIRTY="*"
         fi
-        GIT_INFO=" ${YELLOW}git:${BRANCH}${DIRTY}${RESET}"
     fi
 fi
 
@@ -78,26 +95,42 @@ else
 fi
 
 # Get session title from transcript file (first user message)
+# || true prevents pipefail exit when grep finds no match
 SESSION_TITLE=""
 if [ -n "$EXPANDED_TRANSCRIPT" ]; then
     FIRST_MSG=$(grep -m1 '"userType":"external"' "$EXPANDED_TRANSCRIPT" 2>/dev/null \
         | jq -r '.message.content // empty' 2>/dev/null \
-        | head -1)
-    if [ -n "$FIRST_MSG" ]; then
-        # Truncate to 25 characters
-        if [ ${#FIRST_MSG} -gt 25 ]; then
-            SESSION_TITLE="${FIRST_MSG:0:22}..."
-        else
-            SESSION_TITLE="$FIRST_MSG"
-        fi
-    fi
+        | head -1 || true)
+    [ -n "$FIRST_MSG" ] && SESSION_TITLE="$FIRST_MSG"
 fi
 
-# Build output
-OUTPUT="${GREEN}${DIR_NAME}${RESET}${GIT_INFO} | ${MODEL} | ${CTX_COLOR}Ctx:${PERCENT}%${RESET}"
+# Adaptive title truncation based on terminal width
+COLS=$(tput cols 2>/dev/null || echo 80)
+
+if [ "$COLS" -lt 60 ]; then
+    MAX_TITLE=15
+elif [ "$COLS" -lt 80 ]; then
+    MAX_TITLE=20
+else
+    MAX_TITLE=30
+fi
+
+# Line 1: location context (dir + git branch)
+DIR_DISPLAY=$(truncate "$DIR_NAME" "$MAX_DIR")
+LINE1="${GREEN}${DIR_DISPLAY}${RESET}"
+
+if [ -n "$GIT_BRANCH" ]; then
+    BRANCH_DISPLAY=$(truncate "$GIT_BRANCH" "$MAX_BRANCH")
+    LINE1="${LINE1} ${YELLOW}git:${BRANCH_DISPLAY}${GIT_DIRTY}${RESET}"
+fi
+
+# Line 2: session state (ctx% + model + title)
+LINE2="${CTX_COLOR}Ctx:${PERCENT}%${RESET} | ${MODEL}"
 
 if [ -n "$SESSION_TITLE" ]; then
-    OUTPUT="${OUTPUT} | ${CYAN}\"${SESSION_TITLE}\"${RESET}"
+    TITLE_DISPLAY=$(truncate "$SESSION_TITLE" "$MAX_TITLE")
+    LINE2="${LINE2} | ${CYAN}\"${TITLE_DISPLAY}\"${RESET}"
 fi
 
-printf "%b\n" "$OUTPUT"
+printf "%b\n" "$LINE1"
+printf "%b\n" "$LINE2"

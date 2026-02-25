@@ -8,19 +8,23 @@
 
 | フラグ | 説明 |
 |--------|------|
-| `--output-format json` | JSON形式で出力（NDJSON: 1行1オブジェクト） |
-| `--output-format stream-json` | ストリーミングJSON出力 |
+| `--output-format json` | JSON配列で全イベントを出力 |
+| `--output-format stream-json` | ストリーミングNDJSON出力（1行1オブジェクト） |
 | `--json-schema '{...}'` | 構造化出力を強制（スキーマに一致するJSONを返す） |
 
 ## 出力構造
 
-`--output-format json` の出力は複数のJSONオブジェクトで構成される:
+### `--output-format json`
 
-```
-{"type":"system","subtype":"hook_started",...}
-{"type":"system","subtype":"hook_response",...}
-{"type":"assistant","message":{"content":[...]},...}
-{"type":"result","subtype":"success","structured_output":{...},...}
+全イベントをJSON配列として出力する:
+
+```json
+[
+  {"type":"system","subtype":"hook_started",...},
+  {"type":"system","subtype":"hook_response",...},
+  {"type":"assistant","message":{"content":[...]},...},
+  {"type":"result","subtype":"success","structured_output":{...},...}
+]
 ```
 
 ### 主要なtype
@@ -30,6 +34,16 @@
 | `system` | hook情報、セッション情報 |
 | `assistant` | Claudeの応答テキスト |
 | `result` | 最終結果（structured_outputを含む） |
+
+### `--output-format stream-json`
+
+NDJSON形式で複数のイベントを1行ずつ出力:
+
+```
+{"type":"system","subtype":"hook_started",...}
+{"type":"assistant","message":{"content":[...]},...}
+{"type":"result","subtype":"success","structured_output":{...},...}
+```
 
 ## 構造化出力（--json-schema）
 
@@ -42,7 +56,7 @@ SCHEMA='{"type":"object","properties":{"message":{"type":"string"}},"required":[
 
 claude --model haiku -p --output-format json --json-schema "$SCHEMA" \
   "Generate a greeting" 2>/dev/null | \
-  jq -s -r '.[] | select(.type=="result") | .structured_output.message'
+  jq -r '.[] | select(.type=="result") | .structured_output.message'
 ```
 
 ### 出力の抽出パターン
@@ -50,6 +64,10 @@ claude --model haiku -p --output-format json --json-schema "$SCHEMA" \
 ```bash
 # テキスト出力（従来）- 余計なメッセージが混入する可能性あり
 claude -p "query"
+
+# テキスト応答をJSON経由で取得
+claude -p --output-format json "query" | \
+  jq -r '.[] | select(.type=="result") | .result'
 
 # 構造化出力 - スキーマで指定したフィールドのみ
 claude -p --output-format json --json-schema "$SCHEMA" "query" | \
@@ -66,7 +84,7 @@ SCHEMA='{"type":"object","properties":{"message":{"type":"string"}},"required":[
 
 COMMITMSG=$(claude --model haiku -p --output-format json --json-schema "$SCHEMA" \
   'Based on `git diff --cached`, generate a commit message...' 2>/dev/null | \
-  jq -s -r '.[] | select(.type=="result") | .structured_output.message')
+  jq -r '.[] | select(.type=="result") | .structured_output.message')
 
 git commit -m "$COMMITMSG" -e
 ```
@@ -83,7 +101,7 @@ result の subtype でエラーを判定:
 ```bash
 # エラーチェック
 RESULT=$(claude -p --output-format json --json-schema "$SCHEMA" "query" | \
-  jq -s '[.[] | select(.type=="result")] | .[0]')
+  jq '.[] | select(.type=="result")')
 
 if [[ $(echo "$RESULT" | jq -r '.subtype') == "success" ]]; then
   echo "$RESULT" | jq -r '.structured_output.message'
@@ -95,4 +113,5 @@ fi
 ## 参考
 
 - [CLI Reference](https://code.claude.com/docs/en/cli-reference)
+- [Headless / Programmatic](https://code.claude.com/docs/en/headless)
 - [Agent SDK Structured Outputs](https://platform.claude.com/docs/en/agent-sdk/structured-outputs)

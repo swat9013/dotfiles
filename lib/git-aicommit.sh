@@ -33,7 +33,7 @@ Rules:
 - Keep it concise
 
 Output the commit message in the "message" field.' 2>/dev/null | \
-    jq -s -r '.[] | select(.type=="result") | .structured_output.message')
+    jq -r '.[] | select(.type=="result") | .structured_output.message')
 
 # Validate output
 if [[ -z "$COMMITMSG" || "$COMMITMSG" == "null" ]]; then
