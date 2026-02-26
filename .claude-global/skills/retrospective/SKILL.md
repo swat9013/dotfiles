@@ -18,33 +18,7 @@ argument-hint: "[--since=Nd] [--limit=N]"
 | .claude/skills/ | ワークフロー定義 |
 | settings.local.json | 権限設定（allow/ask/deny） |
 
-## モード選択
-
-| モード | 用途 | トリガー |
-|--------|------|----------|
-| Reflect | セッション会話から自動抽出 | **デフォルト**（`/retrospective`） |
-| Manual | 手動で知識を抽出・追記 | ユーザーが明示的に内容を指定 |
-
-## Manual モード
-
-親エージェントが直接実行する。サブエージェントは不要。
-
-### 手順
-
-1. ユーザーが指定した知見のカテゴリと保存先を判断
-2. 既存 CLAUDE.md・rules/ との重複・矛盾を確認
-3. 保存先ごとの確認フローに従って保存
-
-| 保存先 | 確認フロー |
-|--------|-----------|
-| CLAUDE.md | 重複確認後、即時追記（既存セクションに追記 or 新規セクション作成） |
-| rules/ | 差分提示 + AskUserQuestion で確認 |
-| skills/ | 提案表示のみ（`/managing-skills` に委譲） |
-| settings.local.json | JSON検証 + 差分提示 + 確認 |
-
-## Reflect モード
-
-セッション会話からドメイン知識を自動抽出する。
+## ワークフロー
 
 ### 1. 引数解析
 
@@ -62,35 +36,16 @@ argument-hint: "[--since=Nd] [--limit=N]"
 セッションファイルのパス一覧（改行区切り）を取得する。
 30件を超える場合は `--limit=30` を付与して再取得し、ユーザーに通知する。
 
-### 3. メッセージ抽出とキャッシュチェック
-
-全セッションを一括で抽出・サイズフィルタ・キャッシュ判定する（Bash 1回）:
+### 3. セッション準備
 
 ```bash
-CACHE_DIR=".claude/retrospective-cache"
-mkdir -p "$CACHE_DIR"
-
-for f in {session_files}; do
-  cache_file="$CACHE_DIR/$(basename "$f" .jsonl).txt"
-
-  if [ -f "$cache_file" ]; then
-    echo "CACHED $(wc -c < "$cache_file") $cache_file"
-  else
-    outfile="/tmp/retro_$(basename "$f" .jsonl).txt"
-    ~/.dotfiles/.claude-global/skills/retrospective/scripts/extract-messages.sh "$f" --max-chars=100000 > "$outfile"
-    size=$(wc -c < "$outfile")
-    if [ "$size" -le 2000 ]; then
-      rm -f "$outfile"
-    else
-      echo "NEW $size $outfile"
-    fi
-  fi
-done
+~/.dotfiles/.claude-global/skills/retrospective/scripts/prepare-sessions.sh {session_files}
 ```
 
-- 2000バイト未満: スキップ（知見抽出の価値が低い）
-- `CACHED`: Stage 1 済み。cache_file を直接使用
-- `NEW`: Stage 1 サブエージェントで抽出が必要
+出力（1行/セッション）:
+- `CACHED <bytes> <cache_path>`: Stage 1 済み。cache_file を直接使用
+- `NEW <bytes> <tmp_path>`: Stage 1 サブエージェントで抽出が必要
+- 2000バイト未満のセッションは出力されない（知見抽出の価値が低い）
 
 ### 4. Two-Stage サブエージェント処理
 
@@ -101,15 +56,20 @@ done
 - **backgroundは使用禁止**（TaskOutput並列取得が衝突して全失敗するため）
 - 1メッセージ内のTask呼び出しは**最大5個**。超過分は前バッチ完了後に次バッチ起動
 
-| 設定 | 値 |
-|------|-----|
-| subagent_type | general-purpose |
-| model | sonnet |
+| 設定 | Stage 1 | Stage 2 |
+|------|---------|---------|
+| subagent_type | general-purpose | general-purpose |
+| model | haiku | sonnet |
 
 #### Stage 1: Extract（Map）— NEW セッションのみ
 
 §3 で `NEW` と判定されたセッションごとに1つのサブエージェントを起動する。
 1つのサブエージェントに複数セッションを渡さない。
+
+**事前準備**: 既存コンテキストを収集する（Stage 1 prompt に埋め込む）:
+```bash
+~/.dotfiles/.claude-global/skills/retrospective/scripts/collect-existing-context.sh
+```
 
 **Stage 1 prompt**:
 ```
@@ -121,8 +81,7 @@ done
 3. 汎用的なベストプラクティス・一時的な作業メモは除外する
 
 ## 既存コンテキスト（重複回避用）
-- CLAUDE.md セクション見出し: {見出しのみ}
-- rules/ ファイル一覧: {ファイル名のみ}
+{collect-existing-context.sh の出力}
 
 ## 出力形式
 - **[カテゴリ]** 内容の1行要約 | 根拠: 引用（1-2文）| 保存先候補: CLAUDE.md / rules/ / skills/ / settings / 不明
@@ -238,6 +197,8 @@ wc -l ./CLAUDE.md
 | `references/classification-criteria.md` | 14カテゴリ + 4層分類基準 |
 | `scripts/find-sessions.sh` | セッション特定スクリプト |
 | `scripts/extract-messages.sh` | メッセージ抽出スクリプト |
+| `scripts/prepare-sessions.sh` | キャッシュチェック + 抽出 + ステータス判定 |
+| `scripts/collect-existing-context.sh` | 既存コンテキスト収集（重複回避用） |
 
 ## 成功基準
 

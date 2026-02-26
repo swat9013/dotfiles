@@ -19,3 +19,4 @@ alacritty/themes/
 # Cache
 .cache/
 tmp
+.claude/retrospective-cache

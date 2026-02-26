@@ -80,3 +80,5 @@ brew bundle --global        # Homebrewパッケージ更新
 - **スキル間参照**: 自動読み込みされない。references/ は同一スキル内のみ機能。スキル間参照はデッドリンク化
 - **ToolSearch**: claude-haiku-4-5 では利用不可（tool_reference blocks 非対応）
 - **スキル内 `!` バッククォート**: インライン実行で失敗時エラー停止。`|| true` や `|| echo "(なし)"` でフォールバック必要
+- **macOS BSD awk の match() 3引数制限**: `match(str, /re/, arr)` の3引数形式（キャプチャグループ）は BSD awk 非対応。`grep -oE` や `sed` で代替
+- **set -euo pipefail + grep**: grep マッチなしで exit code 1 → スクリプトクラッシュ。`grep パターン || true` で継続
