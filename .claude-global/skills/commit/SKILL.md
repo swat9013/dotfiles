@@ -12,25 +12,27 @@ disable-model-invocation: true
 
 ## ワークフロー
 
-### Step 1: 変更確認
+### Step 1-2: 変更確認 + コミット情報収集
+
+1回のBash呼び出しで全情報を収集:
 
 ```bash
-git status
-git diff --cached --stat
+git status && echo '---SEPARATOR---' && git diff --cached --stat && echo '---SEPARATOR---' && git log --oneline -5 && echo '---SEPARATOR---' && git diff --cached
 ```
 
-- ステージ済み変更がある → Step 2 へ
+出力を `---SEPARATOR---` で区切って解析:
+1. **git status**: ステージ済み変更の有無を確認
+2. **git diff --cached --stat**: 変更ファイルの統計
+3. **git log --oneline -5**: プロジェクトの命名慣習
+4. **git diff --cached**: diff内容
+
+**判定**:
+- ステージ済み変更がある → コミットメッセージ生成へ
 - ステージ済み変更がない → `git diff --stat` で未ステージ変更を確認
   - 未ステージ変更あり → AskUserQuestion でステージ対象を提案（ファイル一覧を提示）
   - 変更なし → 「コミット対象の変更がありません」と伝えて終了
 
-### Step 2: コミットメッセージ生成
-
-```bash
-git log --oneline -5
-git diff --cached
-```
-
+**コミットメッセージ生成**:
 1. 直近のコミット履歴からプロジェクトの命名慣習を把握
 2. diff内容を分析し、慣習に合わせたコミットメッセージを生成
 3. AskUserQuestion で提案（編集可能にする）

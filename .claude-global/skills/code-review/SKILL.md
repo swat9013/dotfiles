@@ -15,12 +15,19 @@ disable-model-invocation: true
 
 ## 実行手順
 
-### Step 1: 前処理チェック（Haiku）
+### Step 1: 前処理チェック（スクリプト実行）
 
-Task tool で Haiku エージェントを起動し、適格性をチェック:
+Bash toolでスクリプトを直接実行し、適格性をチェック:
 
-- 大規模変更（50ファイル超 or 1000行超）→ 分割レビューを提案
-- レビュー不要（設定ファイルのみ、自動生成コード等）→ 中止
+```bash
+~/.dotfiles/.claude-global/skills/scripts/changed-files.sh
+```
+
+出力の `RESULT` で判定:
+- `NO_CHANGES` → 「レビュー対象の変更がありません」と伝えて終了
+- `TOO_LARGE` → 分割レビューを提案
+- `CONFIG_ONLY` → 「設定ファイルのみの変更のためレビュー不要」と伝えて終了
+- `PROCEED` → `--- File List ---` 以降のファイル一覧をStep 2のレビュー対象として使用
 
 **中止条件に該当した場合、理由を説明して終了**
 

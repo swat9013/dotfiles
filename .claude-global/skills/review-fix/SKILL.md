@@ -19,24 +19,32 @@ disable-model-invocation: true
 
 ### 役割分担
 
-| 自身（オーケストレーター） | サブエージェント委譲 |
-|--------------------------|-------------------|
-| 対象ファイル特定 | レビュー（opus） |
-| issue同一性判定 | コード修正（sonnet） |
-| review-fix.md書き出し | Lint実行（haiku） |
-| サイクル継続判断・報告 | テスト実行（sonnet） |
+| 自身（オーケストレーター） | スクリプト実行 | サブエージェント委譲 |
+|--------------------------|---------------|-------------------|
+| issue同一性判定 | 対象ファイル特定（changed-files.sh） | レビュー（opus） |
+| review-fix.md書き出し | Lint・テスト実行（quality-gate.sh） | コード修正（sonnet） |
+| サイクル継続判断・報告 | | |
 
 ## 実行手順
 
-### Step 1: 対象ファイル特定
+### Step 1: 対象ファイル特定（スクリプト実行）
 
 以下の優先順で対象ファイルを取得:
 
 1. `$ARGUMENTS` が指定されている場合 → そのパスを使用（override）
-2. `git diff --name-only HEAD` と `git ls-files --others --exclude-standard` を併用して変更ファイル＋未追跡（新規作成）ファイルを取得（primary）
-3. implementation.md のタスク対象ファイルを抽出（fallback）
+2. スクリプトで変更ファイルを取得（primary）:
 
-**対象がない場合**: 中止し理由を報告。
+```bash
+~/.dotfiles/.claude-global/skills/scripts/changed-files.sh
+```
+
+出力の `RESULT` で判定:
+- `NO_CHANGES` → 中止し理由を報告
+- `TOO_LARGE` → 分割レビューを提案
+- `CONFIG_ONLY` → レビュー不要の旨を報告し中止
+- `PROCEED` → `--- File List ---` 以降のファイル一覧を使用
+
+3. implementation.md のタスク対象ファイルを抽出（fallback）
 
 **20ファイル超**: 20ファイルずつバッチに分割してStep 2以降を実行。
 
@@ -143,43 +151,24 @@ prompt: |
 - 7ファイル以下: 単一メッセージで並列起動
 - 8ファイル以上: 7ファイルずつバッチ、完了待ち→次バッチ
 
-### Step 6: 品質ゲート（サブエージェント委譲）
+### Step 6: 品質ゲート（スクリプト実行）
 
-**自分では実行しない。サブエージェントに委譲する。**
+Bash toolでスクリプトを直接実行:
 
-#### 品質ゲートコマンドの特定
+```bash
+# implementation.md にコマンド定義がある場合
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh --lint-cmd="npm run lint" --test-cmd="npm test"
 
-以下の優先順で検索:
-
-1. implementation.md の品質ゲート定義
-2. package.json の scripts（lint, test）
-3. Makefile のターゲット（lint, test）
-4. **該当なし → スキップ + 警告**: 「品質ゲートコマンドが見つかりません。Lint/Testは手動で実行してください。」
-
-#### 実行
-
-単一メッセージで2つのTask toolを並列起動:
-
-```
-# Lint チェック
-subagent_type: general-purpose
-model: haiku
-prompt: |
-  Lintを実行: ${LINT_COMMAND}
-  結果を報告（成功/失敗、エラー詳細）
-
-# Test チェック
-subagent_type: general-purpose
-model: sonnet
-prompt: |
-  テストを実行: ${TEST_COMMAND}
-  結果を報告（成功/失敗、失敗テスト詳細）
+# 自動検出に任せる場合
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh
 ```
 
-**失敗時**: 修正サブエージェントを起動して修正を委譲（Step 5と同じ要領）。
+出力の `GATE: PASS/FAIL` で判定する。
+
+**GATE: FAIL**: 修正サブエージェントを起動して修正を委譲（Step 5と同じ要領）。
 修正後、Step 2 へ戻る（次サイクル）。
 
-**成功時**: Step 2 へ戻る（次サイクル）。
+**GATE: PASS**: Step 2 へ戻る（次サイクル）。
 
 **最大サイクル到達（3回）**: Step 7 へ。
 

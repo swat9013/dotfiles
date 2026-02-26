@@ -63,6 +63,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/**/*.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/**/*.py:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
+      "Bash(~/.dotfiles/.claude-global/skills/scripts/*.sh:*)",
       "Bash(find:*)",
       "Bash(cursor agent:*)",
       "Bash(docker:*)",

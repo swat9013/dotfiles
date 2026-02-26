@@ -15,16 +15,17 @@ implementation.md のタスク実行後、コードレビューと修正を自�
 ### 絶対ルール
 
 - **コードの実装・修正は絶対に自分でやらない**
-- **テスト・Lintの実行は絶対に自分でやらない**
+- **テスト・Lintの実行はスクリプト（quality-gate.sh）で実行する**
 - **レビュー自体は絶対に自分でやらない**
-- **上記はすべてサブエージェントまたはスキルに委譲する**
+- **AI判断を要する作業（レビュー、修正、設計判断）はサブエージェントまたはスキルに委譲する**
 
 ### 行動の3分類
 
 | 分類 | 行動 | ツール例 |
 |------|------|---------|
 | **自身で行う** | 情報収集、判断、報告 | Read, 出力 |
-| **サブエージェント委譲** | 修正、テスト実行、Lint | Task tool |
+| **スクリプト実行** | テスト実行、Lint（品質ゲート） | Bash tool（quality-gate.sh） |
+| **サブエージェント委譲** | 修正 | Task tool |
 | **スキル委譲** | 実装、レビュー | Skill tool |
 
 ### やること / やらないこと
@@ -32,9 +33,10 @@ implementation.md のタスク実行後、コードレビューと修正を自�
 | やること | やらないこと |
 |---------|-------------|
 | codex-review.md を読む（Read） | コードの実装・修正 |
-| issue有無の判定 | テスト・Lintの直接実行 |
-| サイクル継続の判断 | レビューの直接実施 |
-| スキル/サブエージェントへの委譲 | 新規ファイル作成 |
+| issue有無の判定 | レビューの直接実施 |
+| サイクル継続の判断 | 新規ファイル作成 |
+| スキル/サブエージェントへの委譲 | - |
+| 品質ゲート実行（quality-gate.sh） | - |
 | ユーザーへの進捗報告 | - |
 
 ## 前提条件
@@ -109,29 +111,21 @@ prompt: |
   修正後、既存のテストを破壊しないこと。
 ```
 
-#### Step 2.4: 品質ゲート（サブエージェント委譲）
+#### Step 2.4: 品質ゲート（スクリプト実行）
 
-**自分では実行しない。サブエージェントに委譲する。**
+Bash toolでスクリプトを直接実行:
 
-implementation.md の品質ゲート定義、またはプロジェクトの設定ファイル（package.json, Makefile等）からLint/Testコマンドを特定し、単一メッセージで2つのTask toolを並列起動:
+```bash
+# implementation.md にコマンド定義がある場合
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh --lint-cmd="npm run lint" --test-cmd="npm test"
 
-```
-# Lint チェック
-subagent_type: general-purpose
-model: haiku
-prompt: |
-  Lintを実行: ${LINT_COMMAND}
-  結果を報告（成功/失敗、エラー詳細）
-
-# Test チェック
-subagent_type: general-purpose
-model: sonnet
-prompt: |
-  テストを実行: ${TEST_COMMAND}
-  結果を報告（成功/失敗、失敗テスト詳細）
+# 自動検出に任せる場合
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh
 ```
 
-**失敗時**: 修正サブエージェントを起動して修正を委譲（自分では修正しない）
+出力の `GATE: PASS/FAIL` で判定する。
+
+**GATE: FAIL**: 修正サブエージェントを起動して修正を委譲（自分では修正しない）
 
 #### Step 2.5: サイクル継続判定（オーケストレーターが判断）
 
