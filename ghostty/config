@@ -12,6 +12,7 @@ macos-option-as-alt = true
 window-padding-x = 8
 window-padding-y = 8
 unfocused-split-opacity = 0.80
+unfocused-split-fill = 000000
 
 # シェル統合
 shell-integration = detect
@@ -41,3 +42,8 @@ desktop-notifications = true
 # keybind = shift+right=unbind
 # keybind = shift+up=unbind
 # keybind = shift+down=unbind
+
+# 分割線を Tokyo Night のアクセントカラーに
+split-divider-color = #3d59a1
+
+focus-follows-mouse = true

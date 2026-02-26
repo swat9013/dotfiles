@@ -130,9 +130,7 @@ agent: true
 | architect | 「設計して」「plan.md作成」 |
 | breakdown | 「/breakdown」「タスク分解」 |
 | implement | 「/implement」「タスク実行」 |
-| implement-review | 「/implement-review」「実装してレビューまで」 |
 | review-fix | 「/review-fix」「レビュー修正」「実装後レビュー」 |
-| code-review | 「コードレビュー」「レビューして」 |
 | codex-code-review | 「codexレビュー」「アーキテクチャレビュー」 |
 | refactor | 「リファクタリング」「コード改善」 |
 | requirements | 「要件整理」「requirements」 |

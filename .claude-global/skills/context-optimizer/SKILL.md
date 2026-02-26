@@ -53,7 +53,7 @@ CLAUDE.mdを50行未満に削減し、コンテキスト消費を最適化する
 | Content | Extract To | Type | Trigger/Path |
 |---------|------------|------|--------------|
 | TypeScript規約 | rules/typescript.md | Rule | `**/*.ts` |
-| コードレビュー手順 | skills/code-review/SKILL.md | Skill | 「レビューして」 |
+| コードレビュー手順 | skills/review-fix/SKILL.md | Skill | 「レビューして」 |
 ```
 
 **必ず `AskUserQuestion` で承認を取得してから次へ進む。**

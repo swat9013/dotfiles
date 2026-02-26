@@ -54,7 +54,7 @@
 
 **問題**: レビュー依頼されるまで不要な情報。
 
-**対策**: `skills/code-review/SKILL.md` に抽出。
+**対策**: `skills/review-fix/SKILL.md` に抽出。
 
 ---
 
@@ -75,7 +75,7 @@
 
 ```yaml
 ---
-name: code-review
+name: review-fix
 # description がない！
 ---
 ```
@@ -86,7 +86,7 @@ name: code-review
 
 ```yaml
 ---
-name: code-review
+name: review-fix
 description: コードをレビューする
 ---
 ```

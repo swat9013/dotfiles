@@ -81,7 +81,7 @@ git checkout HEAD -- CLAUDE.md .claude/
 |---------|------------|------|--------------|
 | TypeScript規約 | rules/typescript.md | Rule | `**/*.ts` |
 | API設計ガイド | rules/api-design.md | Rule | `src/api/**` |
-| コードレビュー手順 | skills/code-review/SKILL.md | Skill | 「レビューして」 |
+| コードレビュー手順 | skills/review-fix/SKILL.md | Skill | 「レビューして」 |
 | デバッグ手順 | skills/debug/SKILL.md | Skill | 「デバッグして」 |
 | コミット作成 | commands/commit.md | Command | `/commit` |
 
@@ -89,7 +89,7 @@ git checkout HEAD -- CLAUDE.md .claude/
 
 - `rules/typescript.md` - TypeScript型付け・命名規約
 - `rules/api-design.md` - RESTful API設計ガイドライン
-- `skills/code-review/SKILL.md` - 5観点コードレビュー手順
+- `skills/review-fix/SKILL.md` - 5観点コードレビュー手順
 - `skills/debug/SKILL.md` - 体系的デバッグ手順
 - `commands/commit.md` - Conventional Commits形式でコミット
 

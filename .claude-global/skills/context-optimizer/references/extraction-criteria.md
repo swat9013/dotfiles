@@ -74,7 +74,7 @@ allowed-tools:          # オプション
 
 | コンテンツ | 抽出先 | トリガー |
 |-----------|--------|----------|
-| コードレビュー手順 | `skills/code-review/SKILL.md` | 「レビューして」 |
+| コードレビュー手順 | `skills/review-fix/SKILL.md` | 「レビューして」 |
 | リファクタリングガイド | `skills/refactor/SKILL.md` | 「リファクタして」 |
 | デバッグ手順 | `skills/debug/SKILL.md` | 「デバッグして」 |
 | ドキュメント生成 | `skills/docs/SKILL.md` | 「ドキュメント作成して」 |

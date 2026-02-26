@@ -75,7 +75,6 @@
       "NotebookEdit",
       "NotebookRead",
       "Bash(cd:*)",
-      "Bash(echo:*)",
       "Bash(bash :*)",
       "Bash(sh :*)",
       "Bash(git -C:*)",

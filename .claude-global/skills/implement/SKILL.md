@@ -249,6 +249,6 @@ TaskUpdate(taskId, status: "in_progress")  # 開始前
 **品質ゲート**: 全クリア
 
 **次のステップ**:
-- /code-review でコードレビュー
+- /review-fix でコードレビュー
 - PR作成
 ```

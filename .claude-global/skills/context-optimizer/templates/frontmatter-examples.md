@@ -61,7 +61,7 @@ paths: src/api/**, src/routes/**
 
 ```yaml
 ---
-name: code-review
+name: review-fix
 description: |
   5観点でコードレビューを実行する。
   「コードレビュー」「レビューして」と依頼された時に使用。

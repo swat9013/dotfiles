@@ -227,7 +227,7 @@ refactor: [手法名] - [対象]
 - ✅ 振る舞い保存確認
 
 **次のステップ**:
-- /code-review でコードレビュー
+- /review-fix でコードレビュー
 ```
 
 ## 安全性ガードレール
@@ -268,6 +268,6 @@ refactor-plan.md
     ↓ 大規模な場合
 /implement（オプション）
     ↓ 完了後
-/code-review（推奨）
+/review-fix（推奨）
 ```
 
