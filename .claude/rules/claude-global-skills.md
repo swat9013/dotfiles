@@ -151,6 +151,7 @@ agent: true
 |--------|------------------|------|
 | managing-skills | 「スキルを作って」「スキル更新」 | スキル作成・変更ガイド |
 | ghq | 「ghq」「リポジトリ管理」 | リポジトリ管理ツールガイド |
+| glab | 「glab」「GitLab CLI」「GitLab MR」「GitLab CI」 | GitLab CLI操作ガイド |
 | frontend-design | 「UI作成」「フロントエンド実装」 | UI/フロントエンド実装ガイド |
 | claude-mem | 「claude-mem」「メモリ検索」 | claude-memプラグイン使用ガイド |
 | playwright-cli | 「Playwright」「E2Eテスト」「ブラウザ操作」「UI確認」 | Playwright CLI + ブラウザ操作リファレンス |

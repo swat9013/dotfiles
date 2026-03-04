@@ -69,7 +69,17 @@
       "Bash(docker:*)",
       "Bash(comm:*)",
       "Bash(sort:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(uv run --with pytest pytest:*)",
+      "Bash(glab mr view:*)",
+      "Bash(glab mr list:*)",
+      "Bash(glab mr diff:*)",
+      "Bash(glab issue view:*)",
+      "Bash(glab issue list:*)",
+      "Bash(glab ci view:*)",
+      "Bash(glab ci list:*)",
+      "Bash(glab ci status:*)",
+      "Bash(glab repo view:*)"
     ],
     "deny": [
       "NotebookEdit",

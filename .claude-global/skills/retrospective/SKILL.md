@@ -20,31 +20,31 @@ argument-hint: "[--since=Nd] [--limit=N]"
 
 ## ワークフロー
 
-### 1. 引数解析
+### 1. 初期化
 
-`$ARGUMENTS` を find-sessions.sh に渡す。
+`$ARGUMENTS` を retro-setup.sh に渡す（1回のBash呼び出しで完了）。
 
 - 引数なし → 当日セッション（デフォルト）
 - 例: `/retrospective --since=3d` → 3日前以降
 
-### 2. セッション取得
-
 ```bash
-~/.dotfiles/.claude-global/skills/retrospective/scripts/find-sessions.sh $ARGUMENTS
+~/.dotfiles/.claude-global/skills/retrospective/scripts/retro-setup.sh $ARGUMENTS
 ```
 
-セッションファイルのパス一覧（改行区切り）を取得する。
-30件を超える場合は `--limit=30` を付与して再取得し、ユーザーに通知する。
-
-### 3. セッション準備
-
-```bash
-~/.dotfiles/.claude-global/skills/retrospective/scripts/prepare-sessions.sh {session_files}
+出力（3セクション）:
+```
+=== SESSIONS ===
+NEW <bytes> <tmp_path> <uuid>
+CACHED <bytes> <cache_path> <uuid>
+=== EXISTING_CONTEXT ===
+{既存コンテキスト}
+=== STATS ===
+total=N new=N cached=N skipped=N
 ```
 
-出力（1行/セッション）:
-- `CACHED <bytes> <cache_path>`: Stage 1 済み。cache_file を直接使用
-- `NEW <bytes> <tmp_path>`: Stage 1 サブエージェントで抽出が必要
+- `NEW`: Stage 1 サブエージェントで抽出が必要
+- `CACHED`: Stage 1 済み。cache_file を直接使用
+- 30件超は自動で `--limit=30` 適用
 - 2000バイト未満のセッションは出力されない（知見抽出の価値が低い）
 
 ### 4. Two-Stage サブエージェント処理
@@ -63,13 +63,10 @@ argument-hint: "[--since=Nd] [--limit=N]"
 
 #### Stage 1: Extract（Map）— NEW セッションのみ
 
-§3 で `NEW` と判定されたセッションごとに1つのサブエージェントを起動する。
+§1 で `NEW` と判定されたセッションごとに1つのサブエージェントを起動する。
 1つのサブエージェントに複数セッションを渡さない。
 
-**事前準備**: 既存コンテキストを収集する（Stage 1 prompt に埋め込む）:
-```bash
-~/.dotfiles/.claude-global/skills/retrospective/scripts/collect-existing-context.sh
-```
+**事前準備**: §1 の `=== EXISTING_CONTEXT ===` セクションの内容を Stage 1 prompt に埋め込む。
 
 **Stage 1 prompt**:
 ```
@@ -79,9 +76,13 @@ argument-hint: "[--since=Nd] [--limit=N]"
 1. 以下のファイルを Read tool で読み込む: {/tmp/retro_XXXXX.txt のパス}
 2. プロジェクト固有の知見を箇条書きで抽出する
 3. 汎用的なベストプラクティス・一時的な作業メモは除外する
+4. 抽出完了後、結果を Write tool で `.claude/retrospective-cache/{uuid}.txt` に保存する
+
+## セッション UUID
+{uuid}
 
 ## 既存コンテキスト（重複回避用）
-{collect-existing-context.sh の出力}
+{EXISTING_CONTEXT セクションの内容}
 
 ## 出力形式
 - **[カテゴリ]** 内容の1行要約 | 根拠: 引用（1-2文）| 保存先候補: CLAUDE.md / rules/ / skills/ / settings / 不明
@@ -94,8 +95,6 @@ argument-hint: "[--since=Nd] [--limit=N]"
 
 **Stage 1 エラー処理**: 個別失敗は警告してスキップ（部分結果でも価値あり）。
 全セッション「知見なし」の場合は「抽出可能な知見なし」と表示して終了。
-
-**Stage 1 完了後**: 結果をキャッシュに保存する（§5参照）。
 
 #### Stage 2: Classify（Reduce）— 1つのサブエージェント
 
@@ -127,11 +126,14 @@ Stage 1 の全結果（キャッシュ済み + 新規）を連結し、単一の
 
 #### Stage 1 完了後
 
-1. 各 NEW セッションの Stage 1 結果を Write tool でキャッシュに保存する:
-   - パス: `.claude/retrospective-cache/{session-uuid}.txt`
-   - 内容: Stage 1 サブエージェントの出力テキスト
-2. `CACHED` セッションの cache_file を Read して Stage 1 結果に加える
-3. 全 Stage 1 結果を連結して Stage 2 に渡す
+1. `CACHED` セッションの cache_file を一括読み取りする:
+   ```bash
+   ~/.dotfiles/.claude-global/skills/retrospective/scripts/read-caches.sh {cache_files...}
+   ```
+   出力: `=== {uuid} ===` デリミタ付きで各キャッシュ内容が連結される
+2. Stage 1 サブエージェントの出力（NEW セッション分）と CACHED 読取結果を連結して Stage 2 に渡す
+
+**注**: NEW セッションのキャッシュ保存は Stage 1 サブエージェントが自己完結で行う（§4参照）。親が保存する必要はない。
 
 #### Stage 2 完了後
 
@@ -195,6 +197,8 @@ wc -l ./CLAUDE.md
 |---------|------|
 | `templates/reflect-output.md` | 抽出結果テンプレート |
 | `references/classification-criteria.md` | 14カテゴリ + 4層分類基準 |
+| `scripts/retro-setup.sh` | 初期化一括実行（find → prepare → collect を合成） |
+| `scripts/read-caches.sh` | CACHEDセッションの一括読み取り |
 | `scripts/find-sessions.sh` | セッション特定スクリプト |
 | `scripts/extract-messages.sh` | メッセージ抽出スクリプト |
 | `scripts/prepare-sessions.sh` | キャッシュチェック + 抽出 + ステータス判定 |
