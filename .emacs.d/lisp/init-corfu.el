@@ -39,7 +39,7 @@
   ;; ターミナルサポート
   (unless (display-graphic-p)
     (use-package corfu-terminal
-      :straight (:host codeberg :repo "akib/emacs-corfu-terminal")
+      :straight (:host github :repo "wyuenho/emacs-corfu-terminal")
       :config
       (corfu-terminal-mode 1))))
 
