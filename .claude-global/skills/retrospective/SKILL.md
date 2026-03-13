@@ -9,174 +9,103 @@ argument-hint: "[--since=Nd] [--limit=N]"
 
 セッション会話からドメイン知識を抽出し、4層の保存先に永続化するスキル。
 
-## 対象
-
-| ファイル | 内容 |
-|----------|------|
-| プロジェクトCLAUDE.md | プロジェクト固有のドメイン知識を蓄積 |
-| .claude/rules/ | パス固有のガイドライン |
-| .claude/skills/ | ワークフロー定義 |
-| settings.local.json | 権限設定（allow/ask/deny） |
-
 ## ワークフロー
 
-### 1. 初期化
+### 1. データ収集
 
-`$ARGUMENTS` を retro-setup.sh に渡す（1回のBash呼び出しで完了）。
-
-- 引数なし → 当日セッション（デフォルト）
-- 例: `/retrospective --since=3d` → 3日前以降
+collect.py でセッションデータを収集する。
 
 ```bash
-~/.dotfiles/.claude-global/skills/retrospective/scripts/retro-setup.sh $ARGUMENTS
+~/.dotfiles/.claude-global/skills/retrospective/scripts/collect.py $ARGUMENTS
 ```
 
-出力（3セクション）:
-```
-=== SESSIONS ===
-NEW <bytes> <tmp_path> <uuid>
-CACHED <bytes> <cache_path> <uuid>
-=== EXISTING_CONTEXT ===
-{既存コンテキスト}
-=== STATS ===
-total=N new=N cached=N skipped=N
-```
+- 引数なし → 当日セッション
+- `--since=7d` → 過去7日分
+- `--since=2026-03-01` → 日付指定
+- `--limit=10` → 件数制限
+- 2000バイト未満のセッションは自動除外
 
-- `NEW`: Stage 1 サブエージェントで抽出が必要
-- `CACHED`: Stage 1 済み。cache_file を直接使用
-- 30件超は自動で `--limit=30` 適用
-- 2000バイト未満のセッションは出力されない（知見抽出の価値が低い）
+stdout にサマリー（total, skipped, セッション一覧）と `file=<パス>` が表示される。
+詳細データは stdout の `file=` 行から取得したパスに書き出される。
 
-### 4. Two-Stage サブエージェント処理
+**パス取得**: stdout から `file=` で始まる行を抽出し、以降のパスをデータファイルパスとして使用する。
 
-**原則**: 親エージェントはセッション内容もテンプレートも読まない。ファイルパスだけを渡す。
+**結果確認**: stdout の `total=0` なら「対象セッションなし」と表示して終了。
+
+### 2. サブエージェント分析
+
+手順1で取得したデータファイルパスを **1つの Sonnet サブエージェント**で一括分析する。
 
 **実行制約**:
-- **foreground**（`run_in_background`未指定）で起動すること。結果は直接返却される
-- **backgroundは使用禁止**（TaskOutput並列取得が衝突して全失敗するため）
-- 1メッセージ内のTask呼び出しは**最大5個**。超過分は前バッチ完了後に次バッチ起動
+- **foreground**（`run_in_background` 未指定）で起動
+- subagent_type: `general-purpose`、model: `sonnet`
 
-| 設定 | Stage 1 | Stage 2 |
-|------|---------|---------|
-| subagent_type | general-purpose | general-purpose |
-| model | haiku | sonnet |
+**サブエージェント prompt**:
 
-#### Stage 1: Extract（Map）— NEW セッションのみ
-
-§1 で `NEW` と判定されたセッションごとに1つのサブエージェントを起動する。
-1つのサブエージェントに複数セッションを渡さない。
-
-**事前準備**: §1 の `=== EXISTING_CONTEXT ===` セクションの内容を Stage 1 prompt に埋め込む。
-
-**Stage 1 prompt**:
 ```
-プロジェクト固有のドメイン知識候補を抽出してください。
+セッション会話からプロジェクト固有のドメイン知識を抽出し、保存先を判断してください。
 
 ## 指示
-1. 以下のファイルを Read tool で読み込む: {/tmp/retro_XXXXX.txt のパス}
-2. プロジェクト固有の知見を箇条書きで抽出する
-3. 汎用的なベストプラクティス・一時的な作業メモは除外する
-4. 抽出完了後、結果を Write tool で `.claude/retrospective-cache/{uuid}.txt` に保存する
-
-## セッション UUID
-{uuid}
-
-## 既存コンテキスト（重複回避用）
-{EXISTING_CONTEXT セクションの内容}
+1. Read tool で以下の2ファイルを読み込む（Bash や python3 は使わないこと）:
+   - {手順1で取得したデータファイルパス}（セッションデータ）
+   - ~/.dotfiles/.claude-global/skills/retrospective/references/layer-criteria.md（判断基準）
+2. retro-data.json の sessions 配列から知見を抽出する
+3. existing_context と重複するものは除外する
+4. layer-criteria.md の基準で各知見の保存先を判断する
 
 ## 出力形式
-- **[カテゴリ]** 内容の1行要約 | 根拠: 引用（1-2文）| 保存先候補: CLAUDE.md / rules/ / skills/ / settings / 不明
+知見ごとに以下の形式で出力:
 
-カテゴリ: アーキテクチャ / 技術選択 / コーディング規約 / 落とし穴 / コマンド / 依存関係 /
-データ構造 / 環境・設定 / 用語 / 境界条件 / パフォーマンス / 権限設定 / ワークフロー摩擦 / 設定改善
-
-知見が0件なら「知見なし」とだけ出力。
-```
-
-**Stage 1 エラー処理**: 個別失敗は警告してスキップ（部分結果でも価値あり）。
-全セッション「知見なし」の場合は「抽出可能な知見なし」と表示して終了。
-
-#### Stage 2: Classify（Reduce）— 1つのサブエージェント
-
-Stage 1 の全結果（キャッシュ済み + 新規）を連結し、単一のサブエージェントに渡す。
-
-**Stage 2 prompt**:
-```
-ドメイン知識候補を分類・構造化してください。
-
-## 指示
-1. 以下のファイルを Read tool で読み込む:
-   - ~/.dotfiles/.claude-global/skills/retrospective/references/classification-criteria.md
-   - ~/.dotfiles/.claude-global/skills/retrospective/templates/reflect-output.md
-2. 下記の抽出結果を classification-criteria.md の基準で分類する
-3. reflect-output.md の形式で出力する
-
-## 抽出結果（全セッション統合）
-{Stage 1 全結果を連結}
+### 知見N: {1行タイトル}
+- **保存先**: CLAUDE.md / rules/ / skills/ / settings / 破棄
+- **対象パス** (rules/の場合): globパターン
+- **内容**: 保存すべき内容（簡潔に）
+- **根拠**: セッションからの引用（1-2文）
 
 ## 処理ルール
-- 重複する知見はマージ（複数セッション言及 → 信頼度UP）
-- 矛盾する知見は両方記載し矛盾を明記
+- プロジェクト固有の知見のみ抽出（汎用ベストプラクティスは除外）
 - 既存コンテキストと重複するものは除外
+- 複数セッションで言及 → 信頼度UP
+- 矛盾する知見は両方記載し矛盾を明記
+- 知見が0件なら「知見なし」とだけ出力
 ```
 
-**Stage 2 エラー処理**: 1回リトライ → 失敗時は Stage 1 結果を直接表示する。
+**エラー処理**: サブエージェントがエラーを返した場合、または出力が空の場合は1回リトライ。2回失敗したら「分析に失敗しました」と表示して終了。
 
-### 5. 親エージェント処理
+### 3. 4層保存ロジック
 
-#### Stage 1 完了後
+サブエージェントの出力を受け取り、保存先ごとに処理する。
 
-1. `CACHED` セッションの cache_file を一括読み取りする:
-   ```bash
-   ~/.dotfiles/.claude-global/skills/retrospective/scripts/read-caches.sh {cache_files...}
-   ```
-   出力: `=== {uuid} ===` デリミタ付きで各キャッシュ内容が連結される
-2. Stage 1 サブエージェントの出力（NEW セッション分）と CACHED 読取結果を連結して Stage 2 に渡す
-
-**注**: NEW セッションのキャッシュ保存は Stage 1 サブエージェントが自己完結で行う（§4参照）。親が保存する必要はない。
-
-#### Stage 2 完了後
-
-Stage 2 の出力（構造化された分類結果）を受け取り、4層保存ロジックに進む。
-
-Stage 2 失敗時は Stage 1 結果を直接表示し、ユーザーに手動分類を促す。
-
-## 4層保存ロジック
-
-**重要**: 保存先ごとに異なる確認フローを適用する。
-
-### CLAUDE.md
-
+#### CLAUDE.md
 - 既存セクションに追記、または新規セクション作成
 - 重複確認後、確認なしで即時追記（Edit tool で直接追記）
 
-### rules/
-
+#### rules/
 - 対象ファイル・glob パターンを含めた差分を AskUserQuestion で提示
 - 承認後に既存ファイルに追記、または新規ファイル作成
 
-### skills/
-
+#### skills/
 - 提案のみ表示（「以下のスキルの作成・更新を検討してください:」）
 - 実際の作成は `/managing-skills` に委譲
 
-### settings.local.json
-
+#### settings.local.json
 1. 現在の設定を読み込み
 2. 提案する変更を生成（allow/ask/deny の追加・変更）
 3. `jq .` で JSON 構文検証
 4. AskUserQuestion で現在値 → 提案値の差分を提示
 5. 承認後に jq でマージ更新
 
-## 追記後の行数チェック
+### 4. 完了処理
+
+#### 行数チェック
 
 ```bash
 wc -l ./CLAUDE.md
 ```
 
-150行を超えた場合: 「CLAUDE.md が150行を超えました。`/context-optimizer` の実行を検討してください。」と表示。
+150行超: 「CLAUDE.md が150行を超えました。`/context-optimizer` の実行を検討してください。」
 
-## 完了レポート
+#### 完了レポート
 
 ```
 ## 振り返り完了
@@ -195,23 +124,11 @@ wc -l ./CLAUDE.md
 
 | ファイル | 用途 |
 |---------|------|
-| `templates/reflect-output.md` | 抽出結果テンプレート |
-| `references/classification-criteria.md` | 14カテゴリ + 4層分類基準 |
-| `scripts/retro-setup.sh` | 初期化一括実行（find → prepare → collect を合成） |
-| `scripts/read-caches.sh` | CACHEDセッションの一括読み取り |
-| `scripts/find-sessions.sh` | セッション特定スクリプト |
-| `scripts/extract-messages.sh` | メッセージ抽出スクリプト |
-| `scripts/prepare-sessions.sh` | キャッシュチェック + 抽出 + ステータス判定 |
-| `scripts/collect-existing-context.sh` | 既存コンテキスト収集（重複回避用） |
-
-## 成功基準
-
-1. 学びが再利用可能な形で適切な層に永続化されている
-2. 既存内容と重複・矛盾がない
-3. rules/skills/settings への書き込み前にユーザー確認が挟まる
+| `scripts/collect.py` | セッションデータ収集（6スクリプト統合） |
+| `references/layer-criteria.md` | 4層保存先判断基準 |
 
 ## 原則
 
 - **ドメイン知識のみ**: 汎用的なベストプラクティスではなく、プロジェクト固有の知見
 - **最小限の高シグナル情報**: 効果を最大化
-- **Progressive Disclosure**: 詳細は references/ と templates/ に分離
+- **横断パターン発見**: 全セッション一括分析で複数セッションにまたがるパターンを検出
