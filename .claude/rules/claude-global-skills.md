@@ -144,6 +144,7 @@ agent: true
 | commit | 「/commit」「コミットして」「コミット作成」 |
 | todoist | 「Todoist」「タスク追加」「タスクリファイン」「タスク整理」 |
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」 |
+| prompt-review | 「/prompt-review」「プロンプトをレビューして」「対話履歴を分析して」「理解度を診断して」 |
 
 ### 知識系スキル（user-invocable: false）
 

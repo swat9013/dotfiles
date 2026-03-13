@@ -29,9 +29,9 @@ paths: .claude-global/settings.json
 
 | キー | 用途 | 例 |
 |-----|------|-----|
-| `permissions.allow` | 自動許可するツール呼び出し | `"Bash(npm test:*)"` |
+| `permissions.allow` | 自動許可するツール呼び出し | `"Bash(npm test *)"` |
 | `permissions.deny` | 禁止するツール呼び出し | `"Read(.env)"` |
-| `permissions.ask` | 確認を求めるツール呼び出し | `"Bash(git push:*)"` |
+| `permissions.ask` | 確認を求めるツール呼び出し | `"Bash(git push *)"` |
 | `hooks` | イベント駆動の自動処理 | 下記参照 |
 | `model` | デフォルトモデル | `"opus"`, `"sonnet"` |
 | `language` | 応答言語 | `"japanese"` |
@@ -114,6 +114,13 @@ hook type と使い分け:
 |-----|------|
 | `statusLine` | ステータスライン表示（`type: "command"` + `command`） |
 | `fileSuggestion` | @参照時のファイル候補（`type: "command"` + `command`） |
+
+## Bashパーミッション構文
+
+- 引数ワイルドカードは**スペース + `*`** を使う: `"Bash(git diff *)"`
+- `:*` は非推奨。リテラルのコロンとして扱われマッチしない
+- `Bash(cmd *)` は `cmd foo` にマッチ、`Bash(cmd*)` は `cmdfoo` にもマッチ（語境界注意）
+- ディレクトリ内スクリプト全許可: `"Bash(./scripts/dir/* *)"` （`/*` でファイル名、` *` で引数）
 
 ## セキュリティ
 

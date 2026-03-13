@@ -28,9 +28,9 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 
 | キー | 用途 | 例 |
 |-----|------|-----|
-| `permissions.allow` | 自動許可 | `"Bash(npm test:*)"` |
+| `permissions.allow` | 自動許可 | `"Bash(npm test *)"` |
 | `permissions.deny` | 禁止 | `"Read(.env)"` |
-| `permissions.ask` | 確認要求 | `"Bash(git push:*)"` |
+| `permissions.ask` | 確認要求 | `"Bash(git push *)"` |
 | `hooks` | イベント駆動処理 | 下記参照 |
 | `model` | デフォルトモデル | `"opus"`, `"sonnet"` |
 | `language` | 応答言語 | `"japanese"` |
@@ -92,6 +92,13 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 3. `jq .` で構文検証
 4. 差分を提示
 5. 承認後に `jq` でマージ更新（直接書き込み禁止）
+
+## Bashパーミッション構文
+
+- 引数ワイルドカードは**スペース + `*`** を使う: `"Bash(git diff *)"`
+- `:*` は非推奨。リテラルのコロンとして扱われマッチしない
+- `Bash(cmd *)` は `cmd foo` にマッチ、`Bash(cmd*)` は `cmdfoo` にもマッチ（語境界注意）
+- ディレクトリ内スクリプト全許可: `"Bash(./scripts/dir/* *)"` （`/*` でファイル名、` *` で引数）
 
 ## セキュリティ
 
