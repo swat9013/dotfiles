@@ -13,7 +13,7 @@ Rulesはモジュール化されたコンテキスト固有のガイドライン
 | 形式 | Markdown + YAML frontmatter |
 | 命名規則 | kebab-case（例: `api-endpoints.md`, `test-files.md`） |
 | シンボリックリンク | サポート（循環リンク検出あり） |
-| ユーザーレベル | `~/.claude/rules/` にも配置可能（ただし `paths:` は無視される） |
+| ユーザーレベル | `~/.claude/rules/` にも配置可能（ただしYAML配列形式・クォート付きの `paths:` は正しく動作しない場合がある） |
 
 ## frontmatter 形式
 
@@ -89,7 +89,7 @@ paths: src/api/**
 | 長い手順（300行超） | ルールではなくワークフロー | skills/に分離 |
 | 複数ルールで同じ内容 | DRY違反 | CLAUDE.mdまたは共通rulesに集約 |
 | 実装詳細の羅列 | ルールではなくドキュメント | docs/に移動 |
-| `~/.claude/rules/` の `paths:` に依存 | ユーザーレベルルールでは `paths:` が無視される ([Issue #21858](https://github.com/anthropics/claude-code/issues/21858)) | プロジェクトレベル (`.claude/rules/`) に配置 or symlink |
+| `~/.claude/rules/` の `paths:` に依存 | ユーザーレベルルールではYAML配列形式・クォート付きの `paths:` が正しく動作しない場合がある ([Issue #21858](https://github.com/anthropics/claude-code/issues/21858)) | カンマ区切り・クォートなし形式で記述 |
 
 ### 悪い例
 
@@ -118,6 +118,5 @@ paths: src/**
 
 | Issue | 概要 | 回避策 |
 |-------|------|--------|
-| [#16299](https://github.com/anthropics/claude-code/issues/16299) | path-scoped rules がセッション開始時に無条件ロードされる（paths 条件が実質機能せずcontext bloat の原因） | ルール数・サイズを最小限に保つ |
-| [#21858](https://github.com/anthropics/claude-code/issues/21858) | `~/.claude/rules/` の `paths:` frontmatter が無視される | プロジェクトレベル (`./.claude/rules/`) に配置、またはシンボリックリンクを使用 |
 | [#13905](https://github.com/anthropics/claude-code/issues/13905) | YAML配列形式（`paths: - "..."` 複数行）が機能しない | カンマ区切りワンライナーで記述 |
+| [#21858](https://github.com/anthropics/claude-code/issues/21858) | クォート付きの `paths:` が無視される場合がある | クォートなしで記述 |

@@ -74,15 +74,15 @@
       "Bash(glab ci view:*)",
       "Bash(glab ci list:*)",
       "Bash(glab ci status:*)",
-      "Bash(glab repo view:*)"
+      "Bash(glab repo view:*)",
+      "Bash(cd:*)",
+      "Bash(git -C:*)"
     ],
     "deny": [
       "NotebookEdit",
       "NotebookRead",
-      "Bash(cd:*)",
       "Bash(bash :*)",
       "Bash(sh :*)",
-      "Bash(git -C:*)",
       "Bash(git add .:*)",
       "Bash(git add -A:*)",
       "Bash(git add --all:*)",
@@ -149,7 +149,8 @@
     "claude-mem@thedotmack": true,
     "example-skills@anthropic-agent-skills": false,
     "code-simplifier@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true
   },
   "language": "japanese",
   "spinnerTipsEnabled": false,

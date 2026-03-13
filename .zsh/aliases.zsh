@@ -9,18 +9,6 @@ alias relogin='exec $SHELL -l'
 alias sed-filename='(){find ./ -type f | sed \"p;s/$1/$2/\" | xargs -n2 mv}'
 alias tf='tail -f'
 
-# 標準出力をクリップボードにコピー
-if which pbcopy >/dev/null 2>&1 ; then
-    # Mac
-    alias -g C='| pbcopy'
-elif which xsel >/dev/null 2>&1 ; then
-    # Linux
-    alias -g C='| xsel --input --clipboard'
-elif which putclip >/dev/null 2>&1 ; then
-    # Cygwin
-    alias -g C='| putclip'
-fi
-
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then
     alias diff='colordiff -u'
@@ -216,3 +204,4 @@ function wtp-init() {
     sed "s/{{ .ProjectName }}/$project_name/g" ~/.dotfiles/.wtp.yml.template > .wtp.yml
     echo "Created .wtp.yml for project: $project_name"
 }
+eval "$(wtp shell-init zsh)"

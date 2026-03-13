@@ -11,15 +11,14 @@ paths: .claude-global/rules/**
 | 推奨サイズ | 200行以下 |
 | 命名規則 | kebab-case |
 | 形式 | Markdown + frontmatter |
-| 注意 | `~/.claude/rules/` ではpathsが無視される（#21858） |
+| 注意 | YAML配列形式・クォート付きではpathsが正しく動作しない場合がある |
 
 ## 既知の不具合
 
 | Issue | 影響 | 対策 |
 |-------|------|------|
-| #16299 | path指定rulesがセッション開始時に全件ロードされる | ファイル数・サイズを最小限に |
-| #21858 | `~/.claude/rules/` のpathsは無視される | pathsに依存しない設計 |
 | #13905 | YAML配列形式（ハイフン複数行）が動作しない | カンマ区切りワンライナー |
+| #21858 | クォート付きpathsが無視される場合がある | クォートなしで記述 |
 
 ## frontmatter paths記法
 

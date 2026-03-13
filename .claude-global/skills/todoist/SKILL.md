@@ -4,7 +4,6 @@ description: |
   プロジェクトのタスク管理ワークフロー。リポジトリに対応するTodoistプロジェクトでタスクの初期化・一覧・追加・更新・リファインメントを行う。
   「Todoist」「タスク追加」「タスク一覧」「タスク完了」「タスク削除」「todo確認」「やること確認」「次のタスク」「タスク整理」「タスクリファイン」「タスク管理」「todo整理」「残タスク」「タスクURL」「タスクリンク」「todoist.com/app/task」と依頼された時に参照する。
 user-invocable: true
-disable-model-invocation: true
 ---
 
 # todoist

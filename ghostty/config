@@ -46,4 +46,4 @@ desktop-notifications = true
 # 分割線を Tokyo Night のアクセントカラーに
 split-divider-color = #3d59a1
 
-focus-follows-mouse = true
+# focus-follows-mouse = true
