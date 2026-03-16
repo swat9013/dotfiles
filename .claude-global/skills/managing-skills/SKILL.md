@@ -23,7 +23,7 @@ user-invocable: false
 ### 2. スキル初期化
 
 ```bash
-~/.dotfiles/.claude-global/skills/skill-creator/scripts/init_skill.sh <skill-name> <path>
+~/.dotfiles/.claude-global/skills/managing-skills/scripts/init_skill.sh <skill-name> <path>
 ```
 
 ### 3. SKILL.md編集
