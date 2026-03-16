@@ -127,7 +127,6 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opus",
   "hooks": {
     "SessionEnd": [
       {
