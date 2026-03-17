@@ -66,9 +66,13 @@ disable-model-invocation: false
 
 引き継ぐべき情報: 根本原因、分解した問題リスト、優先順位
 
-### ステップ7: discovery.md の作成(任意)
+### ステップ7: discovery.md の作成
 
-ユーザーに記録するか確認。Yesなら `templates/discovery.md` を使用してプロジェクトルートに保存。
+`templates/discovery.md` を使用して `.claude/discovery/YYYY-MM-DD-HHMMSS-{topic}.md` に保存する。
+- `{topic}`: 対話で明確になった問題のkebab-caseスラッグ
+- ファイル書き出し前に:
+  1. `mkdir -p .claude/discovery/` を実行
+  2. `.claude/discovery/.gitignore` に `*` を書き込む（Write tool）
 
 ---
 

@@ -52,7 +52,12 @@ plan.md (What/Why) → implementation.md (How) → TaskCreate (Status)
 
 ### 1. 前提条件チェック（自身で実行）
 
-Read tool で implementation.md を読み込み、以下を確認:
+対象ファイルを以下の優先順で特定:
+1. $ARGUMENTS 指定があればそのパスを使用
+2. `.claude/implement/` を Glob し名前降順で先頭ファイルを使用
+※ファイルが見つからない場合はエラーで止まり、breakdown スキルを先に実行するよう案内する
+
+Read tool でファイルを読み込み、以下を確認:
 - ファイルが存在するか
 - タスクに種別・成功基準が明記されているか
 

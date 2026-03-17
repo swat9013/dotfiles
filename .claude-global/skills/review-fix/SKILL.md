@@ -98,11 +98,13 @@ prompt: |
   issueがない場合は「指摘なし」とだけ出力。
 ```
 
-### Step 3: review-fix.md 書き出し
+### Step 3: レビュー結果ファイル書き出し
 
-`templates/output.md` の形式に従い、カレントディレクトリに `review-fix.md` として書き出す。
-
-既存の `review-fix.md` がある場合は上書きする。
+`templates/output.md` の形式に従い、`.claude/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
+- `{topic}`: $ARGUMENTS または変更ファイル群から推定したkebab-caseスラッグ
+- ファイル書き出し前に:
+  1. `mkdir -p .claude/review/` を実行
+  2. `.claude/review/.gitignore` に `*` を書き込む（Write tool）
 
 ### Step 4: issue判定
 
@@ -174,7 +176,7 @@ Bash toolでスクリプトを直接実行:
 
 ### Step 7: 完了報告
 
-review-fix.md を最終更新し、結果を報告する。
+レビュー結果ファイルを最終更新し、結果を報告する。
 
 #### issueゼロ時
 

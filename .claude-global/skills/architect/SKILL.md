@@ -70,7 +70,7 @@ requirements.md が存在するか確認する。
    - `$ARGUMENTS`（設計対象の概要）
    - CLAUDE.md（設計原則・プロジェクト方針）
    - README.md（プロジェクト概要）
-   - discovery.md（存在すれば問題定義・根本原因）
+   - `.claude/discovery/` 最新ファイル（存在すれば問題定義・根本原因）※最新 = Glob後に名前降順ソートで先頭
 3. 収集した情報で Phase 1 へ進む
 
 #### Step 2: requirements.md の品質チェック
@@ -126,7 +126,7 @@ Task tool:
     - ディレクトリ構成と各ディレクトリの役割
     - 主要コンポーネントの依存関係（import/require を追跡）
     - データフローの把握（入力→処理→出力）
-    - 既存の設計ドキュメント（discovery.md, requirements.md, report.md, docs/）
+    - 既存の設計ドキュメント（`.claude/discovery/` 最新ファイル、requirements.md、`.claude/research/` 最新ファイル、docs/）
 
     **除外**: テストコードの詳細、コードスタイルの問題
 
@@ -383,7 +383,11 @@ TaskUpdate({ taskId: "Phase3のID", status: "in_progress" })
 - 実装方針（フェーズ分け）
 - 考慮事項・リスク
 
-**保存先**: プロジェクトルート（`plan.md`）
+**保存先**: `.claude/plans/YYYY-MM-DD-HHMMSS-{topic}.md`
+- `{topic}`: $ARGUMENTS からkebab-caseで生成（例: `auth-redesign`）
+- ファイル書き出し前に:
+  1. `mkdir -p .claude/plans/` を実行
+  2. `.claude/plans/.gitignore` に `*` を書き込む（Write tool）
 
 **テンプレート**: `~/.claude/skills/architect/templates/plan.md`
 
@@ -405,7 +409,7 @@ Task tool:
     作成された plan.md が実装可能な品質を満たしているか検証します。
 
     ## フォーカス範囲
-    plan.md を読み込み、以下のチェックリストで検証する。
+    `.claude/plans/` を Glob し名前降順で先頭ファイルを読み込み、以下のチェックリストで検証する。
 
     ## チェックリスト
     - [ ] 全セクションが記入済み（プレースホルダー残存なし）

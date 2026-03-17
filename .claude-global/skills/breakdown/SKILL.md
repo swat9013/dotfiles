@@ -1,9 +1,9 @@
 ---
 name: breakdown
 description: |-
-  plan.mdからimplementation.mdを生成するタスク分解エージェント。
+  設計書（.claude/plans/）から実装計画（.claude/implement/）を生成するタスク分解エージェント。
   実装計画を実行可能なタスクリストに変換する。
-  「/breakdown」「ブレイクダウン」「タスク分解」「実装計画を作って」「implementation.md生成」「タスクに分解」「実装タスク」と依頼された時に使用。
+  「/breakdown」「ブレイクダウン」「タスク分解」「実装計画を作って」「実装計画ファイル生成」「タスクに分解」「実装タスク」と依頼された時に使用。
 disable-model-invocation: true
 ---
 
@@ -26,8 +26,8 @@ plan.md の実装方針から implementation.md を生成する。
 ## 実行手順
 
 ### 1. 引数解析
-- 引数あり: 指定パスの plan.md を使用
-- 引数なし: プロジェクトルート直下の plan.md を使用
+- 引数あり: 指定パスのファイルを使用
+- 引数なし: `.claude/plans/` を Glob し名前降順で先頭ファイルを使用
 
 ### 2. コンテキスト読み込み
 - plan.md の内容を読み込み
@@ -59,9 +59,13 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 - 他タスクと同じファイルを編集しない
 - 独立して実行可能
 
-### 5. implementation.md 保存
+### 5. 実装計画ファイル保存
 
-プロジェクトルート直下に保存。
+**保存先**: `.claude/implement/YYYY-MM-DD-HHMMSS-{topic}.md`
+- `{topic}`: planのタイトルまたは $ARGUMENTS からkebab-caseで生成
+- ファイル書き出し前に:
+  1. `mkdir -p .claude/implement/` を実行
+  2. `.claude/implement/.gitignore` に `*` を書き込む（Write tool）
 
 テンプレート: `~/.claude/skills/breakdown/templates/implementation.md`
 
@@ -118,7 +122,7 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 ```
 ## implementation.md 生成完了
 
-**保存先**: implementation.md
+**保存先**: `.claude/implement/YYYY-MM-DD-HHMMSS-{topic}.md`
 **タスク数**: X個
 **フェーズ数**: X
 **並列実行可能**: X個（Pマーク付き）
@@ -148,7 +152,7 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 1. plan.md の全フェーズが 1-2時間粒度のタスクに分解されている
 2. 各タスクに種別・推定時間・難易度・成功基準が明記されている
 3. 並列実行可能タスクに Pマークが付与されている
-4. implementation.md がプロジェクトルートに保存されている
+4. `.claude/implement/` にファイルが保存されている
 5. レビュー結果がユーザーに提示されている
 
 ## 完了チェックリスト

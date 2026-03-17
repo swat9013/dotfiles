@@ -54,7 +54,7 @@ disable-model-invocation: true
 TaskCreate({ subject: "[トピック] Phase 1: 調査スコープ定義", activeForm: "調査スコープ定義中" })
 TaskCreate({ subject: "[トピック] Phase 2: ソース調査（並列）", activeForm: "ソース調査中" })
 TaskCreate({ subject: "[トピック] Phase 3: 統合・矛盾検証", activeForm: "調査結果統合中" })
-TaskCreate({ subject: "[トピック] Phase 4: report.md 作成", activeForm: "レポート作成中" })
+TaskCreate({ subject: "[トピック] Phase 4: research ファイル作成", activeForm: "レポート作成中" })
 
 TaskUpdate({ taskId: "2", addBlockedBy: ["1"] })
 TaskUpdate({ taskId: "3", addBlockedBy: ["2"] })
@@ -114,20 +114,24 @@ WebSearch/WebFetchを使用して最新情報を収集すること。
 3. **未カバー領域の特定** — 調査観点に抜けがないか
 
 矛盾・不足がある場合:
-- **Standard**: 矛盾を明記して report.md に記載
+- **Standard**: 矛盾を明記してレポートファイルに記載
 - **Deep**: 追加サブエージェントで矛盾を解決（最大1サイクル）
 
-### Phase 4: report.md 作成
+### Phase 4: research ファイル作成
 
-調査結果を report.md に整理。
+調査結果をファイルに整理。
 
-**保存先**: プロジェクトルート（`report.md`） ※一時ファイルとして扱う
+**保存先**: `.claude/research/YYYY-MM-DD-HHMMSS-{topic}.md`
+- `{topic}`: $ARGUMENTS または調査対象からkebab-caseで生成（例: `auth-library-comparison`）
+- ファイル書き出し前に:
+  1. `mkdir -p .claude/research/` を実行
+  2. `.claude/research/.gitignore` に `*` を書き込む（Write tool）
 
 **テンプレート**: `~/.claude/skills/researcher/templates/report.md`
 
 ## 出力形式
 
-report.md のセクション構成:
+research ファイルのセクション構成:
 1. 調査概要（目的、範囲）
 2. コードベース分析（既存コードが関連する場合のみ）
 3. 技術比較（選択肢の比較表）
@@ -152,7 +156,7 @@ report.md のセクション構成:
 
 ## 完了チェックリスト
 
-- [ ] report.mdが所定のセクション構成で作成されている
+- [ ] `.claude/research/` に所定のセクション構成でファイルが作成されている
 - [ ] 公式ドキュメントを参照し、情報の鮮度を確認している
 - [ ] 比較表が公平な評価軸で作成されている
 - [ ] 推奨事項が調査結果に基づき、根拠付きで示されている
