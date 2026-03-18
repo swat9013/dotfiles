@@ -128,6 +128,7 @@ agent: true
 | スキル | トリガー |
 |--------|---------|
 | architect | 「設計して」「plan.md作成」 |
+| plan | 「/plan」「実装計画」「どう実装する？」 |
 | breakdown | 「/breakdown」「タスク分解」 |
 | implement | 「/implement」「タスク実行」 |
 | review-fix | 「/review-fix」「レビュー修正」「実装後レビュー」 |
