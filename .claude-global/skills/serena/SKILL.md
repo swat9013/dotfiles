@@ -1,6 +1,6 @@
 ---
 name: serena
-description: Serena MCPサーバーの操作ガイド。セマンティックコード検索、シンボル参照追跡、精密編集のMCPツール仕様とベストプラクティスを含む。「Serena」「serena」「シンボル検索」「コード構造分析」「セマンティック検索」「定義ジャンプ」「参照箇所」「影響範囲」「呼び出し元」「継承関係」と依頼された時に参照する。
+description: Serena MCPのセマンティックコード検索・精密編集ガイド。Use when「Serena」「シンボル検索」「コード構造分析」「参照箇所」。
 user-invocable: false
 ---
 

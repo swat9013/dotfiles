@@ -1,8 +1,6 @@
 ---
 name: doc-architect
-description: |
-  Diátaxisフレームワークに基づき、サービス利用者向けドキュメントの構造設計・作成を支援する。
-  「ドキュメント設計」「ドキュメント構成」「ドキュメント作成」「ドキュメント整理」「ドキュメント体系」「docs設計」「docs作成」「技術文書」「文書構成」「Wiki構造」「Diátaxis」と依頼された時に使用。
+description: Diátaxisフレームワークに基づくドキュメント構造設計・作成支援。Use when「ドキュメント設計」「docs作成」「文書構成」「Diátaxis」。
 disable-model-invocation: true
 ---
 

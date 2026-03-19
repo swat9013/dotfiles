@@ -32,8 +32,9 @@ paths: .claude-global/skills/**
 
 **フォーマット**: `Verb+what. Use when+trigger1, trigger2, or trigger3.`
 
-- **三人称で記述**（一人称・二人称は発見に問題を起こす）
-- 具体的なトリガーキーワードを含める
+- **130文字以下**に収める（budget効率: 42→60+スキル収容可能）
+- **三人称動詞で開始**（Analyzes, Generates等）。一人称（I analyze）・二人称（You can）は禁止
+- 「Use when」以降にトリガーキーワードを**3〜5個**列挙（過多は逆効果）
 - 曖昧な表現（「いろいろな」「便利な」）は避ける
 
 ## 呼び出し制御

@@ -1,6 +1,6 @@
 ---
 name: marimo
-description: marimo（リアクティブPythonノートブック）の操作ガイド。ファイル構造、セル編集パターン、リアクティブ設計、主要API、CLIコマンドを含む。「marimo」「マリモ」「リアクティブノートブック」「marimo edit」「marimo run」「marimoノートブック」と依頼された時に参照する。
+description: marimo（リアクティブPythonノートブック）操作ガイド。Use when「marimo」「リアクティブノートブック」「marimo edit」。
 user-invocable: false
 ---
 

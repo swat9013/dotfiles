@@ -1,8 +1,6 @@
 ---
 name: plan
-description: |-
-  コードベースを探索して実装計画を立案する軽量設計エージェント。
-  「/plan」「実装計画を立てて」「どう実装する？」「アプローチを考えて」「実装方針を検討して」「軽く設計して」と依頼された時に使用。
+description: コードベース探索から実装計画を立案する軽量設計エージェント。Use when「/plan」「実装計画」「どう実装する？」「アプローチを考えて」。
 argument-hint: "[実装したい機能や変更の概要]"
 disable-model-invocation: true
 denied-tools:

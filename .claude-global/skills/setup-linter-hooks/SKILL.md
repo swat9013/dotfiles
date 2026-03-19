@@ -1,6 +1,6 @@
 ---
 name: setup-linter-hooks
-description: プロジェクトに適したlinter/formatter hookを設定する。「lint設定」「linter hook」「formatter hook」「フォーマッタ設定」「コード整形hook」「hooks設定」「自動フォーマット」「pre-commit」「コードフォーマット」「保存時整形」「lint自動実行」と依頼された時に使用。プロジェクトの設定ファイルから自動検出してClaude Code hooks設定を生成。
+description: プロジェクトのlinter/formatterをClaude Code hooksに自動設定。Use when「lint設定」「hooks設定」「自動フォーマット」「pre-commit」。
 ---
 
 # Setup Linter Hooks

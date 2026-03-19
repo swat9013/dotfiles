@@ -1,9 +1,6 @@
 ---
 name: breakdown
-description: |-
-  設計書（.claude/plans/）から実装計画（.claude/implement/）を生成するタスク分解エージェント。
-  実装計画を実行可能なタスクリストに変換する。
-  「/breakdown」「ブレイクダウン」「タスク分解」「実装計画を作って」「実装計画ファイル生成」「タスクに分解」「実装タスク」と依頼された時に使用。
+description: 設計書から実装タスクリストを生成するタスク分解エージェント。Use when「/breakdown」「タスク分解」「実装計画を作って」。
 disable-model-invocation: true
 ---
 

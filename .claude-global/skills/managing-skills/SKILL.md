@@ -1,6 +1,6 @@
 ---
 name: managing-skills
-description: Claude Codeのスキルを設計・作成・更新する。frontmatter設計、Progressive Disclosure、自由度設定のガイダンスを提供。「スキルを作って」「スキルを変更」「スキルを更新」「新しいスキルを追加」と依頼された時に使用。
+description: Claude Codeスキルの設計・作成・更新ガイド。Use when「スキルを作って」「スキル更新」「新しいスキル追加」。
 user-invocable: false
 ---
 

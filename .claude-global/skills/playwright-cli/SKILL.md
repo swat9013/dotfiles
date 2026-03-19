@@ -1,6 +1,6 @@
 ---
 name: playwright-cli
-description: Playwright CLIのコマンドリファレンス。テスト実行、コード生成、デバッグ、レポート、インタラクティブブラウザ操作の方法を含む。「Playwright」「playwright test」「E2Eテスト実行」「テストコード生成」「codegen」「トレース」「playwright設定」「テストレポート」「ブラウザ操作」「UI確認」「スナップショット」と依頼された時に参照する。
+description: Playwright CLIコマンドリファレンス。Use when「Playwright」「E2Eテスト」「ブラウザ操作」「codegen」「テストレポート」。
 user-invocable: false
 ---
 

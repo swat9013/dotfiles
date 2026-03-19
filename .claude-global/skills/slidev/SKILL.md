@@ -1,9 +1,6 @@
 ---
 name: slidev
-description: |-
-  Slidev（Markdownベースプレゼンテーション）のスライド内容生成ガイド。
-  レイアウト・テーマ・アニメーション・コードハイライト・フォント設定の構文仕様を含む。
-  「Slidev」「スライド作成」「プレゼン作成」「sli.dev」と依頼された時に参照する。
+description: Slidev（Markdownプレゼンテーション）のスライド内容生成ガイド。Use when「Slidev」「スライド作成」「プレゼン作成」。
 user-invocable: false
 ---
 

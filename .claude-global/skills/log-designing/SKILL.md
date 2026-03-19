@@ -1,8 +1,6 @@
 ---
 name: log-designing
-description: >-
-  ログ設計の知識系スキル。構造化ログ・ログレベル・CLIパターンの設計判断基準を提供する。
-  「ログ設計」「構造化ログ」「ログ基盤」「ログレベル」「verbosity」と依頼された時に参照する。
+description: ログ設計の知識系スキル。構造化ログ・ログレベル・CLIパターンの設計判断基準を提供。Use when「ログ設計」「構造化ログ」「ログレベル」「verbosity」。
 user-invocable: false
 ---
 

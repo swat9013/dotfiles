@@ -1,6 +1,6 @@
 ---
 name: implement
-description: implementation.mdのタスクを並列実行。品質ゲート付きでPhase別に実行。「/implement」「タスク実行」「実装して」「実装開始」「実装を進めて」「タスクを実行して」「並列実装」「実装フェーズ」「タスク消化」と依頼された時に使用。
+description: implementation.mdのタスクを品質ゲート付きで並列実行。Use when「/implement」「タスク実行」「実装して」「実装開始」。
 ---
 
 # /implement コマンド

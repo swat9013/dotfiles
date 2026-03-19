@@ -1,6 +1,6 @@
 ---
 name: requirements
-description: ユーザー要件の整理と検証を担当。依頼内容を5W1Hで構造化し、成功基準・スコープを明確化してrequirements.mdを作成。「要件整理」「requirements」「何を作るべきか明確にして」「要件定義」「要求定義」「スコープ整理」「スコープ定義」「仕様を決めたい」「仕様整理」「何が必要か整理」「ユーザーストーリー」「ペルソナ定義」と依頼された時に使用。
+description: ユーザー要件を5W1Hで構造化しrequirements.mdを作成。Use when「要件整理」「requirements」「スコープ定義」「仕様整理」。
 disable-model-invocation: true
 ---
 

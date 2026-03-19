@@ -1,10 +1,6 @@
 ---
 name: review-fix
-description: |-
-  実装後のコードをOpusサブエージェント（コンテキスト分離）でレビューし、修正サブエージェントで自動修正するサイクル。
-  4観点（Architecture、Test Strategy、API Design、Behavior）で最大3サイクル。
-  「/review-fix」「レビュー修正」「実装後レビュー」「レビューフィックス」
-  「修正サイクル」と依頼された時に使用。
+description: 実装後コードをOpusレビュー＋自動修正する最大3サイクル。Use when「/review-fix」「レビュー修正」「実装後レビュー」。
 model: opus
 disable-model-invocation: true
 ---

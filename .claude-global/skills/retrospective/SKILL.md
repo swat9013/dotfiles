@@ -1,6 +1,6 @@
 ---
 name: retrospective
-description: セッション会話からドメイン知識を抽出し4層（CLAUDE.md/rules/skills/settings）に永続化する。「学びを保存」「知見を保存」「ドメイン知識更新」「振り返り」「retrospective」「reflect」「セッションから学ぶ」「CLAUDE.md更新」「プロジェクト知識」「コンテキスト記録」「今の学びを残して」と依頼された時に使用。
+description: セッション会話からドメイン知識を抽出し4層に永続化。Use when「学びを保存」「振り返り」「retrospective」「ドメイン知識更新」。
 disable-model-invocation: true
 argument-hint: "[--since=Nd] [--limit=N]"
 ---

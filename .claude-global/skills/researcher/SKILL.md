@@ -1,6 +1,6 @@
 ---
 name: researcher
-description: 技術調査を担当する専門エージェント。「調査して」「調べて」「リサーチして」「技術比較して」「技術選定」「ライブラリ比較」「ベストプラクティスを調べて」「最新動向」と依頼された時に使用。
+description: 技術調査を担当する専門エージェント。Use when「調査して」「リサーチして」「技術比較」「ベストプラクティスを調べて」。
 allowed-tools: WebSearch, WebFetch
 disable-model-invocation: true
 ---

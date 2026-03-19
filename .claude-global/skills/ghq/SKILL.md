@@ -1,6 +1,6 @@
 ---
 name: ghq
-description: ghqによるリポジトリ管理のガイド。コマンド仕様、ローカルリポジトリ取り込み手順を含む。「ghq」「ghq get」「ghq list」「リポジトリ管理」「リポジトリをクローン」「リポジトリ取得」「リポジトリ一覧」と依頼された時に参照する。
+description: ghqによるリポジトリ管理ガイド。Use when「ghq」「リポジトリ管理」「リポジトリ取得」「リポジトリ一覧」。
 user-invocable: false
 ---
 
