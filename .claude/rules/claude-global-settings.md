@@ -117,10 +117,16 @@ hook type と使い分け:
 
 ## Bashパーミッション構文
 
-- 引数ワイルドカードは**スペース + `*`** を使う: `"Bash(git diff *)"`
-- `:*` は非推奨。リテラルのコロンとして扱われマッチしない
-- `Bash(cmd *)` は `cmd foo` にマッチ、`Bash(cmd*)` は `cmdfoo` にもマッチ（語境界注意）
-- ディレクトリ内スクリプト全許可: `"Bash(./scripts/dir/* *)"` （`/*` でファイル名、` *` で引数）
+ルールタイプは2種類のみ。グロブ（`*`、`**`）は機能しない。
+
+| 形式 | タイプ | マッチ条件 |
+|------|--------|-----------|
+| `Bash(git:*)` | prefix | `git`、`git status`、`git diff HEAD` など |
+| `Bash(git status)` | exact | `git status` のみ（完全一致） |
+
+- **prefix形式**: `cmd:*` → `cmd` 単独 OR `cmd ` で始まる全コマンド
+- **exact形式**: `cmd foo` → 文字列 `cmd foo` との完全一致のみ（`*` はリテラル）
+- スクリプトファイル許可: `"Bash(~/.dotfiles/scripts/foo.sh:*)"` で引数あり/なし両対応
 
 ## セキュリティ
 

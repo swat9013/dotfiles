@@ -24,19 +24,18 @@
 
 ## Bashパーミッション構文
 
-引数ワイルドカードは**スペース + `*`** を使う。`:*` は非推奨（リテラルのコロンとして扱われマッチしない）。
+ルールタイプは**2種類のみ**。グロブ（`*`、`**`）は機能しない。
 
-| パターン | マッチする | マッチしない |
-|---------|-----------|-------------|
-| `Bash(git diff *)` | `git diff HEAD` | `git diffstat` |
-| `Bash(git diff)` | `git diff`（完全一致のみ） | `git diff HEAD` |
-| `Bash(./scripts/dir/* *)` | `./scripts/dir/foo.sh arg1` | `./scripts/dir/`（引数なし） |
-| `Bash(npm run *)` | `npm run build`, `npm run test` | `npm install` |
+| パターン | タイプ | マッチする | マッチしない |
+|---------|--------|-----------|-------------|
+| `Bash(git:*)` | prefix | `git`, `git status`, `git diff HEAD` | （なし） |
+| `Bash(git diff:*)` | prefix | `git diff`, `git diff HEAD~1` | `git status` |
+| `Bash(git status)` | exact | `git status` のみ | `git status -s` |
+| `Bash(git diff *)` | exact | 文字通り `git diff *` のみ | `git diff HEAD` |
 
-注意点:
-- `Bash(cmd *)` — スペース区切りで `cmd foo` にマッチ
-- `Bash(cmd*)` — スペースなしで `cmdfoo` にもマッチ（語境界注意）
-- ディレクトリ内スクリプト全許可: `"Bash(./scripts/dir/* *)"` （`/*` でファイル名、` *` で引数）
+- **prefix形式 `cmd:*`**: `cmd` 単独 OR `cmd ` で始まる全コマンドにマッチ
+- **exact形式**: `*` を含んでいてもリテラル文字列との完全一致のみ（ワイルドカードではない）
+- スクリプトファイル許可: `"Bash(~/.dotfiles/scripts/foo.sh:*)"` で引数あり/なし両対応
 
 ## セキュリティ
 
