@@ -32,10 +32,13 @@ paths: lib/**
 | `sheldon/` | `~/.config/sheldon` |
 | `starship/` | `~/.config/starship` |
 | `ghostty/` | `~/.config/ghostty` |
+| `zsh-abbr/` | `~/.config/zsh-abbr` |
 | `colima/colima.yaml` | `~/.colima/default/colima.yaml` |
 | `.claude-global/settings.json` | `~/.claude/settings.json` |
 | `.claude-global/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `.claude-global/skills/` | `~/.claude/skills/` |
+| `zed/settings.json` | `~/.config/zed/settings.json` |
+| `zed/keymap.json` | `~/.config/zed/keymap.json` |
 
 ## スクリプト一覧
 

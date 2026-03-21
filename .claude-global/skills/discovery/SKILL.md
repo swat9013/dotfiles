@@ -6,7 +6,7 @@ disable-model-invocation: false
 
 # Discovery (壁打ちツール)
 
-問題分析の対話的な補助ツール。ワークフローには組み込まれない独立スキル。
+問題分析の対話的補助ツール。問題を整理・分解し、次のアクションへ接続する。
 
 ## 対話の進め方
 
@@ -60,9 +60,8 @@ disable-model-invocation: false
 
 | 状況 | 提案 |
 |------|------|
-| 要件が不明確 | `/requirements` で要件定義 |
 | 技術調査が必要 | `/researcher` で調査 |
-| 問題と目的が明確 | `/architect` で設計 |
+| 問題と目的が明確（デフォルト） | `/architect` で設計 |
 
 引き継ぐべき情報: 根本原因、分解した問題リスト、優先順位
 
@@ -70,9 +69,7 @@ disable-model-invocation: false
 
 `templates/discovery.md` を使用して `.claude/discovery/YYYY-MM-DD-HHMMSS-{topic}.md` に保存する。
 - `{topic}`: 対話で明確になった問題のkebab-caseスラッグ
-- ファイル書き出し前に:
-  1. `mkdir -p .claude/discovery/` を実行
-  2. `.claude/discovery/.gitignore` に `*` を書き込む（Write tool）
+- ファイル書き出し前に: `~/.dotfiles/.claude-global/claude-output-init.sh discovery` を実行
 
 ---
 

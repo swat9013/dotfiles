@@ -1,0 +1,21 @@
+{
+  "theme": {
+    "mode": "system",
+    "dark": "Tokyo Night",
+    "light": "Tokyo Night Light"
+  },
+  "buffer_font_family": "PlemolJP35",
+  "buffer_font_size": 12,
+  "tab_size": 2,
+  "hard_tabs": false,
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
+  "autosave": "on_focus_change",
+  "format_on_save": "off",
+  "cursor_blink": false,
+  "restore_on_startup": "last_session",
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  }
+}

@@ -5,9 +5,7 @@
 #
 alias grep='grep --color=auto'
 alias ps-grep="ps aux | grep"
-alias relogin='exec $SHELL -l'
 alias sed-filename='(){find ./ -type f | sed \"p;s/$1/$2/\" | xargs -n2 mv}'
-alias tf='tail -f'
 
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then
@@ -24,7 +22,6 @@ fi
 #
 # editor
 #
-alias c='code'
 alias emacs-kill='emacsclient -e "(kill-emacs)"'
 alias emacs-kill-force='pkill -9 emacs'
 
@@ -51,7 +48,6 @@ alias sshdir='cd ~/.ssh'
 #
 # tmux
 #
-alias tm="tmux"
 alias tmksr="tmux kill-server"
 alias tmkss="tmux kill-session"
 alias ide="~/.dotfiles/lib/ide.sh"
@@ -59,7 +55,6 @@ alias ide="~/.dotfiles/lib/ide.sh"
 #
 # zellij
 #
-alias zj="zellij"
 alias zja="zellij attach"
 alias zjls="zellij list-sessions"
 alias zjk="zellij kill-session"
@@ -69,7 +64,6 @@ alias zjide="zellij --layout ide"
 #
 # git
 #
-alias g='git'
 alias -g L='`git log --decorate --oneline | fzf | cut -d" " -f1`'
 alias -g LA='`git log --decorate --oneline --all | fzf | cut -d" " -f1`'
 alias -g R='`git reflog | fzf | cut -d" " -f1`'
@@ -87,7 +81,6 @@ alias lc='ls -ltcr'        # Sort by and show change time, most recent last
 alias ld='ls -ld'          # Show info about the directory
 alias less="less -qnR"
 alias lk='ls -lShr'         # Sort by size, biggest last
-alias ll='ls -lF'          # Show long file information
 alias lla='ls -lAF'        # Show hidden all files
 
 #

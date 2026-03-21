@@ -135,7 +135,6 @@ agent: true
 | review-fix | 「/review-fix」「レビュー修正」「実装後レビュー」 |
 | codex-code-review | 「codexレビュー」「アーキテクチャレビュー」 |
 | refactor | 「リファクタリング」「コード改善」 |
-| requirements | 「要件整理」「requirements」 |
 | researcher | 「調査して」「リサーチして」 |
 | troubleshooting | 「デバッグ」「バグ調査」 |
 | critical-think | 「批判的に見て」「自己レビュー」 |

@@ -1,0 +1,7 @@
+abbr c="code"
+abbr g="git"
+abbr ll="ls -lF"
+abbr relogin="exec $SHELL -l"
+abbr tf="tail -f"
+abbr tm="tmux"
+abbr zj="zellij"

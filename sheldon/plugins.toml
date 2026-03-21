@@ -21,6 +21,10 @@ github = "ohmyzsh/ohmyzsh"
 dir = "lib"
 use = ["{completion,directories}.zsh"]
 
+[plugins.zsh-abbr]
+github = "olets/zsh-abbr"
+apply = ["source"]
+
 # [plugins.asdf]
 # github = "asdf-vm/asdf"
 # apply = ["source"]

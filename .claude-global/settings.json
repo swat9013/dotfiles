@@ -77,7 +77,13 @@
       "Bash(~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/scripts/review-skills.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/managing-skills/scripts/init_skill.sh:*)",
-      "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)"
+      "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
+      "Bash(~/.dotfiles/.claude-global/claude-output-init.sh:*)",
+      "Write(.claude/discovery/**)",
+      "Write(.claude/plans/**)",
+      "Write(.claude/research/**)",
+      "Write(.claude/review/**)",
+      "Write(.claude/implement/**)"
     ],
     "deny": [
       "NotebookEdit",
@@ -128,7 +134,6 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {

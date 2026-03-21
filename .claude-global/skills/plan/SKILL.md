@@ -143,11 +143,8 @@ Task tool:
 ### Phase 4: plan file 書き出し
 
 #### 準備
-```bash
-mkdir -p .claude/plans/
-```
 
-`.claude/plans/.gitignore` が存在しない場合のみ作成（内容: `*`）。
+`~/.dotfiles/.claude-global/claude-output-init.sh plans` を実行。
 
 #### 保存先
 

@@ -57,34 +57,33 @@ TaskUpdate({ taskId: "Phase3のID", addBlockedBy: ["Phase2のID"] })
 TaskUpdate({ taskId: "Phase0のID", status: "in_progress" })
 ```
 
-#### Step 1: requirements.md の確認
+#### Step 1: discovery.md の確認
 
-requirements.md が存在するか確認する。
+`.claude/discovery/` 配下の最新ファイルが存在するか確認する（最新 = Glob後に名前降順ソートで先頭）。
 
 **存在する場合** → Step 2（品質チェック）へ
 
 **存在しない場合** → 代替ソースからコンテキスト収集:
 
-1. ユーザーに通知: 「requirements.md がありません。代替ソースからコンテキストを収集して進行します。より精度の高い設計には `/requirements` での要件整理を推奨します」
+1. ユーザーに通知: 「discovery.md がありません。代替ソースからコンテキストを収集して進行します。より精度の高い設計には `/discovery` での問題整理を推奨します」
 2. 以下から設計コンテキストを収集:
    - `$ARGUMENTS`（設計対象の概要）
    - CLAUDE.md（設計原則・プロジェクト方針）
    - README.md（プロジェクト概要）
-   - `.claude/discovery/` 最新ファイル（存在すれば問題定義・根本原因）※最新 = Glob後に名前降順ソートで先頭
 3. 収集した情報で Phase 1 へ進む
 
-#### Step 2: requirements.md の品質チェック
+#### Step 2: discovery.md の品質チェック
 
-requirements.md を読み込み、以下をチェック:
+`.claude/discovery/` 最新ファイルを読み込み、以下をチェック:
 
-- [ ] **背景・目的**が記述されているか?
+- [ ] **背景・目的**（What セクション）が記述されているか?
 - [ ] **成功基準**が測定可能な形式で記述されているか?
+  - 測定可能性・検証可能性・具体性の3観点で確認
   - 「速い」「使いやすい」などの曖昧な表現ではなく、数値・状態で表現されているか
-- [ ] **ペルソナ**が定義されているか?（最低1個）
-- [ ] **ユーザーストーリー**が具体的に記述されているか?
+- [ ] **ペルソナ**（Who セクション）が定義されているか?（最低1個）
 
 **品質が低い場合**:
-- 不足項目をリストアップし `/requirements` での見直しを提案
+- 不足項目をリストアップし `/discovery` での補完を提案
 - architect の実行を一時停止
 
 **品質が十分な場合**:
@@ -126,7 +125,7 @@ Task tool:
     - ディレクトリ構成と各ディレクトリの役割
     - 主要コンポーネントの依存関係（import/require を追跡）
     - データフローの把握（入力→処理→出力）
-    - 既存の設計ドキュメント（`.claude/discovery/` 最新ファイル、requirements.md、`.claude/research/` 最新ファイル、docs/）
+    - 既存の設計ドキュメント（`.claude/discovery/` 最新ファイル、`.claude/research/` 最新ファイル、docs/）
 
     **除外**: テストコードの詳細、コードスタイルの問題
 
@@ -376,8 +375,8 @@ TaskUpdate({ taskId: "Phase3のID", status: "in_progress" })
 
 設計書には以下を含める:
 - **背景・目的**（DRY原則）:
-  - requirements.md が存在する場合: 「背景・目的は requirements.md 参照」と記載
-  - requirements.md がない場合: plan.md に直接記述
+  - `.claude/discovery/` 最新ファイルが存在する場合: 「背景・目的は .claude/discovery/[ファイル名] 参照」と記載
+  - discovery.md がない場合: plan.md に直接記述
 - 現状分析
 - 設計提案（選択肢とトレードオフ）
 - 実装方針（フェーズ分け）
@@ -385,9 +384,7 @@ TaskUpdate({ taskId: "Phase3のID", status: "in_progress" })
 
 **保存先**: `.claude/plans/YYYY-MM-DD-HHMMSS-{topic}.md`
 - `{topic}`: $ARGUMENTS からkebab-caseで生成（例: `auth-redesign`）
-- ファイル書き出し前に:
-  1. `mkdir -p .claude/plans/` を実行
-  2. `.claude/plans/.gitignore` に `*` を書き込む（Write tool）
+- ファイル書き出し前に: `~/.dotfiles/.claude-global/claude-output-init.sh plans` を実行
 
 **テンプレート**: `~/.claude/skills/architect/templates/plan.md`
 
@@ -397,44 +394,27 @@ TaskUpdate({ taskId: "Phase3のID", status: "in_progress" })
 
 ### Phase 3.5: 品質検証
 
-plan.md 作成後、Explore エージェント（sonnet）で自動品質検証を実行:
+plan.md 作成後、opus サブエージェント（Task tool, `model: opus`）に品質検証を委譲。生成バイアスを排除するためコンテキスト分離で実行。
 
-```
-Task tool:
-- subagent_type: Explore
-- model: sonnet
-- prompt: |
-    ## ロール
-    あなたは設計書の品質検証レビュアーです。
-    作成された plan.md が実装可能な品質を満たしているか検証します。
+**サブエージェントへの入力**:
+- 生成した plan.md の全文
+- 元の discovery.md の全文（`.claude/discovery/` 最新ファイル、存在する場合）
+- レビュー観点の指示（下記7カテゴリ）
 
-    ## フォーカス範囲
-    `.claude/plans/` を Glob し名前降順で先頭ファイルを読み込み、以下のチェックリストで検証する。
+**レビュー観点**: `~/.claude/skills/architect/references/review-criteria.md` の7カテゴリ
+1. 設計原則の遵守 — booleanパラメータ、不要な後方互換性、過剰な将来設計
+2. セクション完全性 — プレースホルダー残存、NEEDS CLARIFICATION 過多
+3. 成功基準の具体性 — 主観的表現のみ、検証不可能な基準
+4. 選択肢とトレードオフ — 比較対象なし、リスク評価の均一化
+5. 実装フェーズの妥当性 — 推定時間、リスク順序、git revert 粒度
+6. アーキテクチャ図の品質 — 図の有無、可読性、関心の混在
+7. 参照の正確性 — ファイルパス実在確認、コンポーネント存在確認
 
-    ## チェックリスト
-    - [ ] 全セクションが記入済み（プレースホルダー残存なし）
-    - [ ] 成功基準が測定可能（数値・状態で表現されている）
-    - [ ] `[NEEDS CLARIFICATION]` が3箇所以内
-    - [ ] 推奨案と選定理由が明記されている
-    - [ ] 参照ファイルパスが実在する（Glob で確認）
-    - [ ] 各フェーズに推定時間が記載されている
-    - [ ] アーキテクチャ図（Mermaid等）が含まれている
-    - [ ] booleanパラメータ・モード切替フラグが設計に含まれていない
-    - [ ] 明示的に要求されていない後方互換性・フォールバック・フィーチャーフラグがない
-    - [ ] 「将来のため」の拡張ポイント・抽象化が含まれていない
+**出力形式**: 前提テーブル（セクション数/選択肢数/フェーズ数/NEEDS CLARIFICATION数）→ 問題点（番号付き、重要度 高/中/低 + カテゴリ）→ 良い点 → 修正推奨テーブル（#/重要度/対応）
 
-    ## 出力形式
-    ### 検証結果: [合格 / 要修正]
-
-    ### チェックリスト結果
-    | 項目 | 結果 | 備考 |
-    |------|------|------|
-
-    ### 修正が必要な箇所（要修正の場合のみ）
-    - [ファイル内の位置]: [問題の説明] → [修正案]
-```
-
-**結果が「要修正」の場合**: 指摘箇所を修正してからフィードバックループへ。
+**レビュー後のフロー**:
+1. レビュー結果をユーザーに表示
+2. 全修正を Edit で plan.md に適用
 
 ```
 TaskUpdate({ taskId: "Phase3のID", status: "completed" })
@@ -443,9 +423,10 @@ TaskUpdate({ taskId: "Phase3のID", status: "completed" })
 ### フィードバックループ
 
 1. plan.md を作成
-2. ユーザーレビューを依頼
-3. フィードバックがあれば修正
-4. 承認されるまで繰り返し
+2. Phase 3.5 のレビュー結果に基づき修正
+3. ユーザーレビューを依頼
+4. フィードバックがあれば修正
+5. 承認されるまで繰り返し
 
 ## 注意事項
 

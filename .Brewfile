@@ -77,6 +77,7 @@ cask "obs"
 # cask "temurin"
 cask "utm"
 cask "xquartz"
+cask "zed"
 
 # VS Code extensions
 vscode "3w36zj6.textlint"

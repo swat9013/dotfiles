@@ -60,9 +60,7 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 
 **保存先**: `.claude/implement/YYYY-MM-DD-HHMMSS-{topic}.md`
 - `{topic}`: planのタイトルまたは $ARGUMENTS からkebab-caseで生成
-- ファイル書き出し前に:
-  1. `mkdir -p .claude/implement/` を実行
-  2. `.claude/implement/.gitignore` に `*` を書き込む（Write tool）
+- ファイル書き出し前に: `~/.dotfiles/.claude-global/claude-output-init.sh implement` を実行
 
 テンプレート: `~/.claude/skills/breakdown/templates/implementation.md`
 
@@ -90,10 +88,7 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 
 **レビュー後のフロー**:
 1. レビュー結果をユーザーに表示
-2. AskUserQuestion で修正適用の可否を確認（はい / いいえ / 一部適用）
-3. 「はい」→ 全修正を Edit で implementation.md に適用
-4. 「一部適用」→ 適用する修正番号を確認し、選択分のみ適用
-5. 「いいえ」→ 修正せず完了
+2. 全修正を Edit で implementation.md に適用
 
 ## 依存表記ルール
 
@@ -125,16 +120,7 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 **並列実行可能**: X個（Pマーク付き）
 ```
 
-レビュー結果を表示後、修正適用の確認ダイアログ:
-
-```
-修正を適用しますか？
-- はい（全修正を適用）
-- いいえ（修正せず完了）
-- 一部適用（適用する修正を選択）
-```
-
-修正完了（または修正なし）後:
+修正完了後:
 
 ```
 **次のステップ**:

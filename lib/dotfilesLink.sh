@@ -52,6 +52,12 @@ if [ ! -e "$HOME"/.config/zellij ]; then
     ln -snfv "$HOME"/.dotfiles/zellij "$HOME"/.config/zellij
 fi
 
+# zsh-abbr設定
+if [ ! -e "$HOME"/.config/zsh-abbr ]; then
+    mkdir -p "$HOME"/.config
+    ln -snfv "$HOME"/.dotfiles/zsh-abbr "$HOME"/.config/zsh-abbr
+fi
+
 # Claude Code global settings
 mkdir -p "$HOME"/.claude
 ln -snfv "$HOME"/.dotfiles/.claude-global/settings.json "$HOME"/.claude/settings.json
@@ -79,3 +85,8 @@ if [ -d "$VSCODE_USER" ]; then
     ln -snfv "$HOME/.dotfiles/vscode/settings.json" "$VSCODE_USER/settings.json"
     ln -snfv "$HOME/.dotfiles/vscode/keybindings.json" "$VSCODE_USER/keybindings.json"
 fi
+
+# Zed設定
+mkdir -p "$HOME"/.config/zed
+ln -snfv "$HOME"/.dotfiles/zed/settings.json "$HOME"/.config/zed/settings.json
+ln -snfv "$HOME"/.dotfiles/zed/keymap.json "$HOME"/.config/zed/keymap.json
