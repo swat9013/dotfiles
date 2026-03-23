@@ -107,8 +107,9 @@ zle -N cdup
 bindkey '^^' cdup
 
 ## Enter押下時の情報表示（accept-lineラップ方式）
+## Claude Code内では無効化（ノイズ抑制）
 function custom_accept_line() {
-    if [[ -z "$BUFFER" ]]; then
+    if [[ -z "$BUFFER" && -z "$CLAUDE_CODE" ]]; then
         # 空行の場合、マーカーをセット
         EMPTY_LINE_ENTER=1
     else

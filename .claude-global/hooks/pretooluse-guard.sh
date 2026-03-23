@@ -11,11 +11,22 @@ deny() {
 
 if [ "$TOOL" = "Bash" ]; then
   # 改行を含むコマンドは禁止
-  if printf '%s' "$COMMAND" | grep -qP '\n'; then
+  LINECOUNT=$(printf '%s' "$COMMAND" | wc -l | tr -d ' ')
+  if [ "$LINECOUNT" -gt 0 ]; then
     deny "改行を含むコマンドは禁止。&&チェーンまたは複数のBash呼び出しに分割してください"
   fi
 
-  # A: rm 禁止（rmtrash使用を強制）
+  # A: bash/sh 実行制御（-n は shellcheck に差し替え、それ以外は deny）
+  if echo "$COMMAND" | grep -qE '^(bash|sh)( |$)'; then
+    if echo "$COMMAND" | grep -qE '^(bash|sh) -n [^ ]+$'; then
+      FILE=$(echo "$COMMAND" | sed -E 's/^(bash|sh) -n //')
+      printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow","updatedInput":{"command":"shellcheck %s"}}}\n' "$FILE"
+      exit 0
+    fi
+    deny "bash/shの直接実行は禁止。構文チェックにはshellcheckを使用してください"
+  fi
+
+  # B: rm 禁止（rmtrash使用を強制）
   if echo "$COMMAND" | grep -qE '^rm( |$)'; then
     deny "rmは使用禁止。rmtrash（ファイル）またはrmtrash -r（ディレクトリ）を使用してください"
   fi

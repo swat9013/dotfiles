@@ -79,6 +79,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/managing-skills/scripts/init_skill.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
       "Bash(~/.dotfiles/.claude-global/claude-output-init.sh:*)",
+      "Bash(shellcheck:*)",
       "Write(.claude/discovery/**)",
       "Write(.claude/plans/**)",
       "Write(.claude/research/**)",
@@ -88,8 +89,7 @@
     "deny": [
       "NotebookEdit",
       "NotebookRead",
-      "Bash(bash:*)",
-      "Bash(sh:*)",
+      "Bash(zsh:*)",
       "Bash(git add .:*)",
       "Bash(git add -A:*)",
       "Bash(git add --all:*)",

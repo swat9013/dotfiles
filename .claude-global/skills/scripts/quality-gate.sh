@@ -74,7 +74,7 @@ detect_node_commands() {
 detect_python_commands() {
   if [[ -z "$LINT_CMD" ]]; then
     if grep -q '\[tool\.ruff\]' pyproject.toml 2>/dev/null; then
-      LINT_CMD="ruff check ."
+      LINT_CMD="uv run ruff check ."
     elif grep -q '\[tool\.flake8\]' pyproject.toml 2>/dev/null || [[ -f ".flake8" ]]; then
       LINT_CMD="flake8 ."
     fi

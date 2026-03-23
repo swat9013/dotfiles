@@ -38,7 +38,7 @@ plan.md (What/Why) → implementation.md (How) → TaskCreate (Status)
 |------|------|--------|
 | **自身で行う** | implementation.md読込、タスク分析、TaskCreate登録、進捗監視、報告 | Read, TaskCreate, TaskUpdate, TaskList, TaskGet, 出力 |
 | **スクリプト実行** | テスト実行、Lint、ビルド（品質ゲート） | Bash tool（quality-gate.sh） |
-| **サブエージェント委譲** | 実装、修正 | Task tool |
+| **サブエージェント委譲** | 実装、修正、レビュー | Task tool |
 | **スキル委譲** | 複雑なサブワークフロー | Skill tool |
 
 ## 前提条件
@@ -217,6 +217,112 @@ TaskUpdate(taskId, status: "in_progress")  # 開始前
 - 並列実行可能タスク: X件
 ```
 
+### 7. 最終レビューサイクル（最大3回）
+
+全Phaseの品質ゲート通過後、コードレビュー・修正サイクルを実行する。
+
+#### 7.1 対象ファイル特定（スクリプト実行）
+
+```bash
+~/.dotfiles/.claude-global/skills/scripts/changed-files.sh
+```
+
+`RESULT` 判定: `NO_CHANGES` / `CONFIG_ONLY` → スキップしStep 8へ。`TOO_LARGE` → 20ファイルずつバッチ。
+
+#### 7.2 レビュー・修正サイクル
+
+```
+レビュー(opus) → issue判定 → 修正(sonnet) → 品質ゲート → 次サイクル or Step 8
+```
+
+**レビュー（サブエージェント委譲・opus）**:
+
+```
+Task tool
+
+subagent_type: general-purpose
+model: opus
+prompt: |
+  あなたはコードレビューの専門家です。
+
+  ## レビュー対象ファイル
+  ${対象ファイルパスのリスト}
+
+  ## レビュー観点（4観点）
+  ${_shared/review-criteria.md の内容を展開}
+
+  ## 高信号フィルタ
+
+  フラグすべき:
+  - コンパイル/パースエラー、型エラー
+  - 明確なロジックエラー
+  - セキュリティ脆弱性（SQLインジェクション、XSS等）
+  - CLAUDE.md/rules違反（引用可能なもの）
+  - テスト不足（重要パスのカバレッジ欠落）
+  - テストファースト違反（新規公開API/関数にテスト未作成）
+  - API契約違反（戻り値型の不整合等）
+
+  フラグしない:
+  - コードスタイル（Linter管轄）
+  - 潜在的問題（入力依存の仮定）
+  - 既存コードの問題（新規導入ではない）
+  - 命名の好み
+
+  ## 出力形式
+
+  各issueを以下の形式で出力:
+
+  issue_id: REVIEW-${cycle}-{sequential}
+  file: パス
+  line: 行番号
+  dimension: architecture | test_strategy | api_design | behavior
+  problem: 問題の1行要約
+  suggestion: 修正案
+
+  issueがない場合は「指摘なし」とだけ出力。
+```
+
+**issue判定（自身で実行）**:
+- issueなし → Step 8 へ
+- 前サイクルと同一issue（file+line一致） → `[RECURRING]` マーク、修正対象外
+- issueあり → 修正へ
+
+**修正（サブエージェント委譲・sonnet）**:
+
+異なるファイルへの修正は単一メッセージで並列起動（最大7）:
+
+```
+Task tool × N
+
+subagent_type: general-purpose
+model: sonnet
+prompt: |
+  あなたはコード修正の専門家です。
+
+  ## 修正対象
+  ファイル: ${file}
+
+  ## issue一覧（このファイル分）
+  ${該当ファイルのissue群}
+
+  ## 指示
+  1. 該当箇所を特定し修正を実施
+  2. 周辺コードとの整合性を確認
+  3. 変更内容をissue_idごとに報告
+
+  修正後、既存のテストを破壊しないこと。
+```
+
+**品質ゲート**: quality-gate.sh 実行。FAIL → 修正サブエージェント起動後にサイクル先頭へ。
+
+**最大3サイクル到達**: 残存issueを報告しStep 8 へ。
+
+### 8. レビュー結果ファイル書き出し
+
+レビューサイクルを実行した場合、結果を `.claude/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
+- 書き出し前に: `~/.dotfiles/.claude-global/claude-output-init.sh review` を実行
+- `{topic}`: 変更ファイル群から推定したkebab-caseスラッグ
+
 ## タスク種別とサブエージェントのロール
 
 タスク種別に応じて、サブエージェントにロール・原則を付与する。
@@ -238,12 +344,14 @@ TaskUpdate(taskId, status: "in_progress")  # 開始前
 
 1. TaskList で全タスクが completed ステータスになっている
 2. 全 Phase の品質ゲートをクリアしている
-3. implementation.md に記載された成功基準を満たしている
+3. 最終レビューサイクルを完了している（issueゼロ or 最大3サイクル到達）
+4. implementation.md に記載された成功基準を満たしている
 
 ## 完了チェックリスト
 
 - [ ] 全Phaseのタスクが completed（TaskList で確認）
 - [ ] 全品質ゲートをクリア
+- [ ] 最終レビューサイクル完了（レビュー結果ファイル書き出し済み）
 - [ ] implementation.md の成功基準を満たしている
 
 ## Gotchas
@@ -261,8 +369,12 @@ TaskUpdate(taskId, status: "in_progress")  # 開始前
 
 **完了タスク**: X個
 **品質ゲート**: 全クリア
+**レビュー**: issueゼロ（Y回サイクル） / X件残存（3回上限到達）
+
+**残存issue**（ある場合）:
+- `file.ts:42` - [問題の簡潔な説明]
+- `file.ts:88` - [RECURRING] [問題の簡潔な説明]
 
 **次のステップ**:
-- /review-fix でコードレビュー
 - PR作成
 ```

@@ -62,7 +62,7 @@ prompt: |
   ${対象ファイルパスのリスト}
 
   ## レビュー観点（4観点）
-  ${references/review-criteria.md の内容を展開}
+  ${_shared/review-criteria.md の内容を展開}
 
   ## 高信号フィルタ
 
