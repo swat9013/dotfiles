@@ -111,8 +111,38 @@
       "Read(**/.pypirc)",
       "Read(**/secrets/**)",
       "Read(**/private/**)",
+      "Write(./.env)",
+      "Write(./.env.*)",
+      "Write(**/.env)",
+      "Write(**/.env.*)",
+      "Write(**/*.key)",
+      "Write(**/*.pem)",
+      "Write(**/*.p12)",
+      "Write(**/*.pfx)",
+      "Write(**/*.crt)",
+      "Write(**/credentials)",
+      "Write(**/.netrc)",
+      "Write(**/secrets/**)",
+      "Write(**/private/**)",
+      "Edit(./.env)",
+      "Edit(./.env.*)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
+      "Edit(**/*.key)",
+      "Edit(**/*.pem)",
+      "Edit(**/*.p12)",
+      "Edit(**/*.pfx)",
+      "Edit(**/*.crt)",
+      "Edit(**/credentials)",
+      "Edit(**/.netrc)",
+      "Edit(**/secrets/**)",
+      "Edit(**/private/**)",
       "Bash(wget:*)",
-      "Bash(rm -rf:*)",
+      "Bash(rm:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)",
+      "Bash(git clean --force:*)",
+      "Bash(git checkout --:*)",
       "Bash(sudo:*)",
       "Bash(chmod 777:*)",
       "Bash(ssh:*)",
@@ -120,13 +150,9 @@
     ],
     "ask": [
       "Bash(curl:*)",
-      "Bash(git push:*)",
       "Bash(git merge:*)",
       "Bash(git rebase:*)",
       "Bash(git reset:*)",
-      "Bash(git checkout --:*)",
-      "Bash(git restore:*)",
-      "Bash(rm:*)",
       "Bash(rmtrash:*)",
       "Bash(brew install:*)",
       "Bash(npm publish:*)",
@@ -135,6 +161,17 @@
     "defaultMode": "default"
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/pretooluse-guard.sh"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [

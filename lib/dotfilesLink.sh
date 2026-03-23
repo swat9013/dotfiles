@@ -53,8 +53,9 @@ if [ ! -e "$HOME"/.config/zellij ]; then
 fi
 
 # zsh-abbr設定
-if [ ! -e "$HOME"/.config/zsh-abbr ]; then
+if [ ! -L "$HOME"/.config/zsh-abbr ]; then
     mkdir -p "$HOME"/.config
+    rm -rf "$HOME"/.config/zsh-abbr
     ln -snfv "$HOME"/.dotfiles/zsh-abbr "$HOME"/.config/zsh-abbr
 fi
 

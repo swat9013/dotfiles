@@ -29,7 +29,7 @@ paths: .claude-global/**
 | 動作設定 | `settings.json` | permissions、hooks登録、UI、MCP |
 | 行動指針 | `CLAUDE.md` | コーディング哲学、環境制約 |
 | ガイドライン | `rules/` | パス固有のルール |
-| 自動処理 | `hooks/` | イベント駆動実行（SessionStart, PreToolUse, PostToolUse, Stop 等） |
+| 自動処理 | `hooks/` | イベント駆動実行。PreToolUseガード（第1層防御）+ permissions.deny（第2層フォールバック）の二層構造 |
 | ワークフロー | `skills/` | 対話的タスク定義（サブエージェント呼び出し含む） |
 | 動的情報 | `*.sh` | 状態取得スクリプト |
 

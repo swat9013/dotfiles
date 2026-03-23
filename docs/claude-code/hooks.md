@@ -320,6 +320,36 @@ fi
 exit 0
 ```
 
+### AI自律性向上パターン（PreToolUse ガード）
+
+permissions.ask/deny の静的マッチングでは対応できない条件分岐ロジックを
+PreToolUse フックで実現する。単一スクリプトに集約して保守性を確保:
+
+| パターン | 対象ツール | 動作 |
+|---------|----------|------|
+| 改行コマンド禁止 | Bash | 改行を含むコマンドを deny。`&&`チェーンまたは複数Bash呼び出しに分割 |
+| rm 禁止 | Bash | `rm` コマンドを deny。rmtrash 使用を強制 |
+| 破壊的 git 禁止 | Bash | `reset --hard`, `checkout --`, `restore`(staged除外), `clean -f` を deny |
+| git push 条件分岐 | Bash | force push → deny、main/master → deny、feature ブランチ → allow |
+| 機密ファイル Write 禁止 | Write/Edit | .env, .key, .pem 等への書き込みを deny |
+
+**二層防御アーキテクチャ**:
+
+| 層 | 仕組み | 役割 |
+|----|--------|------|
+| 第1層 | PreToolUse フック（`pretooluse-guard.sh`） | 動的条件分岐（ブランチ判定等）、メイン防御 |
+| 第2層 | `permissions.deny`（settings.json） | 静的マッチング、フック障害時のフォールバック |
+
+フックがカバーする全パターンは `permissions.deny` にも静的ルールとして登録し、フック未実行時でも安全性を保証する。
+
+ポイント:
+- `hookSpecificOutput` 形式で deny/allow を返す（推奨形式）
+- ブランチ判定は `git branch --show-current` で動的に取得（コマンド文字列パースより確実）
+- `git restore --staged` は非破壊的操作のため除外
+- `--force-with-lease` は安全なforce pushとして許容
+
+実装: `.claude-global/hooks/pretooluse-guard.sh`
+
 ### SubagentStart hookでのコンテキスト注入
 
 ```json
