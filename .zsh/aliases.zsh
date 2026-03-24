@@ -143,6 +143,7 @@ alias fvpn="~/.dotfiles/lib/fortivpn.sh"
 #
 # AI Coding
 #
+alias cc='claude'
 alias cco='claude --model opus'
 alias ccs='claude --model sonnet'
 
@@ -189,13 +190,4 @@ ${file_contents}"
 #
 # wtp (git worktree)
 #
-function wtp-init() {
-    local project_name="${1:-$(basename $(pwd))}"
-    if [ -f ".wtp.yml" ]; then
-        echo "Error: .wtp.yml already exists"
-        return 1
-    fi
-    sed "s/{{ .ProjectName }}/$project_name/g" ~/.dotfiles/.wtp.yml.template > .wtp.yml
-    echo "Created .wtp.yml for project: $project_name"
-}
 eval "$(wtp shell-init zsh)"

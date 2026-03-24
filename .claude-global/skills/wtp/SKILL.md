@@ -2,7 +2,7 @@
 name: wtp
 description: >-
   タスク内容からブランチ名を生成し、wtp add -b でワークツリーを作成する。
-  「/wtp」「wtp add」「ワークツリー作成」「worktree作成」「worktree追加」と依頼された時に使用。
+  「/wtp」「wtp add」「ワークツリー作成」「worktree作成」「worktree追加」「wtp init」「環境セットアップ」と依頼された時に使用。
 user-invocable: true
 disable-model-invocation: true
 argument-hint: "[タスク説明（省略時はTodoistから取得）]"
@@ -10,9 +10,40 @@ argument-hint: "[タスク説明（省略時はTodoistから取得）]"
 
 # wtp
 
-タスク内容から `type/slug` 形式のブランチ名を生成し、`wtp add -b` でワークツリーを作成する。
+タスク内容から `type/slug` 形式のブランチ名を生成し、プロジェクト直下の `.worktree/` にワークツリーを作成する。
 
 ## ワークフロー
+
+### Step 0: 環境セットアップ
+
+以下を順に確認し、不足があれば作成する:
+
+1. `.wtp.yml` が存在しない場合:
+
+```bash
+wtp init
+```
+
+次に、生成された `.wtp.yml` の `base_dir` を `.worktree` に書き換える:
+
+```bash
+sed -i '' 's|base_dir: ../worktrees|base_dir: .worktree|' .wtp.yml
+grep -q 'base_dir: .worktree' .wtp.yml || echo "WARNING: base_dir の書き換えに失敗。手動で base_dir: .worktree に設定してください"
+```
+
+2. `.worktree/` が存在しない場合:
+
+```bash
+mkdir -p .worktree
+```
+
+3. `.worktree/.gitignore` が存在しない場合:
+
+```bash
+printf '*\n' > .worktree/.gitignore
+```
+
+全て揃っていればスキップ。作成時は1行で報告して Step 1 へ進む。
 
 ### Step 1: タスク内容の取得
 
