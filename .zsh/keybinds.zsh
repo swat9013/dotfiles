@@ -141,13 +141,13 @@ add-zsh-hook precmd precmd_show_info
 #cd 後のlsの省略
 function chpwd() { ls }
 
-## Ctrl+v でカレントディレクトリをVSCodeで開く
-function open-vscode() {
-    code .
+## Ctrl+v でカレントディレクトリをZedで開く
+function open-zed() {
+    zed .
     zle reset-prompt
 }
-zle -N open-vscode
-bindkey '^v' open-vscode
+zle -N open-zed
+bindkey '^v' open-zed
 
 #スクリーンロックを無効化
 stty stop undef

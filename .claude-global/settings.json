@@ -84,7 +84,8 @@
       "Write(.claude/plans/**)",
       "Write(.claude/research/**)",
       "Write(.claude/review/**)",
-      "Write(.claude/implement/**)"
+      "Write(.claude/implement/**)",
+      "Write(.claude/tmp/**)"
     ],
     "deny": [
       "NotebookEdit",

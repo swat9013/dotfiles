@@ -6,6 +6,7 @@
 alias grep='grep --color=auto'
 alias ps-grep="ps aux | grep"
 alias sed-filename='(){find ./ -type f | sed \"p;s/$1/$2/\" | xargs -n2 mv}'
+alias relogin="exec $SHELL -l"
 
 #colordiff設定
 if which colordiff >/dev/null 2>&1 ;then
@@ -76,6 +77,7 @@ alias lt='ls -ltr'         # Sort by date, most recent last
 alias lu='ls -ltur'        # Sort by and show access time, most recent last
 alias lx='ls -lXB'         # Sort by extension
 alias l='ls -1F'           # Show long file information
+alias ll='ls -lF'          # Long listing
 alias la='ls -AF'          # Show hidden files
 alias lc='ls -ltcr'        # Sort by and show change time, most recent last
 alias ld='ls -ld'          # Show info about the directory
@@ -141,7 +143,6 @@ alias fvpn="~/.dotfiles/lib/fortivpn.sh"
 #
 # AI Coding
 #
-alias cc='claude'
 alias cco='claude --model opus'
 alias ccs='claude --model sonnet'
 

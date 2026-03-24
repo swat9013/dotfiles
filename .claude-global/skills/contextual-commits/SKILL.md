@@ -72,6 +72,16 @@ action_type(scope): 説明文
 8. **説明文は日本語で記述**（subject line、action lines ともに日本語）
 9. **捏造禁止** — コンテキストがなければ action lines を省略する
 
+## コミット実行手順
+
+改行を含むメッセージはHEREDOCが使えない（改行禁止hook）。**Write tool → `git commit -F`** で実行する:
+
+1. `~/.dotfiles/.claude-global/claude-output-init.sh tmp` でディレクトリ初期化
+2. `Write(.claude/tmp/commit-msg.txt)` でメッセージ作成
+3. `git commit -F .claude/tmp/commit-msg.txt` でコミット
+
+> `-m` 複数指定は各 `-m` 間がダブル改行になり action lines が崩れる。`-F` を使うこと。
+
 ## 例
 
 ### 最小（1-2 action lines）
