@@ -145,6 +145,7 @@ agent: true
 | todoist | 「Todoist」「タスク追加」「タスクリファイン」「タスク整理」 |
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」 |
 | prompt-review | 「/prompt-review」「プロンプトをレビューして」「対話履歴を分析して」「理解度を診断して」 |
+| drawio | 「drawio」「.drawio」「図を作って」 |
 
 ### 知識系スキル（user-invocable: false）
 
@@ -161,3 +162,4 @@ agent: true
 | log-designing | 「ログ設計」「構造化ログ」 | ログ設計7原則・CLIパターンガイド |
 | contextual-commits | 「コミットメッセージ」「action lines」「commit body」「コミットして」 | コミットbodyのaction lines規約ガイド |
 | serena | 「Serena」「シンボル検索」 | セマンティックコード検索MCPガイド |
+| mermaid-syntax | 「Mermaid」「シーケンス図」「フローチャート」「状態遷移図」「ER図」 | Mermaid構文安全ルール+図種選択ガイド |
