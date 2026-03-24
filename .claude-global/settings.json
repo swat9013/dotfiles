@@ -79,6 +79,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/managing-skills/scripts/init_skill.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
       "Bash(~/.dotfiles/.claude-global/claude-output-init.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",
       "Bash(shellcheck:*)",
       "Write(.claude/discovery/**)",
       "Write(.claude/plans/**)",
