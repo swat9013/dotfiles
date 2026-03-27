@@ -144,6 +144,7 @@ agent: true
 | troubleshooting | 「デバッグ」「バグ調査」 |
 | critical-think | 「批判的に見て」「自己レビュー」 |
 | discovery | 「壁打ちしたい」「問題を整理したい」 |
+| dialogue | 「対話したい」「議論したい」「意見を聞きたい」「反論して」 |
 | retrospective | 「学びを保存」「ドメイン知識更新」「振り返り」「retrospective」 |
 | context-optimizer | 「CLAUDE.md圧縮」「コンテキスト最適化」 |
 | doc-architect | 「ドキュメント設計」「docs作成」 |
