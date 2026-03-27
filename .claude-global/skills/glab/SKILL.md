@@ -1,6 +1,6 @@
 ---
 name: glab
-description: GitLab CLI操作ガイド。MR・Issue・CI/CD操作を含む。Use when「glab」「GitLab CLI」「GitLab MR」「GitLab CI」。
+description: GitLab CLI（glab）コマンドリファレンス。Use when「glab」「GitLab」「MR」「マージリクエスト」「GitLab CI」。
 user-invocable: false
 ---
 

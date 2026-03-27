@@ -146,6 +146,7 @@ agent: true
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」 |
 | prompt-review | 「/prompt-review」「プロンプトをレビューして」「対話履歴を分析して」「理解度を診断して」 |
 | drawio | 「drawio」「.drawio」「図を作って」 |
+| claude-config | 「設定を最適化」「config」「Claude設定チェック」「ベストプラクティス反映」 |
 
 ### 知識系スキル（user-invocable: false）
 
@@ -153,7 +154,7 @@ agent: true
 |--------|------------------|------|
 | managing-skills | 「スキルを作って」「スキル更新」 | スキル作成・変更ガイド |
 | ghq | 「ghq」「リポジトリ管理」 | リポジトリ管理ツールガイド |
-| glab | 「glab」「GitLab CLI」「GitLab MR」「GitLab CI」 | GitLab CLI操作ガイド |
+| glab | 「glab」「GitLab」「MR」「マージリクエスト」「GitLab CI」 | GitLab CLI操作ガイド |
 | frontend-design | 「UI作成」「フロントエンド実装」 | UI/フロントエンド実装ガイド |
 | claude-mem | 「claude-mem」「メモリ検索」 | claude-memプラグイン使用ガイド |
 | playwright-cli | 「Playwright」「E2Eテスト」「ブラウザ操作」「UI確認」 | Playwright CLI + ブラウザ操作リファレンス |

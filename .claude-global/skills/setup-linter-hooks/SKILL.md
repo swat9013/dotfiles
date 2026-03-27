@@ -209,4 +209,4 @@ chmod +x .claude/hooks/format-and-lint.sh
 
 ## 参考資料
 
-- [Hooks設計ガイド](~/.dotfiles/docs/claude-code/hooks.md)
+- [Hooks設計ガイド](~/.dotfiles/.claude-global/skills/claude-config/references/hooks.md)

@@ -1,6 +1,6 @@
 # Review Claude Config
 
-`.claude-global/` 配下の設定が `docs/claude-code-context-optimization.md` のガイドラインに従っているかレビュー。
+`.claude-global/` 配下の設定が `.claude-global/skills/claude-config/references/` のベストプラクティスに従っているかレビュー。
 
 ## レビュー対象
 

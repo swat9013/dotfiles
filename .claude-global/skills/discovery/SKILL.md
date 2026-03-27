@@ -1,7 +1,7 @@
 ---
 name: discovery
 description: 問題分析の壁打ちツール。対話的に問題を分解・分析する。Use when「壁打ちしたい」「問題を整理したい」「行き詰まった」「XY問題」。
-disable-model-invocation: false
+disable-model-invocation: true
 ---
 
 # Discovery (壁打ちツール)

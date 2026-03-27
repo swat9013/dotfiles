@@ -109,7 +109,7 @@ bindkey '^^' cdup
 ## Enter押下時の情報表示（accept-lineラップ方式）
 ## Claude Code内では無効化（ノイズ抑制）
 function custom_accept_line() {
-    if [[ -z "$BUFFER" && -z "$CLAUDE_CODE" ]]; then
+    if [[ -z "$BUFFER" && -z "$CLAUDECODE" ]]; then
         # 空行の場合、マーカーをセット
         EMPTY_LINE_ENTER=1
     else
@@ -139,7 +139,7 @@ autoload -Uz add-zsh-hook
 add-zsh-hook precmd precmd_show_info
 
 #cd 後のlsの省略
-function chpwd() { ls }
+function chpwd() { [[ -z $CLAUDECODE ]] && ls }
 
 ## Ctrl+v でカレントディレクトリをZedで開く
 function open-zed() {
