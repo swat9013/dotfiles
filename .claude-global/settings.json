@@ -222,7 +222,7 @@
     "swift-lsp@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true
   },
-  "language": "japanese",
+  "language": "日本語でMBTIでINTJの人がわかりやすい話し方",
   "spinnerTipsEnabled": false,
   "effortLevel": "medium",
   "promptSuggestionEnabled": false

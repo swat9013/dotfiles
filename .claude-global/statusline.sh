@@ -128,15 +128,8 @@ input=$(cat)
 
 # Extract values from JSON
 CURRENT_DIR=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // "."')
-TRANSCRIPT_PATH=$(echo "$input" | jq -r '.transcript_path // ""')
 MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"')
 
-# Expand transcript path once (used for session title)
-EXPANDED_TRANSCRIPT=""
-if [ -n "$TRANSCRIPT_PATH" ]; then
-    EXPANDED_TRANSCRIPT="${TRANSCRIPT_PATH/#\~/$HOME}"
-    [ ! -f "$EXPANDED_TRANSCRIPT" ] && EXPANDED_TRANSCRIPT=""
-fi
 
 # Shorten directory name
 if [ "$CURRENT_DIR" = "$HOME" ]; then
@@ -166,28 +159,6 @@ PERCENT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d.
 
 CTX_COLOR=$(usage_color "$PERCENT")
 
-# Get session title from transcript file (first user message)
-# || true prevents pipefail exit when grep finds no match
-SESSION_TITLE=""
-if [ -n "$EXPANDED_TRANSCRIPT" ]; then
-    FIRST_MSG=$(grep -m1 '"userType":"external"' "$EXPANDED_TRANSCRIPT" 2>/dev/null \
-        | jq -r '.message.content // empty' 2>/dev/null \
-        | sed 's/<command-message>[^<]*<\/command-message>//g' \
-        | sed 's/^[[:space:]]*//' \
-        | head -1 || true)
-    [ -n "$FIRST_MSG" ] && SESSION_TITLE="$FIRST_MSG"
-fi
-
-# Adaptive title truncation based on terminal width
-COLS=$(tput cols 2>/dev/null || echo 80)
-
-if [ "$COLS" -lt 60 ]; then
-    MAX_TITLE=15
-elif [ "$COLS" -lt 80 ]; then
-    MAX_TITLE=20
-else
-    MAX_TITLE=30
-fi
 
 # Line 1: location context (dir + git branch)
 DIR_DISPLAY=$(truncate "$DIR_NAME" "$MAX_DIR")
@@ -198,14 +169,9 @@ if [ -n "$GIT_BRANCH" ]; then
     LINE1="${LINE1} ${YELLOW}git:${BRANCH_DISPLAY}${GIT_DIRTY}${RESET}"
 fi
 
-# Line 2: session state (ctx braille bar + model + title)
+# Line 2: session state (ctx braille bar + model)
 CTX_BAR=$(render_braille_bar "$PERCENT")
 LINE2="${DIM}cx${RESET} ${CTX_COLOR}${CTX_BAR}${RESET} $(printf '%2d' "$PERCENT")%  ${MODEL}"
-
-if [ -n "$SESSION_TITLE" ]; then
-    TITLE_DISPLAY=$(truncate "$SESSION_TITLE" "$MAX_TITLE")
-    LINE2="${LINE2} | ${CYAN}\"${TITLE_DISPLAY}\"${RESET}"
-fi
 
 printf "%b\n" "$LINE1"
 printf "%b\n" "$LINE2"

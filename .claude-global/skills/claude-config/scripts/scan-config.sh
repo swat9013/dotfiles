@@ -242,3 +242,122 @@ if [ -d "${CLAUDE_DIR}" ]; then
 else
   echo "(directory not found: ${CLAUDE_DIR})"
 fi
+
+echo ""
+
+# ──────────────────────────────────────────────────────────
+# セクション: project-context
+# ──────────────────────────────────────────────────────────
+echo "=== project-context ==="
+for fname in package.json pyproject.toml Cargo.toml go.mod Makefile; do
+  if [ -f "${PROJECT_ROOT}/${fname}" ]; then
+    echo "${fname}: exists: true"
+  else
+    echo "${fname}: exists: false"
+  fi
+done
+for dname in ".github/workflows" ".gitlab-ci.yml"; do
+  if [ -e "${PROJECT_ROOT}/${dname}" ]; then
+    echo "${dname}: exists: true"
+  else
+    echo "${dname}: exists: false"
+  fi
+done
+
+echo ""
+
+# ──────────────────────────────────────────────────────────
+# セクション: hooks-scripts
+# ──────────────────────────────────────────────────────────
+echo "=== hooks-scripts ==="
+if command -v jq > /dev/null 2>&1; then
+  hooks_found=0
+  for settings_path in "${CLAUDE_DIR}/settings.json" "${GLOBAL_SETTINGS}"; do
+    if [ ! -f "${settings_path}" ]; then
+      continue
+    fi
+    has_hooks=""
+    has_hooks="$(jq -r 'if has("hooks") then "present" else "absent" end' "${settings_path}" 2>/dev/null || true)"
+    if [ "${has_hooks}" != "present" ]; then
+      continue
+    fi
+    hooks_found=1
+    echo "from: ${settings_path}"
+    jq -r '
+      .hooks
+      | to_entries[]
+      | .value[]
+      | .hooks[]?
+      | .command // empty
+    ' "${settings_path}" 2>/dev/null | while IFS= read -r cmd; do
+      # コマンドの先頭トークンをスクリプトパスとして抽出
+      script_path=""
+      script_path="$(printf '%s' "${cmd}" | sed 's/[[:space:]].*//')"
+      if [ -z "${script_path}" ]; then
+        continue
+      fi
+      # チルダ展開（先頭の ~ を $HOME に置換）
+      script_path="$(printf '%s' "${script_path}" | sed "s|^~|${HOME}|")"
+      if [ -e "${script_path}" ]; then
+        if [ -x "${script_path}" ]; then
+          echo "  script: ${script_path} [exist: true, executable: true]"
+        else
+          echo "  script: ${script_path} [exist: true, executable: false]"
+        fi
+      else
+        echo "  script: ${script_path} [exist: false, executable: false]"
+      fi
+    done || true
+  done
+  if [ "${hooks_found}" -eq 0 ]; then
+    echo "(no hooks configured)"
+  fi
+else
+  echo "(jq not available)"
+fi
+
+echo ""
+
+# ──────────────────────────────────────────────────────────
+# セクション: rules-paths-check
+# ──────────────────────────────────────────────────────────
+echo "=== rules-paths-check ==="
+RULES_DIR_CHECK="${CLAUDE_DIR}/rules"
+if [ -d "${RULES_DIR_CHECK}" ]; then
+  ls "${RULES_DIR_CHECK}" 2>/dev/null | sort | while IFS= read -r fname; do
+    fpath="${RULES_DIR_CHECK}/${fname}"
+    if [ ! -f "${fpath}" ]; then
+      continue
+    fi
+    paths_value=""
+    paths_value="$(grep -m1 '^paths:' "${fpath}" | sed 's/^paths:[[:space:]]*//' || true)"
+    if [ -z "${paths_value}" ]; then
+      continue
+    fi
+    echo "rule: ${fname} [paths: ${paths_value}]"
+    # カンマ区切りのglobを順に処理
+    printf '%s\n' "${paths_value}" | tr ',' '\n' | while IFS= read -r raw_glob; do
+      # 前後の空白を除去
+      trimmed_glob=""
+      trimmed_glob="$(printf '%s' "${raw_glob}" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')"
+      if [ -z "${trimmed_glob}" ]; then
+        continue
+      fi
+      match_count=0
+      # globにパスセパレータが含まれる場合はfind -pathを使用
+      case "${trimmed_glob}" in
+        */*)
+          # findは**を理解しないため*に置換してから検索
+          find_glob="$(printf '%s' "${trimmed_glob}" | sed 's/\*\*\/*/\*/g; s/\*\*/\*/g')"
+          match_count="$(find "${PROJECT_ROOT}" -path "*/${find_glob}" 2>/dev/null | wc -l | tr -d ' ')"
+          ;;
+        *)
+          match_count="$(find "${PROJECT_ROOT}" -name "${trimmed_glob}" 2>/dev/null | wc -l | tr -d ' ')"
+          ;;
+      esac
+      echo "  glob: ${trimmed_glob} -> ${match_count} file(s)"
+    done || true
+  done
+else
+  echo "(rules directory not found)"
+fi
