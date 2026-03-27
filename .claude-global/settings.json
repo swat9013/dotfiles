@@ -92,7 +92,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/managing-skills/scripts/init_skill.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-config.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
-      "Bash(~/.dotfiles/.claude-global/claude-output-init.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",
       "Bash(shellcheck:*)",
       "Bash(/Applications/draw.io.app/Contents/MacOS/draw.io:*)",
@@ -163,7 +163,11 @@
       "Bash(sudo:*)",
       "Bash(chmod 777:*)",
       "Bash(ssh:*)",
-      "Bash(scp:*)"
+      "Bash(scp:*)",
+      "Bash(bash:*)",
+      "Bash(sh:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
     ],
     "ask": [
       "Bash(curl:*)",

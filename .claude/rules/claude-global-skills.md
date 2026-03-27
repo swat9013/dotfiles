@@ -15,6 +15,8 @@ paths: .claude-global/skills/**
 
 ## frontmatter
 
+命名規則: kebab-case（全体）、64文字以内（frontmatter name）
+
 | フィールド | 必須 | 説明 |
 |-----------|-----|------|
 | `name` | ○ | gerund形式推奨（`processing-pdfs`等） |
@@ -123,6 +125,9 @@ agent: true
 | 深い参照ネスト | 1階層までに制限 |
 
 ## スキル一覧
+
+開発サイクル全体像・スキル間のコナセンス → `rules/dev-cycle.md`
+設定管理系のコナセンス → `rules/config-management.md`
 
 ### ワークフロー系スキル
 

@@ -76,7 +76,7 @@ action_type(scope): 説明文
 
 改行を含むメッセージはHEREDOCが使えない（改行禁止hook）。**Write tool → `git commit -F`** で実行する:
 
-1. `~/.dotfiles/.claude-global/claude-output-init.sh tmp` でディレクトリ初期化
+1. `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh tmp` でディレクトリ初期化
 2. `Write(.claude/tmp/commit-msg.txt)` でメッセージ作成
 3. `git commit -F .claude/tmp/commit-msg.txt` でコミット
 

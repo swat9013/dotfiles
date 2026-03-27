@@ -31,7 +31,12 @@ if [ "$TOOL" = "Bash" ]; then
     deny "rmは使用禁止。rmtrash（ファイル）またはrmtrash -r（ディレクトリ）を使用してください"
   fi
 
-  # D: 破壊的 git 操作 deny
+  # D: git add . / -A 禁止（明示的なファイル指定を強制）
+  if echo "$COMMAND" | grep -qE '^git add (-A|--all|\.)\b'; then
+    deny "git add . / -A は禁止。ファイルを個別に指定してください"
+  fi
+
+  # E: 破壊的 git 操作 deny
   if echo "$COMMAND" | grep -qE 'git reset.*--hard|git clean.*(--force|-f)'; then
     deny "破壊的git操作は禁止。git stashで退避してから操作してください"
   fi
@@ -42,7 +47,7 @@ if [ "$TOOL" = "Bash" ]; then
     deny "git restore（ワーキングツリー変更の破棄）は禁止。git stashで退避してください"
   fi
 
-  # C: git push 条件付き許可
+  # F: git push 条件付き許可
   if echo "$COMMAND" | grep -qE '^git push'; then
     # force push は deny
     if echo "$COMMAND" | grep -qE -- '--force($| )|-f($| )' && ! echo "$COMMAND" | grep -q -- '--force-with-lease'; then
@@ -59,7 +64,7 @@ if [ "$TOOL" = "Bash" ]; then
   fi
 fi
 
-# B: 機密ファイルへの Write/Edit 拒否
+# G: 機密ファイルへの Write/Edit 拒否
 if [ "$TOOL" = "Write" ] || [ "$TOOL" = "Edit" ]; then
   if echo "$FILE_PATH" | grep -qE '\.(env|key|pem|p12|pfx|crt)$|id_rsa|\.netrc|/credentials$|/secrets/|/private/'; then
     deny "機密ファイルへの書き込みは禁止"

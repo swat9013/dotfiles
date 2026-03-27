@@ -24,13 +24,15 @@ brew bundle --global        # Homebrewパッケージ更新
 - `sheldon/`, `ghostty/`, `yazi/`, `starship/` → `~/.config/`配下
 - `.claude-global/` → `~/.claude/`配下
 
-### Claude Code設定の3層構造
+### Claude Code設定のレイヤー構造
 
 | 層 | 用途 | 適用タイミング |
 |----|------|--------------|
+| settings.json | permissions、hooks登録、UI | 常時（機械制御） |
+| hooks/ | イベント駆動の自動処理 | イベント発生時 |
 | CLAUDE.md | プロジェクト全体の方針 | 常時 |
 | rules/ | パス固有のガイドライン | 該当パスのファイルアクセス時 |
-| skills/ | ワークフロー（サブエージェント呼び出し含む） | 明示的呼び出し or キーワードマッチ |
+| skills/ | ワークフロー（サブエージェント含む） | 明示的呼び出し or キーワードマッチ |
 
 **重要**: `.claude/agents/` は使用しない。サブエージェントはskill内でTask toolを使ってadhocに呼び出す。
 
@@ -49,6 +51,7 @@ brew bundle --global        # Homebrewパッケージ更新
 - シンプルさ優先（KISS）
 - 既存パターンに従う（新規ツールは`.zsh/[tool].zsh`）
 - 詳細は各`rules/`ファイルを参照
+- 同じ指示を CLAUDE.md と rules/ に重複記載しない
 
 ## Gotchas
 

@@ -144,7 +144,7 @@ Task tool:
 
 #### 準備
 
-`~/.dotfiles/.claude-global/claude-output-init.sh plans` を実行。
+`~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh plans` を実行。
 
 #### 保存先
 

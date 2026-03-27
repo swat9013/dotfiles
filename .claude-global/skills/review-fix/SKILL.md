@@ -99,7 +99,7 @@ prompt: |
 
 `templates/output.md` の形式に従い、`.claude/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
 - `{topic}`: $ARGUMENTS または変更ファイル群から推定したkebab-caseスラッグ
-- ファイル書き出し前に: `~/.dotfiles/.claude-global/claude-output-init.sh review` を実行
+- ファイル書き出し前に: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh review` を実行
 
 ### Step 4: issue判定
 
