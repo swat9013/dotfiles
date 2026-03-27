@@ -172,6 +172,8 @@ SESSION_TITLE=""
 if [ -n "$EXPANDED_TRANSCRIPT" ]; then
     FIRST_MSG=$(grep -m1 '"userType":"external"' "$EXPANDED_TRANSCRIPT" 2>/dev/null \
         | jq -r '.message.content // empty' 2>/dev/null \
+        | sed 's/<command-message>[^<]*<\/command-message>//g' \
+        | sed 's/^[[:space:]]*//' \
         | head -1 || true)
     [ -n "$FIRST_MSG" ] && SESSION_TITLE="$FIRST_MSG"
 fi

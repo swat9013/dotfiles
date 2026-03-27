@@ -144,19 +144,21 @@ alias fvpn="~/.dotfiles/lib/fortivpn.sh"
 # AI Coding
 #
 alias cc='claude'
+alias cca='claude --permission-mode auto'
 alias cco='claude --model opus'
+alias ccp='claude --setting-sources project,local'  # user設定を除外してプロジェクト+ローカルのみ適用
 alias ccs='claude --model sonnet'
 
 # 軽量Claude Codeでワンライナー質問（ファイル参照オプション対応）
-# Usage: cask "質問内容" [file1] [file2] ...
+# Usage: ccask "質問内容" [file1] [file2] ...
 # Example:
-#   cask "このコードを説明して" main.py
-#   cask "これらのファイルの違いは？" old.js new.js
-#   cask "今日の日付は？"
+#   ccask "このコードを説明して" main.py
+#   ccask "これらのファイルの違いは？" old.js new.js
+#   ccask "今日の日付は？"
 function ccask() {
     if [[ $# -eq 0 ]]; then
-        echo "Usage: cask \"質問内容\" [file1] [file2] ..."
-        echo "Example: cask \"このコードを説明して\" main.py"
+        echo "Usage: ccask \"質問内容\" [file1] [file2] ..."
+        echo "Example: ccask \"このコードを説明して\" main.py"
         return 1
     fi
 
