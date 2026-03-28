@@ -191,6 +191,16 @@
             "command": "~/.dotfiles/.claude-global/hooks/pretooluse-guard.sh"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"'$(date)'\"}}'",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
