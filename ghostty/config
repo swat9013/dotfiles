@@ -32,3 +32,6 @@ split-divider-color = #3d59a1
 # カーソル・選択
 cursor-click-to-move = true
 copy-on-select = clipboard
+
+# キーバインド
+keybind = ctrl+i=equalize_splits

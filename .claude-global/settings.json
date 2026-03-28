@@ -234,7 +234,8 @@
     "example-skills@anthropic-agent-skills": false,
     "code-simplifier@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true
+    "ruby-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
   },
   "language": "日本語でMBTIでINTJの人がわかりやすい話し方",
   "spinnerTipsEnabled": false,
