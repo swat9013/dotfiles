@@ -28,6 +28,8 @@ Phase 1 エージェントへの探索ヒントとして活用:
 
 ### Phase 0: 前提と目的の整理
 
+**設計判断時の問い**: `_shared/design-questions.md` の該当フェーズを参照。
+
 $ARGUMENTS を分析し、以下を明確にする:
 
 1. **なぜこの変更が必要か**（動機・背景）
@@ -155,8 +157,6 @@ Task tool:
 - ファイル書き出し後に: `~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh <filepath>` を実行
 
 #### plan file の内容
-
-`<!-- generated-by: plan -->` をファイル先頭に含める。
 
 推奨アプローチのみ記載する（検討した全代替案は不要）。
 素早くスキャンできる簡潔さと、実行に十分な詳細さのバランスを取る。

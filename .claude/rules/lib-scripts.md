@@ -101,3 +101,10 @@ tmuxでIDE風のパネルレイアウトを作成:
 ### fortivpn.sh
 
 OpenFortiVPN の接続ラッパー。設定ファイルのパスを自動設定。
+
+## Gotchas
+
+- **macOS lsof の複数条件**: `-a`フラグ必須（AND条件）。`lsof -a -d cwd -p $pid`
+- **macOS BSD awk の match() 3引数制限**: `match(str, /re/, arr)` の3引数形式（キャプチャグループ）は BSD awk 非対応。`grep -oE` や `sed` で代替
+- **set -euo pipefail + grep**: grep マッチなしで exit code 1 → スクリプトクラッシュ。`grep パターン || true` で継続
+- **Claude CLI JSON 出力形式**: `--output-format json` はJSON配列。`jq -r '.[] | select(.type=="result") | .result'` で抽出。`-s` は不要（既に配列）。NDJSONが必要なら `--output-format stream-json`

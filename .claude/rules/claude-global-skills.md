@@ -113,6 +113,16 @@ agent: true
 - **手順記述スタイル**: 番号リストと`####`見出しの混在を避ける。フラットなリスト構造に統一
 - **BSD/GNU互換性テスト**: スクリプト検証時にmacOS BSD awk/sed等の挙動差異を確認必須
 
+## Gotchas
+
+- **サブエージェント残存**: Task toolで起動したサブエージェントは親セッション終了後も残存しメモリ消費。定期的に`cck --sub`でクリーンアップ
+- **Task tool 並列制限**: `run_in_background` + TaskOutput並列取得は全失敗（Sibling error）。foreground で最大5並列が安全上限
+- **Task tool 制約**: 孫エージェントスポーン不可（1段階のみ）。PreToolUse/PostToolUse hooks はバイパスされる
+- **Skill tool 連鎖不可**: Skill tool で他スキルを呼び出すと失敗。スキル間連携はユーザーに次スキルを案内
+- **スキル間参照**: 自動読み込みされない。references/ は同一スキル内のみ機能。スキル間参照はデッドリンク化
+- **ToolSearch**: claude-haiku-4-5 では利用不可（tool_reference blocks 非対応）
+- **スキル内 `!` バッククォート**: インライン実行で失敗時エラー停止。`|| true` や `|| echo "(なし)"` でフォールバック必要
+
 ## アンチパターン
 
 | パターン | 対策 |
@@ -170,3 +180,5 @@ agent: true
 | contextual-commits | 「コミットメッセージ」「action lines」「commit body」「コミットして」 | コミットbodyのaction lines規約ガイド |
 | serena | 「Serena」「シンボル検索」 | セマンティックコード検索MCPガイド |
 | mermaid-syntax | 「Mermaid」「シーケンス図」「フローチャート」「状態遷移図」「ER図」 | Mermaid構文安全ルール+図種選択ガイド |
+| ghostty | 「Ghostty」「ghostty設定」「ターミナル設定」「keybind」「テーマ変更」 | Ghostty設定変更・トラブルシューティング支援（プロジェクトスキル: `.claude/skills/`） |
+| zsh | 「zsh設定」「エイリアス追加」「abbr」「キーバインド」「Sheldon」 | Zsh設定・アーキテクチャ・Sheldon・zsh-abbrガイド（プロジェクトスキル: `.claude/skills/`） |

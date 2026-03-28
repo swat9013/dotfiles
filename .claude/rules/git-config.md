@@ -1,7 +1,5 @@
 ---
-paths:
-  - .gitconfig
-  - .gitconfig.local.sample
+paths: .gitconfig, .gitconfig.local.sample
 ---
 
 # Git設定アーキテクチャ

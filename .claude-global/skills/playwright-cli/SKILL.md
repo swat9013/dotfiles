@@ -6,6 +6,16 @@ user-invocable: false
 
 # Playwright CLI
 
+## バージョン情報
+
+現在のバージョン: `!`npx playwright --version 2>/dev/null || echo "(未インストール)"``
+
+記録バージョン: `1.58.2`
+
+バージョンが異なる場合、ユーザーに通知。確認後にWebFetchでリリースノートを取得し、スキル内容を更新。
+
+---
+
 ## 2つのモード
 
 | モード | 用途 | 実行形態 |

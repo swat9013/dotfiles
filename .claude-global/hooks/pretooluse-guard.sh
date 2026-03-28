@@ -32,7 +32,7 @@ if [ "$TOOL" = "Bash" ]; then
   fi
 
   # D: git add . / -A 禁止（明示的なファイル指定を強制）
-  if echo "$COMMAND" | grep -qE '^git add (-A|--all|\.)\b'; then
+  if echo "$COMMAND" | grep -qE '^git add (-A|--all|\.)( |$)'; then
     deny "git add . / -A は禁止。ファイルを個別に指定してください"
   fi
 

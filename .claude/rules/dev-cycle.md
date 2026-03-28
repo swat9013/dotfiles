@@ -54,7 +54,7 @@ flowchart LR
 | breakdown → implement | タスク定義（静的）と実行制御（動的）の分離。implementation.md は読み取り専用の仕様源、implement はオーケストレーター |
 | implement → review-fix | 実装者とレビュアーのコンテキスト分離。生成バイアスを排除するため、実装したエージェントとは別のエージェントがレビューする |
 
-**architect vs plan**: architect は discovery.md を前提入力とし、3観点並列調査→2アプローチ対立案→opusレビューのフォーマルプロセスを踏む。plan はコードベース探索ベースの軽量版で、discovery を経由せず `$ARGUMENTS` から直接開始できる。plan 生成ファイルには `<!-- generated-by: plan -->` が入るが、breakdown はこれを区別しない（意図的に同一扱い）。
+**architect vs plan**: architect は discovery.md を前提入力とし、3観点並列調査→2アプローチ対立案→opusレビューのフォーマルプロセスを踏む。plan はコードベース探索ベースの軽量版で、discovery を経由せず `$ARGUMENTS` から直接開始できる。breakdown は plan/architect どちらの生成ファイルも同一扱いする。
 
 ## 3. コナセンス・マップ
 
@@ -88,6 +88,7 @@ flowchart LR
 | **コードレビュー高信号フィルタ** | implement(レビューサイクル) と review-fix(レビュー) の SKILL.md 本文に同一リストが重複記述。正規ソースは `_shared/review-criteria.md` | 一方のみ更新すると判定基準が分岐。`_shared/` を更新しても SKILL.md 本文の重複記述が残る |
 | **サブエージェント必須4要素** | implement(タスク実行): コンテキスト/明示的指示/関連ファイルパス/成功基準。researcher(ソース調査): コンテキスト/指示/参照ソース/成功基準 | 同じ概念だが名称が不統一（「関連ファイルパス」vs「参照ソース」）。新スキル追加時にどちらを参照するか曖昧 |
 | **全文転記ルール** | plan(設計検討, 注意事項), architect(設計検討) で各自記述 | 共有ルールだが `_shared/` に集約されていない。一方で緩和すると他方に波及するが、変更漏れに気づきにくい |
+| **設計判断の問い** | architect(設計原則), plan(Phase 0) が `_shared/design-questions.md` を参照 | 問いの追加・削除時に正規ソースのみ更新すればよい。参照側は1行のポインタのみ |
 
 ## 4. 連動スキルの接続意図
 
