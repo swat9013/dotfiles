@@ -109,6 +109,7 @@ echo ""
 
 # Marketplaces
 add_marketplace "thedotmack" "thedotmack/claude-mem"
+add_marketplace "worktrunk" "max-sixty/worktrunk"
 
 echo ""
 echo "Installing plugins..."
@@ -116,6 +117,7 @@ echo ""
 
 # Plugins
 install_plugin "claude-mem"
+install_plugin "worktrunk"
 
 echo ""
 echo "Done."
