@@ -2,101 +2,22 @@
 paths: .Brewfile
 ---
 
-# Brewfile パッケージ管理
+# Brewfile 編集ルール
 
-## 概要
+## 必須事項
 
-Homebrew Bundle を使用して、50以上のパッケージを一元管理。
-
-## パッケージカテゴリ
-
-### CLI ツール
-
-| パッケージ | 用途 |
-|----------|------|
-| asdf | バージョン管理（Ruby、Node.jsなど） |
-| bun | 高速JavaScriptランタイム |
-| emacs | エディタ |
-| git | バージョン管理 |
-| jq | JSON処理 |
-| fzf | 汎用ファジーファインダー |
-| ripgrep | 高速grep |
-| sheldon | Zshプラグインマネージャー |
-| tmux | ターミナルマルチプレクサ |
-| uv | Python パッケージマネージャー |
-| zsh | シェル |
-
-### AI/開発ツール
-
-| パッケージ | 用途 |
-|----------|------|
-| ollama | ローカルLLM実行 |
-| poetry | Python 依存関係管理 |
-| uv | 高速 Python パッケージマネージャー |
-
-### GUI アプリケーション
-
-| パッケージ | 用途 |
-|----------|------|
-| dash | API ドキュメントビューア |
-| dbeaver-community | データベースクライアント |
-| devtoys | 開発者向けユーティリティ |
-| obs | 画面録画・配信 |
-| codex | コードスニペット管理 |
-
-### フォント
-
-| パッケージ | 用途 |
-|----------|------|
-| font-iosevka | プログラミング用等幅フォント |
-| font-monaspace | モダンな等幅フォント |
-| font-myrica | 日本語対応等幅フォント |
+- 適切なカテゴリセクション内に配置する（カテゴリ判断は package-management スキル参照）
+- カテゴリ内はアルファベット順でソート
+- サードパーティ tap は Taps セクションに明示宣言
+- mas エントリは `mas "AppName", id: <numeric_id>` 形式
 
 ## 管理コマンド
 
-### インストール
+- インストール: `brew bundle --global`
+- 同期（不要パッケージ削除）: `brew bundle --global --cleanup`
+- 現状エクスポート: `brew bundle dump --global --force`
 
-```bash
-brew bundle --global
-```
+## 禁止事項
 
-`.Brewfile` を `~/.Brewfile` にリンクして使用。
-
-### 更新
-
-```bash
-brew bundle --global --cleanup
-```
-
-- `--cleanup`: Brewfileに記載されていないパッケージを削除
-
-### 現在のパッケージをBrewfileに反映
-
-```bash
-brew bundle dump --global --force
-```
-
-## Brewfile の構成
-
-```ruby
-# CLI tools
-brew "asdf"
-brew "git"
-...
-
-# GUI apps
-cask "dash"
-cask "dbeaver-community"
-...
-
-# Fonts
-cask "font-iosevka"
-cask "font-monaspace"
-...
-```
-
-## パッケージ追加手順
-
-1. `.Brewfile` を編集
-2. `brew bundle --global` でインストール
-3. 不要パッケージがあれば `brew bundle --global --cleanup` でクリーンアップ
+- パッケージ一覧のコメントアウト放置（不要なら行削除）
+- バージョン指定（Homebrew はバージョンピニング非対応）

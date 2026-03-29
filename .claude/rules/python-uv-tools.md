@@ -24,7 +24,7 @@ paths: .default-python-packages, .Brewfile
 ## 制約
 
 - pip install でのグローバルインストール禁止
-- .default-python-packages は空を維持（asdf自動インストール防止）
+- .default-python-packages は空を維持（mise自動インストール防止）
 - pipx は削除済み、推奨しない
 - CLIツール → uv tool、プロジェクト依存 → poetry/uv add
 
