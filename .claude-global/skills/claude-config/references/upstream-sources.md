@@ -2,7 +2,7 @@
 
 ## 最終更新日
 
-last-auto-update: 2026-03-29
+last-auto-update: 2026-03-29T16:20
 
 ---
 
@@ -10,11 +10,12 @@ last-auto-update: 2026-03-29
 
 | URL | カテゴリ |
 |-----|---------|
-| `https://docs.anthropic.com/en/release-notes/claude-code` | 全般 |
-| `https://docs.anthropic.com/en/docs/claude-code/settings` | settings |
-| `https://docs.anthropic.com/en/docs/claude-code/hooks` | hooks |
-| `https://docs.anthropic.com/en/docs/claude-code/sub-agents` | subagent |
-| `https://docs.anthropic.com/en/docs/claude-code/overview` | context-architecture |
+| `https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md` | 全般（リリースノート） |
+| `https://code.claude.com/docs/en/settings` | settings |
+| `https://code.claude.com/docs/en/hooks` | hooks |
+| `https://code.claude.com/docs/en/sub-agents` | subagent |
+| `https://code.claude.com/docs/en/overview` | context-architecture |
+| `https://code.claude.com/docs/en/agent-teams` | agent-teams |
 
 ---
 
@@ -34,9 +35,9 @@ last-auto-update: 2026-03-29
 |------|------|---------|
 | `$()` コマンド置換禁止 | サブシェルごとにパーミッション確認が発生 | CLAUDE.md |
 | HEREDOC禁止（`git commit`） | パーミッションプロンプト誘発 | CLAUDE.md |
-| Task tool `run_in_background` + TaskOutput並列禁止 | Sibling error で全失敗 | Gotchas |
-| Task tool 孫エージェントスポーン不可 | 1段階のみ | Gotchas |
-| PreToolUse/PostToolUse hooks が Task tool でバイパスされる | hook未起動時のフォールバック欠落 | Gotchas |
+| Agent tool `run_in_background` + TaskOutput並列禁止 | Sibling error で全失敗 | Gotchas |
+| Agent tool 孫エージェントスポーン不可 | 1段階のみ | Gotchas |
+| PreToolUse/PostToolUse hooks が Agent tool でバイパスされる | subagent frontmatter での hooks 定義で部分対応済。plugin subagent は hooks frontmatter 無視 | Gotchas |
 | Skill tool 連鎖不可 | 呼び出しが失敗 | Gotchas |
 | ToolSearch が claude-haiku-4-5 で利用不可 | tool_reference blocks 非対応 | Gotchas |
 

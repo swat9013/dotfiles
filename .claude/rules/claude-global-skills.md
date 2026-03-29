@@ -54,7 +54,7 @@ paths: .claude-global/skills/**
 | コンテキスト共有 | コンテキスト分離 |
 | 手順定義、ガイド | 並列実行、専門役割 |
 
-> サブエージェントはskill内でTask toolを呼び出す
+> サブエージェントはskill内でAgent toolを呼び出す
 
 ## 優先度
 
@@ -115,9 +115,9 @@ agent: true
 
 ## Gotchas
 
-- **サブエージェント残存**: Task toolで起動したサブエージェントは親セッション終了後も残存しメモリ消費。定期的に`cck --sub`でクリーンアップ
-- **Task tool 並列制限**: `run_in_background` + TaskOutput並列取得は全失敗（Sibling error）。foreground で最大5並列が安全上限
-- **Task tool 制約**: 孫エージェントスポーン不可（1段階のみ）。PreToolUse/PostToolUse hooks はバイパスされる
+- **サブエージェント残存**: Agent toolで起動したサブエージェントは親セッション終了後も残存しメモリ消費。定期的に`cck --sub`でクリーンアップ
+- **Agent tool 並列制限**: `run_in_background` + TaskOutput並列取得は全失敗（Sibling error）。foreground で最大5並列が安全上限
+- **Agent tool 制約**: 孫エージェントスポーン不可（1段階のみ）。PreToolUse/PostToolUse hooks はバイパスされる（frontmatter `hooks` で部分対応可）
 - **Skill tool 連鎖不可**: Skill tool で他スキルを呼び出すと失敗。スキル間連携はユーザーに次スキルを案内
 - **スキル間参照**: 自動読み込みされない。references/ は同一スキル内のみ機能。スキル間参照はデッドリンク化
 - **ToolSearch**: claude-haiku-4-5 では利用不可（tool_reference blocks 非対応）

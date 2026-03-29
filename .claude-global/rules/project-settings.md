@@ -37,6 +37,8 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 | `env` | 環境変数 | `{"KEY": "value"}` |
 | `permissions.defaultMode` | 権限モード | `"default"`, `"allowEdits"` |
 | `enabledPlugins` | プラグイン制御 | `{"name@author": true}` |
+| `effortLevel` | effortレベル永続化 | `"low"`, `"medium"`, `"high"` |
+| `attribution` | 帰属表示設定 | `includeCoAuthoredBy` の後継 |
 
 ## hooks設定
 
@@ -53,13 +55,16 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 }
 ```
 
-イベント: `SessionStart`, `PreToolUse`, `PostToolUse`, `Stop`, `SubagentStart`, `SessionEnd`
+主要イベント: `PreToolUse`, `PostToolUse`, `Stop`, `SessionStart`, `SubagentStart`, `SessionEnd`
+
+**`if` フィールド**（v2.1.85+）: パーミッションルール構文で条件フィルタリング。例: `"if": "Bash(git *)"`
 
 | type | 用途 | 特徴 |
 |------|------|------|
 | `command` | 静的・形式検証 | シェル実行、最速 |
 | `prompt` | 定型チェック | Haiku 1ターン、低コスト |
-| `agent` | 深いレビュー | マルチターン、最大50ターン |
+| `agent` | 深いレビュー | マルチターン、Read/Grep/Glob使用可 |
+| `http` | 外部サービス連携 | JSON経由リクエスト/レスポンス |
 
 ## Skill権限制御
 

@@ -1,7 +1,7 @@
 # サブエージェントオーケストレーション リファレンス
 
 ## TOC
-1. [Task tool パラメータ全量](#task-tool-パラメータ全量)
+1. [Agent tool パラメータ全量](#agent-tool-パラメータ全量)
 2. [subagent_type 一覧](#subagent_type-一覧)
 3. [モデル選択ガイド](#モデル選択ガイド)
 4. [run_in_background 制約](#run_in_background-制約)
@@ -14,7 +14,7 @@
 
 ---
 
-## Task tool パラメータ全量
+## Agent tool パラメータ全量
 
 | パラメータ | 必須 | 型 | デフォルト | 説明 |
 |-----------|------|-----|----------|------|
@@ -37,6 +37,8 @@
 | `Explore` | 読み取り専用（Read, Glob, Grep 等） | コードベース探索・検索（高速・低コスト） |
 | `Plan` | 読み取り専用 | プランモードでの調査 |
 | `Bash` | Bash のみ | コマンド実行（独立コンテキスト） |
+| `claude-code-guide` | WebFetch, WebSearch, Read 等 | ビルトイン: Claude Code 機能Q&A |
+| `statusline-setup` | Read, Edit | ビルトイン: `/statusline` 設定 |
 | カスタム名 | frontmatter `tools` 設定次第 | `.claude/agents/` または `~/.claude/agents/` で定義 |
 
 ---
@@ -73,7 +75,7 @@
 ## isolation: "worktree" 仕様
 
 ```yaml
-Task tool:
+Agent tool:
 - isolation: "worktree"
 - run_in_background: true
 - prompt: authentication モジュールをリファクタリング...
@@ -93,13 +95,15 @@ Task tool:
 
 | フィールド | 必須 | 型 | 説明 |
 |-----------|------|-----|------|
-| `name` | ✓ | string | 小文字とハイフンのみ。`Task(name)` で参照 |
+| `name` | ✓ | string | 小文字とハイフンのみ。`Agent(name)` で参照 |
 | `description` | ✓ | string | 自動選択の判断材料（キーワード重要） |
 | `tools` | - | string | 許可ツールリスト（省略時: 全ツール継承） |
 | `disallowedTools` | - | string | 拒否ツールリスト |
 | `model` | - | enum | `sonnet` / `opus` / `haiku` / `inherit` |
 | `permissionMode` | - | enum | 下記5種参照 |
 | `maxTurns` | - | number | 最大ターン数 |
+| `effort` | - | enum | effort レベル（`low` / `medium` / `high`） |
+| `initialPrompt` | - | string | `--agent` 起動時の自動サブミットプロンプト |
 | `skills` | - | array | 起動時コンテキスト注入スキル（明示列挙必須） |
 | `mcpServers` | - | object | 使用可能な MCP サーバー |
 | `hooks` | - | object | スコープ付きhooks（PreToolUse, PostToolUse, Stop） |
@@ -112,10 +116,12 @@ Task tool:
 
 **サブエージェント生成制限**:
 ```yaml
-tools: Task(worker, researcher), Read, Bash  # worker と researcher のみ生成可
-tools: Task   # 全サブエージェント許可
-# Task 省略: サブエージェント生成禁止
+tools: Agent(worker, researcher), Read, Bash  # worker と researcher のみ生成可
+tools: Agent   # 全サブエージェント許可
+# Agent 省略: サブエージェント生成禁止
 ```
+
+> **v2.1.63+**: Task tool は Agent tool にリネーム。`Task(...)` はエイリアスとして動作するが、新規設定では `Agent(...)` を使用。
 
 **description 自動選択キーワード**:
 ```yaml
@@ -189,8 +195,8 @@ description: MUST BE USED for all security-related code reviews.
 
 | 制約 | 詳細 |
 |------|------|
-| 孫エージェントスポーン | Task tool は1段階のみ（孫エージェント起動不可） |
-| PreToolUse/PostToolUse hooks | サブエージェント内でバイパスされる |
+| 孫エージェントスポーン | Agent tool は1段階のみ（孫エージェント起動不可） |
+| PreToolUse/PostToolUse hooks | サブエージェント内でバイパスされる（frontmatter `hooks` で部分対応可。plugin subagent は hooks 無視） |
 | スキル間参照 | 自動読み込みされない。references/ は同一スキル内のみ機能 |
 | Haiku での ToolSearch | `tool_reference blocks` 非対応（使用不可） |
 | run_in_background + TaskOutput 並列 | Sibling error で全失敗。フォアグラウンド5並列が上限 |

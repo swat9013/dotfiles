@@ -1,7 +1,7 @@
 # Hooks リファレンス
 
 ## TOC
-1. [イベント完全一覧（17種）](#イベント完全一覧)
+1. [イベント完全一覧（25種）](#イベント完全一覧)
 2. [hookSpecificOutput 仕様](#hookspecificoutput-仕様)
 3. [stdin JSON 構造](#stdin-json-構造)
 4. [実装パターン](#実装パターン)
@@ -24,14 +24,22 @@
 | `PostToolUse` | 不可（フィードバックのみ） | `tool_name`, `tool_input`, `tool_response` |
 | `PostToolUseFailure` | 不可（フィードバックのみ） | `tool_name`, `tool_input`, `error` |
 | `Stop` | 可 | `stop_hook_active`, `last_assistant_message` |
+| `StopFailure` | 不可 | `error` |
 | `SubagentStart` | 不可 | `session_id`, `parent_session_id` |
 | `SubagentStop` | 可 | `session_id`, `last_assistant_message` |
 | `TeammateIdle` | 可 | `teammate_name`, `session_id` |
+| `TaskCreated` | 可 | `task_id`, `task_subject`, `task_description`, `teammate_name` |
 | `TaskCompleted` | 可 | `task_id`, `task_subject` |
 | `PreCompact` | 不可 | `context_size`, `token_count` |
+| `PostCompact` | 不可 | `context_size`, `token_count` |
 | `SessionEnd` | 不可 | `session_id`, `duration_ms` |
 | `Notification` | 不可 | `message`, `notification_type` |
 | `ConfigChange` | 可（policy_settings除く） | `file_path`, `old_value`, `new_value` |
+| `CwdChanged` | 不可 | `old_cwd`, `new_cwd` |
+| `FileChanged` | 不可 | `file_path` |
+| `InstructionsLoaded` | 不可 | `file_path` |
+| `Elicitation` | 可 | MCP ツールの入力要求 |
+| `ElicitationResult` | 可 | MCP 入力要求の結果 |
 | `WorktreeCreate` | 可 | `worktree_path`, `branch` |
 | `WorktreeRemove` | 可 | `worktree_path` |
 
@@ -61,6 +69,8 @@ exit 0 の stdout に出力する JSON。イベントごとに使えるフィー
 | `permissionDecision` | `"allow"` / `"deny"` | ツール実行の許可/拒否 |
 | `permissionDecisionReason` | string | Claudeへの説明 |
 | `updatedInput` | object | ツール入力の書き換え（v2.0.10+）。grep → rg 自動変換、パス正規化等 |
+
+**AskUserQuestion 自動応答**（v2.1.85+）: PreToolUse で `tool_name: "AskUserQuestion"` を検出し、`updatedInput` + `permissionDecision: "allow"` を返すことで、ユーザー確認を自動処理可能。
 
 ### SubagentStart / PostToolUse / SessionStart
 
@@ -156,6 +166,8 @@ exit 0
 | `CLAUDE_ENV_FILE` | SessionStart専用の環境変数永続化ファイル |
 | `CLAUDE_CODE_REMOTE` | リモート環境なら `"true"` |
 | `CLAUDE_PLUGIN_ROOT` | プラグインディレクトリパス |
+| `CLAUDE_CODE_MCP_SERVER_NAME` | MCP サーバー名（`headersHelper` スクリプト用） |
+| `CLAUDE_CODE_MCP_SERVER_URL` | MCP サーバーURL（`headersHelper` スクリプト用） |
 
 スクリプト内パス参照は必ず `"$CLAUDE_PROJECT_DIR"/...` 形式（相対パス禁止）。
 

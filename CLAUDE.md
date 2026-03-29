@@ -27,7 +27,7 @@ brew bundle --global        # Homebrewパッケージ更新
 - `colima/colima.yaml` → `~/.colima/default/`配下
 - `.claude-global/` → `~/.claude/`配下
 
-**重要**: `.claude/agents/` は使用しない。サブエージェントはskill内でTask toolを使ってadhocに呼び出す。
+**重要**: `.claude/agents/` は使用しない。サブエージェントはskill内でAgent toolを使ってadhocに呼び出す。
 
 ### docs/ と rules/ の責務分担
 
