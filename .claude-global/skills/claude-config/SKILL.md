@@ -235,6 +235,7 @@ Task tool (sonnet, allowed-tools: WebSearch, WebFetch, Write, Bash):
     - 新機能・破壊的変更・非推奨化
     - settings/hooks/skills/subagent/CLAUDE.md の仕様変更
     - 新しいベストプラクティス・Gotchas
+    - ベストプラクティス記事の発見と知見抽出（検索クエリ結果から質の高い記事を選別し、設定改善に活かせるパターン・テクニックを抽出する。公式情報と矛盾する場合は公式を優先）
     - 以下のワークアラウンドに関連するバグ修正・機能実装の有無
       {upstream-sources.md の監視対象ワークアラウンドを全文転記}
 

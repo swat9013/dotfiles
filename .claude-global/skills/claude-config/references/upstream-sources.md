@@ -23,7 +23,10 @@ last-auto-update: 2026-03-29T16:20
 
 | クエリ | 用途 |
 |--------|------|
-| `site:anthropic.com/news claude code` | ブログ記事発見用 |
+| `site:anthropic.com/news claude code` | 公式ブログ記事発見用 |
+| `"claude code" best practices settings hooks` | 設定・hooks ベストプラクティス記事 |
+| `"claude code" CLAUDE.md tips workflow` | CLAUDE.md 設計パターン・ワークフロー記事 |
+| `"claude code" skills custom slash command` | スキル活用事例・設計パターン記事 |
 
 ---
 
