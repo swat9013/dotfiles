@@ -97,9 +97,8 @@ prompt: |
 
 ### Step 3: レビュー結果ファイル書き出し
 
-`templates/output.md` の形式に従い、`.claude/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
+`templates/output.md` の形式に従い、`.claude/tmp/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
 - `{topic}`: $ARGUMENTS または変更ファイル群から推定したkebab-caseスラッグ
-- ファイル書き出し前に: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh review` を実行
 
 ### Step 4: issue判定
 

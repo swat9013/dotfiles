@@ -106,10 +106,6 @@ Task tool:
 
 ### Phase 3: plan file 書き出し
 
-#### 準備
-
-`~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh plans` を実行。
-
 #### 保存先
 
 `.claude/plans/YYYY-MM-DD-HHMMSS-{topic}.md`

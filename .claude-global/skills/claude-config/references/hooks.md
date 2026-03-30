@@ -188,15 +188,45 @@ claude --debug  # 実行詳細の確認
 3. ログ追加: `echo "[hook] FILE=$FILE_PATH" >> /tmp/hook.log`
 4. PreToolUse ガードは最後に追加（全ツール実行に影響）
 
+**デバッグ用入力キャプチャ**（一時的に追加→原因特定後に削除）:
+
+```bash
+INPUT=$(cat)
+printf '%s\n' "$INPUT" > /tmp/hook-debug.json  # 実際の入力を保存
+```
+
 **Exit code 規則**:
 
 | コード | 意味 | 備考 |
 |-------|------|------|
 | `0` | 成功 | stdout が JSON なら解析される |
 | `2` | ブロッキングエラー | stderr が Claude へフィードバック |
-| その他 | 非ブロッキングエラー | 実行継続 |
+| その他 | 非ブロッキングエラー | 「hook returned error」表示、実行は継続 |
 
 `exit 2` 時は stdout の JSON は無視される。両方使う場合は `exit 0 + hookSpecificOutput deny` を使う。
+
+### ハマりポイント
+
+**`set -e` はhookスクリプトで使わない**:
+hookは「失敗しても本体処理を妨げない」べき。`set -e` があると jq パース失敗等で即座に non-zero exit → 「hook returned error」表示。代わりに `|| exit 0` で個別ガードする。
+
+**`echo "$INPUT"` は任意JSONに対して安全でない**:
+PostToolUse の Write 入力は `tool_input.content` にファイル全文を含むため、JSONが巨大になる。`echo` はバックスラッシュ解釈やバッファ制限の問題があるため、`printf '%s\n' "$INPUT"` を使う。
+
+**hookの実行環境はユーザーシェルと異なる**:
+手動テスト（`echo '...' | ./hook.sh`）では再現しないエラーがhook実行時に発生し得る。PATH、環境変数、カレントディレクトリが異なる可能性がある。外部コマンドはフルパス指定が安全。
+
+**安全なhookスクリプトのテンプレート**:
+
+```bash
+#!/bin/sh
+# set -e は使わない
+
+INPUT=$(cat)
+TOOL=$(printf '%s\n' "$INPUT" | jq -r '.tool_name' 2>/dev/null) || exit 0
+# ... 処理 ...
+exit 0
+```
 
 ---
 
@@ -243,3 +273,5 @@ claude --debug  # 実行詳細の確認
 | 相対パス使用 | ディレクトリ移動で壊れる | `$CLAUDE_PROJECT_DIR` を使う |
 | シェル変数をクォートなしで展開 | スペース含むパスで破損 | `"$FILE_PATH"` と必ずクォート |
 | CLAUDE.md に「リンター実行せよ」と書くだけ | 「ほぼ毎回」止まり | Hook で「例外なく毎回」に強制 |
+| `set -e` をhookスクリプトで使用 | jq失敗等で即死→「hook returned error」 | `|| exit 0` で個別ガード |
+| `echo "$INPUT"` でJSON受け渡し | 巨大JSON・バックスラッシュで破損 | `printf '%s\n' "$INPUT"` を使う |

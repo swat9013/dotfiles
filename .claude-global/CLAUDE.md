@@ -23,4 +23,4 @@
 - ツールが動作しない場合は不具合を修正してから進める。バイパス禁止
 - サブエージェント委譲は基本sonnet、軽量タスク（検索、ファイル存在確認、定型出力収集）のみhaiku
 - Bash toolで `$()` コマンド置換禁止（サブシェルごとにパーミッション確認が発生）。代替: `$PWD`、パイプ、`&&`チェーンでの中間変数、複数Bash呼び出し分割
-- gitコミット手順: ① Writeツールでメッセージ全体（トレーラー含む）を `.claude-commit` に書く → ② `git commit -F .claude-commit` で実行。HEREDOC（`$(cat <<'EOF')`）や複数`-m`フラグはパーミッションプロンプトを誘発するため禁止
+- gitコミット手順: ① Writeツールでメッセージ全体（トレーラー含む）を `.claude/tmp/commit/YYYYMMDD-HHMMSS.txt` に書く（タイムスタンプは実行時刻） → ② `git commit -F .claude/tmp/commit/YYYYMMDD-HHMMSS.txt` で実行。HEREDOC（`$(cat <<'EOF')`）や複数`-m`フラグはパーミッションプロンプトを誘発するため禁止

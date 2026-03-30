@@ -14,11 +14,10 @@ argument-hint: "<topic>"
 
 ## 起動手順
 
-1. ディレクトリ初期化: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh dialogues` を実行
-2. 対話ログファイルを作成:
+1. 対話ログファイルを作成:
    - パス: `.claude/dialogues/YYYY-MM-DD-HHmmss-<topic-slug>.md`
    - topic-slugは `$ARGUMENTS` から英数字+ハイフンで生成（30文字以内）
-3. ログファイルの初期内容を書き込む:
+2. ログファイルの初期内容を書き込む:
 ```markdown
 ---
 topic: $ARGUMENTS

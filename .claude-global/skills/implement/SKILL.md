@@ -319,8 +319,7 @@ prompt: |
 
 ### 8. レビュー結果ファイル書き出し
 
-レビューサイクルを実行した場合、結果を `.claude/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
-- 書き出し前に: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh review` を実行
+レビューサイクルを実行した場合、結果を `.claude/tmp/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
 - `{topic}`: 変更ファイル群から推定したkebab-caseスラッグ
 
 ## タスク種別とサブエージェントのロール

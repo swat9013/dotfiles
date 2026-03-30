@@ -69,7 +69,6 @@ disable-model-invocation: true
 
 `templates/discovery.md` を使用して `.claude/discovery/YYYY-MM-DD-HHMMSS-{topic}.md` に保存する。
 - `{topic}`: 対話で明確になった問題のkebab-caseスラッグ
-- ファイル書き出し前に: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh discovery` を実行
 
 
 ---

@@ -67,7 +67,6 @@ plan.md の各フェーズを 1-2時間粒度のタスクに分解。
 
 **保存先**: `.claude/implement/YYYY-MM-DD-HHMMSS-{topic}.md`
 - `{topic}`: planのタイトルまたは $ARGUMENTS からkebab-caseで生成
-- ファイル書き出し前に: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh implement` を実行
 
 
 テンプレート: `~/.claude/skills/breakdown/templates/implementation.md`

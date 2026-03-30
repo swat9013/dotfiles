@@ -385,7 +385,6 @@ TaskUpdate({ taskId: "Phase3のID", status: "in_progress" })
 
 **保存先**: `.claude/plans/YYYY-MM-DD-HHMMSS-{topic}.md`
 - `{topic}`: $ARGUMENTS からkebab-caseで生成（例: `auth-redesign`）
-- ファイル書き出し前に: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh plans` を実行
 
 **テンプレート**: `~/.claude/skills/architect/templates/plan.md`
 

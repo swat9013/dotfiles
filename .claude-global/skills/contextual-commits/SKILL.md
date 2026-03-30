@@ -76,9 +76,8 @@ action_type(scope): 説明文
 
 改行を含むメッセージはHEREDOCが使えない（改行禁止hook）。**Write tool → `git commit -F`** で実行する:
 
-1. `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh tmp` でディレクトリ初期化
-2. `Write(.claude/tmp/commit-msg.txt)` でメッセージ作成
-3. `git commit -F .claude/tmp/commit-msg.txt` でコミット
+1. `Write(.claude/tmp/commit/YYYYMMDD-HHMMSS.txt)` でメッセージ作成（タイムスタンプは実行時刻）
+2. `git commit -F .claude/tmp/commit/YYYYMMDD-HHMMSS.txt` でコミット
 
 > `-m` 複数指定は各 `-m` 間がダブル改行になり action lines が崩れる。`-F` を使うこと。
 
