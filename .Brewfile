@@ -38,7 +38,6 @@ brew "wget"
 brew "zlib"
 
 # Shell
-brew "direnv"
 brew "sheldon"
 brew "starship"
 brew "tmux"
@@ -144,15 +143,3 @@ vscode "streetsidesoftware.code-spell-checker"
 vscode "tuttieee.emacs-mcx"
 vscode "vue.volar"
 vscode "yzhang.markdown-all-in-one"
-
-# Mac App Store
-mas "Bitwarden", id: 1352778147
-mas "GarageBand", id: 682658836
-mas "Keynote", id: 409183694
-mas "Kindle", id: 302584613
-mas "LadioCast", id: 411213048
-mas "LINE", id: 539883307
-mas "Magic", id: 1581223559
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Windows App", id: 1295203466

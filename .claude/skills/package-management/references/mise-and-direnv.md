@@ -22,15 +22,17 @@
 
 **キャッシュの注意点**: mise アップデート後にキャッシュ削除が必要（`rm ~/.cache/mise/activate.zsh`）。IDE のターミナル以外（GUI から直接起動されるプロセス等）では activate が効かない。そのケースでは `mise x -- command` で明示実行。
 
-## direnv 併用の判断
+## direnv → mise 移行完了（2026-03-30）
 
-mise 公式は direnv との併用を非推奨（`mise activate` が direnv の機能を包含するため）。
+direnv は完全削除済み。環境変数管理は mise `[env]` に一本化。
 
-**それでも残置している理由**:
-- 既存プロジェクトに `.envrc` が存在し、mise `[env]` への一括移行は非現実的
-- direnv はプロジェクト横断的なツール。dotfiles 以外のリポジトリでも使用
+**削除内容**:
+- `.zsh/direnv.zsh`（hook初期化）
+- `.Brewfile` の `brew "direnv"`
+- `~/.cache/direnv/`（キャッシュ）
 
-**将来の方向**: 新規プロジェクトでは mise `[env]` セクションを優先。既存 `.envrc` は段階的に移行。
+**移行方針**: 既存プロジェクトの `.envrc` は各プロジェクトで `mise.toml` の `[env]` に段階的に移行。
+詳細な変換パターンは `mise` スキルの `references/env-migration.md` を参照。
 
 ## .tool-versions の運用
 

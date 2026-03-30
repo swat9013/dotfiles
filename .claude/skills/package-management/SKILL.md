@@ -25,7 +25,7 @@ description: |-
 | システムツール | Homebrew (brew) | CLI、ライブラリ | macOS標準。依存解決が堅牢 |
 | GUIアプリ | Homebrew (cask) | .app | brew統合で一元管理 |
 | App Store | mas | App Store購入済みアプリ | caskにない配布形態。Apple ID紐付き |
-| 言語バージョン | mise | Node/Python/Ruby等 | asdfから移行。7倍高速、direnv統合可能 |
+| 言語バージョン | mise | Node/Python/Ruby等 | asdfから移行。7倍高速、direnv代替も内蔵 |
 
 **Homebrew Bundleで管理しないもの**: システム設定（defaults write）、GUI設定値、サブスクリプション型アプリ（Setapp等）
 
@@ -60,8 +60,8 @@ description: |-
 | Brewfile.lock.json | バージョンロックではなくデバッグ情報。再現性保証に使えない |
 | mas の Apple ID 制限 | 一度も購入していないアプリはインストール不可。新マシンでは事前にApp Store手動購入が必要 |
 | `brew bundle --cleanup` の破壊性 | Brewfileにないパッケージを削除する。`--force`なしなら確認あり |
-| mise activate vs shims | activate推奨（PATH動的切替）。shims は120msオーバーヘッド。`.zshrc`でキャッシュ方式（direnv同様）を使用中。miseアップデート時はキャッシュ手動削除が必要 |
-| mise + direnv 併用 | mise公式は非推奨だが、プロジェクト固有`.envrc`用に direnv を残置。mise `[env]`への段階的移行を検討中 |
+| mise activate vs shims | activate推奨（PATH動的切替）。shims は120msオーバーヘッド。`.zsh/mise.zsh`でキャッシュ方式を使用中。miseアップデート時はキャッシュ手動削除が必要 |
+| direnv削除済み | direnvは完全削除（2026-03-30）。環境変数管理はmise `[env]` に一本化。詳細は `mise` スキル参照 |
 | tap の明示管理 | サードパーティ tap は Brewfile 先頭で明示宣言。暗黙依存を防ぐ |
 
 ## 詳細リファレンス
