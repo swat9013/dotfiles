@@ -6,7 +6,8 @@
   },
   "env": {
     "ENABLE_TOOL_SEARCH": "true",
-    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
   },
   "permissions": {
     "allow": [
@@ -78,6 +79,26 @@
       "Bash(glab variable export:*)",
       "Bash(glab config get:*)",
       "Bash(glab auth status:*)",
+      "Bash(gog auth list:*)",
+      "Bash(gog config list:*)",
+      "Bash(gog gmail search:*)",
+      "Bash(gog gmail messages search:*)",
+      "Bash(gog gmail thread get:*)",
+      "Bash(gog gmail labels list:*)",
+      "Bash(gog gmail filters list:*)",
+      "Bash(gog calendar events:*)",
+      "Bash(gog drive ls:*)",
+      "Bash(gog drive search:*)",
+      "Bash(gog ls:*)",
+      "Bash(gog search:*)",
+      "Bash(gog contacts search:*)",
+      "Bash(gog contacts list:*)",
+      "Bash(gog tasks list:*)",
+      "Bash(gog open:*)",
+      "Bash(gog version:*)",
+      "Bash(wt list:*)",
+      "Bash(wt config show:*)",
+      "Bash(wt --version:*)",
       "Task(Explore)",
       "Task(Plan)",
       "Skill",
@@ -219,6 +240,18 @@
           {
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/session-cleanup.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/posttooluse-open-zed.sh",
+            "timeout": 10
           }
         ]
       }

@@ -248,7 +248,6 @@ Task tool (sonnet, allowed-tools: WebSearch, WebFetch, Write, Bash):
     1. `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh research` を実行
     2. 調査結果を `.claude/research/YYYY-MM-DD-HHMMSS-claude-code-updates.md` に Write
        - セクション構成: 調査概要 / カテゴリ別変更 / ワークアラウンド状況 / 参考資料
-    3. `~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh <filepath>` を実行
 ```
 
 ### Step A3: 更新有無の判定

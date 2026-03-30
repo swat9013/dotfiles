@@ -124,7 +124,7 @@ WebSearch/WebFetchを使用して最新情報を収集すること。
 **保存先**: `.claude/research/YYYY-MM-DD-HHMMSS-{topic}.md`
 - `{topic}`: $ARGUMENTS または調査対象からkebab-caseで生成（例: `auth-library-comparison`）
 - ファイル書き出し前に: `~/.dotfiles/.claude-global/skills/scripts/claude-output-init.sh research` を実行
-- ファイル書き出し後に: `~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh <filepath>` を実行
+
 
 **テンプレート**: `~/.claude/skills/researcher/templates/report.md`
 

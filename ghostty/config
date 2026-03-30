@@ -15,6 +15,7 @@ window-padding-balance = true
 unfocused-split-opacity = 0.80
 unfocused-split-fill = #000000
 window-inherit-working-directory = false
+tab-inherit-working-directory = false
 
 # シェル統合
 shell-integration = detect

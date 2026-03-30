@@ -10,11 +10,8 @@ description: |-
 
 ## バージョン情報
 
-| ツール | 現在 | 記録 |
-|--------|------|------|
-| brew | !`brew --version 2>/dev/null \| head -1 \| awk '{print $2}' \|\| echo "(未インストール)"` | 4.5.3 |
-| mise | !`mise version 2>/dev/null \| awk '{print $1}' \|\| echo "(未インストール)"` | 2026.3.17 |
-| mas | !`mas version 2>/dev/null \|\| echo "(未インストール)"` | 6.0.1 |
+現在: !`./scripts/versions.sh`
+記録: brew 5.1.1 | mise 2026.3.17 | mas 6.0.1
 
 バージョンが異なる場合、ユーザーに通知。確認後にWebFetchでリリースノートを取得し、スキル内容を更新。
 

@@ -116,7 +116,7 @@ Task tool:
 
 - `{topic}`: $ARGUMENTS から kebab-case で生成（例: `auth-redesign`）
 - 日時は `date '+%Y-%m-%d-%H%M%S'` で取得
-- ファイル書き出し後に: `~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh <filepath>` を実行
+
 
 #### plan file の内容
 
