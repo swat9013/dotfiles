@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "bindings": {
+      "cmd-shift-c": "editor::CopyRelativePath"
+    }
+  }
+]

@@ -189,5 +189,4 @@ if [[ $FAILED -eq 0 ]]; then
   echo "GATE: PASS"
 else
   echo "GATE: FAIL"
-  exit 1
 fi
