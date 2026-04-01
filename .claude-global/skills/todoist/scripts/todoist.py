@@ -10,8 +10,8 @@
 Usage:
     todoist.py init
     todoist.py list
-    todoist.py add [--priority N] [--due DATE] [--labels L1,L2] [--description DESC] [--parent-id ID] TITLE
-    todoist.py update TASK_ID [--content TEXT] [--description TEXT] [--priority N] [--due DATE] [--labels L1,L2]
+    todoist.py add [--priority N] [--due DATE] [--labels L1,L2] [--description DESC] [--description-file FILE] [--parent-id ID] TITLE
+    todoist.py update TASK_ID [--content TEXT] [--description TEXT] [--description-file FILE] [--priority N] [--due DATE] [--labels L1,L2]
     todoist.py close TASK_ID
     todoist.py delete TASK_ID
 """
@@ -213,6 +213,16 @@ def cmd_get(api: TodoistAPI, args: argparse.Namespace) -> None:
                     print(f"  {line}")
 
 
+def resolve_description(args: argparse.Namespace) -> str | None:
+    """Return description from --description-file (priority) or --description."""
+    if getattr(args, "description_file", None):
+        path = Path(args.description_file)
+        if not path.exists():
+            die(f"Description file not found: {path}")
+        return path.read_text().rstrip("\n")
+    return getattr(args, "description", None)
+
+
 def cmd_add(api: TodoistAPI, args: argparse.Namespace) -> None:
     name, project = require_project(api)
 
@@ -227,8 +237,9 @@ def cmd_add(api: TodoistAPI, args: argparse.Namespace) -> None:
         kwargs["due_string"] = args.due
     if args.labels:
         kwargs["labels"] = [l.strip() for l in args.labels.split(",")]
-    if args.description:
-        kwargs["description"] = args.description
+    desc = resolve_description(args)
+    if desc:
+        kwargs["description"] = desc
     if args.parent_id:
         kwargs["parent_id"] = args.parent_id
 
@@ -240,8 +251,9 @@ def cmd_update(api: TodoistAPI, args: argparse.Namespace) -> None:
     kwargs: dict = {}
     if args.content is not None:
         kwargs["content"] = args.content
-    if args.description is not None:
-        kwargs["description"] = args.description
+    desc = resolve_description(args)
+    if desc is not None:
+        kwargs["description"] = desc
     if args.priority is not None:
         kwargs["priority"] = 5 - args.priority
     if args.due is not None:
@@ -287,12 +299,14 @@ def parse_args() -> argparse.Namespace:
     p_add.add_argument("--due", help="Due date (e.g. 'tomorrow', '2026-03-01')")
     p_add.add_argument("--labels", help="Comma-separated labels")
     p_add.add_argument("--description", help="Task description")
+    p_add.add_argument("--description-file", help="Read description from file")
     p_add.add_argument("--parent-id", help="Parent task ID (for subtasks)")
 
     p_update = sub.add_parser("update", help="Update task")
     p_update.add_argument("task_id", help="Task ID")
     p_update.add_argument("--content", help="New task title")
     p_update.add_argument("--description", help="New description")
+    p_update.add_argument("--description-file", help="Read description from file")
     p_update.add_argument("--priority", type=int, choices=[1, 2, 3, 4], help="Priority (1=highest, 4=lowest)")
     p_update.add_argument("--due", help="Due date")
     p_update.add_argument("--labels", help="Comma-separated labels")
