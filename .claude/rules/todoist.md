@@ -6,13 +6,9 @@ paths: .claude-global/skills/todoist/**
 
 ## リファインメント基準
 
-- INVEST全6原則は参照用。個人タスク管理の主軸は **S**(mall)・**T**(estable)・**V**(aluable) の3項目
-- I(ndependent)・N(egotiable)・E(stimable) は稀なケースのみ適用
-
-## DoD（Definition of Done）
-
-- 全タスクに必須ではない。完了条件が曖昧なタスクのみ限定適用
-- 「CLAUDE.mdにルール追加」のような明快なタスクにはDoD不要
+- リファインの軸は**背景・意図・完了条件**の3点補完
+- 明快なタスク（「CLAUDE.mdにルール追加」等）はリファイン不要。スキップする
+- 粒度が大きいタスク（1日超）はリファイン時に分割提案を併せて行う
 
 ## git worktree 対応
 

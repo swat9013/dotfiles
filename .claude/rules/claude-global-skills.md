@@ -159,7 +159,7 @@ agent: true
 | context-optimizer | 「CLAUDE.md圧縮」「コンテキスト最適化」 |
 | doc-architect | 「ドキュメント設計」「docs作成」 |
 | todoist | 「Todoist」「タスク追加」「todo確認」 |
-| todoist-refine | 「タスクリファイン」「タスク整理」「INVEST」 |
+| todoist-refine | 「タスクリファイン」「タスク整理」「タスク明確化」 |
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」 |
 | prompt-review | 「/prompt-review」「プロンプトをレビューして」「対話履歴を分析して」「理解度を診断して」 |
 | drawio | 「drawio」「.drawio」「図を作って」 |
