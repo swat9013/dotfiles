@@ -150,7 +150,7 @@ fi
 ### SubagentStart でのコンテキスト注入
 
 ```bash
-printf '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"セキュリティガイドライン: rm禁止、rmtrash使用"}}'
+printf '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"セキュリティガイドライン: 機密ファイル書き込み禁止、破壊的git操作禁止"}}'
 exit 0
 ```
 

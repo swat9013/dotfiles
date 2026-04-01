@@ -23,7 +23,7 @@ paths: .claude-global/settings.json
 | 読み手 | 機械（Claude Code本体） | Claude（AIモデル） |
 | 記載内容 | 権限、hooks登録、UI設定 | コーディング原則、環境情報 |
 | 形式 | JSON | Markdown |
-| 例 | `"deny": ["Read(.env)"]` | 「rm → rmtrash で誤削除防止」 |
+| 例 | `"deny": ["Read(.env)"]` | 「破壊的git操作は git stash で退避」 |
 
 ## 主要設定
 
@@ -140,4 +140,4 @@ hook type と使い分け:
 - フックでカバーする操作は `deny` にも登録する（フック未実行時の安全網）
 - 機密ファイルは Read/Write/Edit すべて `deny` に追加
 - 広範なBash許可を避ける（`"Bash(*)"` は禁止）
-- フックでは対応できない静的パターン（`rm -rf` 等）は `deny` のみで防御
+- `rm` はシェルalias（`rm='rmtrash'`）で透過的にゴミ箱へ移動される

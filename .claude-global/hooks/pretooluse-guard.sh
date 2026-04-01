@@ -26,11 +26,6 @@ if [ "$TOOL" = "Bash" ]; then
     deny "bash/shの直接実行は禁止。構文チェックにはshellcheckを使用してください"
   fi
 
-  # B: rm 禁止（rmtrash使用を強制）
-  if printf '%s\n' "$COMMAND" | grep -qE '^rm( |$)'; then
-    deny "rmは使用禁止。rmtrash（ファイル）またはrmtrash -r（ディレクトリ）を使用してください"
-  fi
-
   # D: git add . / -A 禁止（明示的なファイル指定を強制）
   if printf '%s\n' "$COMMAND" | grep -qE '^git add (-A|--all|\.)( |$)'; then
     deny "git add . / -A は禁止。ファイルを個別に指定してください"

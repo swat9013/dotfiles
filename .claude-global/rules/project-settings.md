@@ -22,7 +22,7 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 |---------|---------------|-----------|
 | 読み手 | 機械（Claude Code本体） | Claude（AIモデル） |
 | 記載内容 | 権限、hooks登録、UI設定 | コーディング原則、環境情報 |
-| 例 | `"deny": ["Read(.env)"]` | 「rm → rmtrash で誤削除防止」 |
+| 例 | `"deny": ["Read(.env)"]` | 「破壊的git操作は git stash で退避」 |
 
 ## 主要設定
 
