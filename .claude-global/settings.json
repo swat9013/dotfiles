@@ -113,6 +113,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/managing-skills/scripts/init_skill.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-config.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/todoist-url-inject.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",
       "Bash(shellcheck:*)",
       "Bash(/Applications/draw.io.app/Contents/MacOS/draw.io:*)",
@@ -229,6 +230,11 @@
           {
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/skill-activation.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/todoist-url-inject.sh",
+            "timeout": 15000
           }
         ]
       }

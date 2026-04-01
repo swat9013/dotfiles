@@ -4,3 +4,4 @@ GTAGS
 .DS_store
 .tool-versions
 .config
+mise.toml

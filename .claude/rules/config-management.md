@@ -27,6 +27,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 | **スキル設計ルールの重複保有** | managing-skills/references/patterns.md ↔ claude-config/references/skills.md | 両ファイルが「description 130字以下」「500行制限」等の判定基準を保有。一方だけ更新→診断基準と設計ガイドが乖離。正規ソースは `rules/claude-global-skills.md` |
 | **Gotchas 追記ルール** | claude-config/references/update-guide.md（「Gotchas は dotfiles CLAUDE.md に追記」と明示）↔ managing-skills/SKILL.md（同ルール未記載） | 新スキル作成時に発見したGotchasの追記先がmanaging-skills側で案内されない |
 | **skill-activation.sh の3ステップ構造** | hooks/skill-activation.sh の出力テキスト（EVALUATE/ACTIVATE/IMPLEMENT）↔ 全スキルのSKILL.md description設計 | 出力テキスト変更→スキル自動選択精度が変化。hook無効化→選択率が大幅低下。description の最適化はhook有効を前提としている |
+| **todoist-refine のスクリプトパス参照** | todoist-refine/SKILL.md のスクリプトパス ↔ todoist/scripts/todoist.py の実体パス | todoist.py のパス変更時に todoist-refine 側が壊れる（コマンド不在エラー） |
 
 ## 2. 変更ガイド
 

@@ -1,16 +1,26 @@
 #!/bin/bash
 # スキル雛形を生成するスクリプト
-# Usage: init_skill.sh <skill-name> [output-path]
+# Usage: init_skill.sh [--minimal] <skill-name> [output-path]
 
 set -e
 
-SKILL_NAME="$1"
-OUTPUT_PATH="${2:-.}"
+MINIMAL=false
+ARGS=()
+for arg in "$@"; do
+  case "$arg" in
+    --minimal) MINIMAL=true ;;
+    *) ARGS+=("$arg") ;;
+  esac
+done
+SKILL_NAME="${ARGS[0]}"
+OUTPUT_PATH="${ARGS[1]:-.}"
 
 # 引数チェック
 if [ -z "$SKILL_NAME" ]; then
-    echo "Usage: $0 <skill-name> [output-path]"
+    echo "Usage: $0 [--minimal] <skill-name> [output-path]"
+    echo "  --minimal  SKILL.mdのみ生成（references/scripts/assetsディレクトリ省略）"
     echo "Example: $0 my-awesome-skill ~/.claude/skills"
+    echo "Example: $0 --minimal my-awesome-skill ~/.claude/skills"
     exit 1
 fi
 
@@ -35,15 +45,19 @@ if [ -d "$SKILL_DIR" ]; then
 fi
 
 # ディレクトリ作成
-mkdir -p "$SKILL_DIR"/{references,scripts,assets}
+if [ "$MINIMAL" = true ]; then
+    mkdir -p "$SKILL_DIR"
+else
+    mkdir -p "$SKILL_DIR"/{references,scripts,assets}
+fi
 
 # SKILL.md生成
 cat > "$SKILL_DIR/SKILL.md" << EOF
 ---
 name: $SKILL_NAME
 description: |-
-  [TODO: 三人称で記述。例：「〇〇を担当する支援エージェント。」]
-  [TODO: トリガーキーワード。例：「〜して」「〜したい」と依頼された時に使用。]
+  [TODO: 三人称で記述。例：「〇〇を支援する。」]
+  Use when「[TODO: キーワード1]」「[TODO: キーワード2]」。
 ---
 
 # ${SKILL_NAME//-/ }
@@ -80,7 +94,8 @@ description: |-
 EOF
 
 # サンプルreference生成
-cat > "$SKILL_DIR/references/README.md" << EOF
+if [ "$MINIMAL" != true ]; then
+    cat > "$SKILL_DIR/references/README.md" << EOF
 # References
 
 詳細なドキュメントをここに配置。
@@ -89,6 +104,7 @@ cat > "$SKILL_DIR/references/README.md" << EOF
 - スキーマ定義
 - 詳細な例
 EOF
+fi
 
 echo "Created skill at: $SKILL_DIR"
 echo ""
