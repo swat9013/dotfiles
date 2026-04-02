@@ -116,8 +116,8 @@ agent: true
 ## Gotchas
 
 - **サブエージェント残存**: Agent toolで起動したサブエージェントは親セッション終了後も残存しメモリ消費。定期的に`cck --sub`でクリーンアップ
-- **Agent tool 並列制限**: `run_in_background` + TaskOutput並列取得は全失敗（Sibling error）。foreground で最大5並列が安全上限
-- **Agent tool 制約**: 孫エージェントスポーン不可（1段階のみ）。PreToolUse/PostToolUse hooks はバイパスされる（frontmatter `hooks` で部分対応可）
+- **Agent tool 並列制限**: `TaskOutput` は非推奨（v2.1.83）。バックグラウンドタスクの出力は `Read` でファイルパスから取得。foreground で最大5並列が安全上限
+- **Agent tool 制約**: 孫エージェントスポーン不可（1段階のみ）。PreToolUse/PostToolUse hooks はバイパスされる（frontmatter `hooks` で部分対応可）。**plugin subagents は `hooks`/`mcpServers`/`permissionMode` frontmatter を無視（仕様確定）** — `.claude/agents/` にコピーで回避
 - **Skill tool 連鎖不可**: Skill tool で他スキルを呼び出すと失敗。スキル間連携はユーザーに次スキルを案内
 - **スキル間参照**: 自動読み込みされない。references/ は同一スキル内のみ機能。スキル間参照はデッドリンク化
 - **ToolSearch**: claude-haiku-4-5 では利用不可（tool_reference blocks 非対応）
@@ -163,6 +163,7 @@ agent: true
 | setup-linter-hooks | 「linter hook作成」「formatter hook設定」 |
 | prompt-review | 「/prompt-review」「プロンプトをレビューして」「対話履歴を分析して」「理解度を診断して」 |
 | drawio | 「drawio」「.drawio」「図を作って」 |
+| claude-code-release | 「Claude Code リリースノート」「最新バージョン」「アップデート内容」 |
 | claude-config | 「設定を最適化」「config」「Claude設定チェック」「ベストプラクティス反映」 |
 
 ### 知識系スキル（user-invocable: false）

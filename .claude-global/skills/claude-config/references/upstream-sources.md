@@ -2,7 +2,7 @@
 
 ## 最終更新日
 
-last-auto-update: 2026-03-29T16:20
+last-auto-update: 2026-04-02
 
 ---
 
@@ -38,10 +38,15 @@ last-auto-update: 2026-03-29T16:20
 |------|------|---------|
 | `$()` コマンド置換禁止 | サブシェルごとにパーミッション確認が発生 | CLAUDE.md |
 | HEREDOC禁止（`git commit`） | パーミッションプロンプト誘発 | CLAUDE.md |
-| Agent tool `run_in_background` + TaskOutput並列禁止 | Sibling error で全失敗 | Gotchas |
 | Agent tool 孫エージェントスポーン不可 | 1段階のみ | Gotchas |
-| PreToolUse/PostToolUse hooks が Agent tool でバイパスされる | subagent frontmatter での hooks 定義で部分対応済。plugin subagent は hooks frontmatter 無視 | Gotchas |
 | Skill tool 連鎖不可 | 呼び出しが失敗 | Gotchas |
 | ToolSearch が claude-haiku-4-5 で利用不可 | tool_reference blocks 非対応 | Gotchas |
 
 修正確認後: 対応ワークアラウンドを記載箇所から削除し、このテーブルから行を除去する。
+
+### 2026-04-02 に監視対象から除外
+
+| 制約 | 理由 |
+|------|------|
+| `run_in_background` + TaskOutput並列禁止 | TaskOutput 自体が v2.1.83 で非推奨化。`Read` で代替可能になり制約解消 |
+| PreToolUse/PostToolUse hooks が Agent tool でバイパスされる | 仕様として確定（plugin subagents は hooks/mcpServers/permissionMode を無視）。ワークアラウンドではなく設計上の制約 |

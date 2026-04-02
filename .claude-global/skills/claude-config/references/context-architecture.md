@@ -114,6 +114,7 @@ Follow Kent Beck's Test-Driven Development methodology (tdd skill) as the prefer
 |---------|------|--------------|
 | `/compact` | 会話履歴をサマリーに圧縮 | 同じ作業を続けながらコンテキストを削減（使用率 70% 目安） |
 | `/clear` | 会話履歴を完全リセット | 全く別タスクへ切り替える時、コミット完了後 |
+| `/btw` | クイック質問（コンテキスト非消費） | 作業中の関連しない軽い質問 |
 
 ---
 

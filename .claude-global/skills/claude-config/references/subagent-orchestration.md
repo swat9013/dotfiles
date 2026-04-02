@@ -68,8 +68,9 @@
 | 推奨同時実行数 | 5-7個 | 3-5個 |
 | 用途 | 短時間・インタラクティブ | 長時間・CPU集約型・完全自律 |
 
-`run_in_background: true` + `TaskOutput` 並列取得は全失敗（Sibling error）。フォアグラウンドで最大5並列が安全上限。
 `run_in_background` 使用時は MCP ツール（glab, gh, etc.）が使えない。CLI ツールは Bash 経由で代替。
+
+> **v2.1.83**: `TaskOutput` ツールは**非推奨化**。バックグラウンドタスクの出力はファイルパスへの `Read` で取得する。フォアグラウンドで最大5並列が安全上限。
 
 ---
 
@@ -199,8 +200,8 @@ description: MUST BE USED for all security-related code reviews.
 | 制約 | 詳細 |
 |------|------|
 | 孫エージェントスポーン | Agent tool は1段階のみ（孫エージェント起動不可） |
-| PreToolUse/PostToolUse hooks | サブエージェント内でバイパスされる（frontmatter `hooks` で部分対応可。plugin subagent は hooks 無視） |
+| PreToolUse/PostToolUse hooks | サブエージェント内でバイパスされる（frontmatter `hooks` で部分対応可）。**plugin subagents は `hooks`/`mcpServers`/`permissionMode` frontmatter を無視（仕様確定）**。回避策: `.claude/agents/` にコピーして非プラグインエージェントとして定義 |
 | スキル間参照 | 自動読み込みされない。references/ は同一スキル内のみ機能 |
 | Haiku での ToolSearch | `tool_reference blocks` 非対応（使用不可） |
-| run_in_background + TaskOutput 並列 | Sibling error で全失敗。フォアグラウンド5並列が上限 |
+| TaskOutput 非推奨（v2.1.83） | `TaskOutput` は非推奨化。バックグラウンドタスクの出力は `Read` でファイルパスから取得 |
 | セッション再開 | `resume` パラメータでセッション ID 指定。チームメイトは再開不可 |

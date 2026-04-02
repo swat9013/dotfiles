@@ -39,6 +39,11 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 | `enabledPlugins` | プラグイン制御 | `{"name@author": true}` |
 | `effortLevel` | effortレベル永続化 | `"low"`, `"medium"`, `"high"` |
 | `attribution` | 帰属表示設定 | `includeCoAuthoredBy` の後継 |
+| `showThinkingSummaries` | thinking summaries表示 | `true`（v2.1.89でデフォルトfalseに変更） |
+| `autoMode` | auto modeカスタマイズ | `environment`/`allow`/`soft_deny` 配列 |
+| `fileSuggestion` | `@` ファイル補完カスタム | スクリプトパス |
+| `includeGitInstructions` | git指示のシステムプロンプト注入 | `true`/`false` |
+| `autoMemoryDirectory` | auto memoryカスタム保存先 | ディレクトリパス |
 
 ## hooks設定
 
@@ -110,6 +115,11 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 - **prefix形式**: `cmd:*` → `cmd` 単独 OR `cmd ` で始まる全コマンド
 - **exact形式**: `cmd foo` → 文字列 `cmd foo` との完全一致のみ（`*` はリテラル）
 - スクリプトファイル許可: `"Bash(~/.dotfiles/scripts/foo.sh:*)"` で引数あり/なし両対応
+
+## 注意事項
+
+- `cleanupPeriodDays: 0` はバリデーションエラー（v2.1.89+）。トランスクリプト永続化無効化は別手段を使う
+- `includeCoAuthoredBy` は非推奨 → `attribution` を使用
 
 ## セキュリティ
 

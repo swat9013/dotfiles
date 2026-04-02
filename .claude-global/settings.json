@@ -285,8 +285,8 @@
     }
   },
   "language": "日本語でMBTIでINTJの人がわかりやすい話し方",
-  "plansDirectory": ".claude/plans",
   "spinnerTipsEnabled": false,
   "effortLevel": "medium",
-  "promptSuggestionEnabled": false
+  "promptSuggestionEnabled": false,
+  "plansDirectory": ".claude/plans"
 }

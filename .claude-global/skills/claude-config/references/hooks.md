@@ -2,14 +2,16 @@
 
 ## TOC
 1. [イベント完全一覧（25種）](#イベント完全一覧)
-2. [hookSpecificOutput 仕様](#hookspecificoutput-仕様)
-3. [stdin JSON 構造](#stdin-json-構造)
-4. [実装パターン](#実装パターン)
-5. [環境変数](#環境変数)
-6. [デバッグ・段階的導入](#デバッグ段階的導入)
-7. [4つの Hook パターン](#4つの-hook-パターン)
-8. [フィードバック速度階層](#フィードバック速度階層)
-9. [アンチパターン](#アンチパターン)
+2. [Hook 設定フィールド](#hook-設定フィールド)
+3. [PreToolUse 権限決定の優先度](#pretooluse-権限決定の優先度)
+4. [hookSpecificOutput 仕様](#hookspecificoutput-仕様)
+5. [stdin JSON 構造](#stdin-json-構造)
+6. [実装パターン](#実装パターン)
+7. [環境変数](#環境変数)
+8. [デバッグ・段階的導入](#デバッグ段階的導入)
+9. [4つの Hook パターン](#4つの-hook-パターン)
+10. [フィードバック速度階層](#フィードバック速度階層)
+11. [アンチパターン](#アンチパターン)
 
 ---
 
@@ -44,6 +46,64 @@
 | `WorktreeRemove` | 可 | `worktree_path` |
 
 ブロック方法: `exit 2 + stderr` → Claudeへフィードバック（古い方式）、`exit 0 + hookSpecificOutput JSON` → 構造化応答（推奨）
+
+---
+
+## Hook 設定フィールド
+
+### `if` フィールド（v2.1.85+）
+
+permission rule 構文で hook 実行を条件フィルタリング。プロセス起動オーバーヘッドを削減:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.dotfiles/.claude-global/hooks/git-guard.sh",
+        "if": "Bash(git *)"
+      }]
+    }]
+  }
+}
+```
+
+- `if` がマッチしない場合、hook スクリプトは起動されない（matcher は通常通り評価）
+- 複合コマンド（`ls && git push`）、環境変数プレフィックス付き（`FOO=bar git push`）にも対応（v2.1.89修正）
+
+### `once` フィールド
+
+```json
+{ "type": "command", "command": "...", "once": true }
+```
+
+セッション中1回だけ実行。初期化処理やスキルの1回限り設定向け。
+
+### `async` フィールド
+
+```json
+{ "type": "command", "command": "~/.dotfiles/.claude-global/hooks/run-tests-async.sh", "async": true, "timeout": 300 }
+```
+
+バックグラウンド実行。結果返却: stdout に `{"systemMessage": "表示メッセージ"}` を出力。
+
+### 出力サイズ制限（v2.1.89+）
+
+hook 出力が **50K文字**を超えた場合、コンテキストに直接注入されずディスクに保存される。ファイルパス＋プレビューがコンテキストに渡される。
+
+---
+
+## PreToolUse 権限決定の優先度
+
+複数の hook が異なる権限決定を返した場合の優先度:
+
+```
+deny > defer > ask > allow
+```
+
+- `defer`（v2.1.89+）: ヘッドレスセッションでツール呼び出しを一時停止し、`-p --resume` で再開・再評価可能
 
 ---
 
@@ -112,14 +172,6 @@ if [ "$(echo "$INPUT" | jq -r '.stop_hook_active')" = "true" ]; then
 fi
 npm test || { echo "テスト失敗" >&2; exit 2; }
 ```
-
-### async: true（ブロッキング回避）
-
-```json
-{ "type": "command", "command": "~/.dotfiles/.claude-global/hooks/run-tests-async.sh", "async": true, "timeout": 300 }
-```
-
-async hook の結果返却: stdout に `{"systemMessage": "表示メッセージ"}` を出力。
 
 ### tool input modification（updatedInput）
 
