@@ -3,7 +3,7 @@ name: mise
 user-invocable: false
 description: |-
   miseによるランタイムバージョン管理・環境変数管理の設定・運用・direnv移行を支援する知識ベーススキル。
-  Use when「mise」「mise設定」「.tool-versions」「mise.toml」「ランタイムバージョン」「envrc移行」。
+  Use when「mise」「mise設定」「mise.toml」「ランタイムバージョン」「envrc移行」。
 ---
 
 # mise 知識ベース

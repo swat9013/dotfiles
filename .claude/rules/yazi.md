@@ -1,7 +1,5 @@
 ---
-paths:
-  - yazi/**
-  - .zsh/yazi.zsh
+paths: yazi/**, .zsh/yazi.zsh
 ---
 
 # Yazi設定ガイド

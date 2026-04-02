@@ -1,6 +1,6 @@
 ---
 name: zed
-description: Zed editorの設定変更・拡張機能管理・トラブルシューティングを支援する知識ベーススキル。Use when「Zed」「zed設定」「settings.json」「keymap」「LSP」「拡張機能」「zedトラブル」。
+description: Zed editorの設定変更・拡張機能管理・トラブルシューティングを支援する知識ベーススキル。Use when「Zed」「zed設定」「keymap」「LSP」「拡張機能」。
 user-invocable: false
 ---
 

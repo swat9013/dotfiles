@@ -2,7 +2,7 @@
 name: wtp
 description: >-
   タスク内容からブランチ名を生成し、wtp add -b でワークツリーを作成する。
-  「/wtp」「wtp add」「ワークツリー作成」「worktree作成」「worktree追加」「wtp init」「環境セットアップ」と依頼された時に使用。
+  Use when「/wtp」「wtp add」「ワークツリー作成」「worktree作成」「環境セットアップ」。
 user-invocable: true
 disable-model-invocation: true
 argument-hint: "[タスク説明（省略時はTodoistから取得）]"

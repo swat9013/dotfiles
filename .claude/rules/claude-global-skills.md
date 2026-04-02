@@ -54,7 +54,7 @@ paths: .claude-global/skills/**
 | コンテキスト共有 | コンテキスト分離 |
 | 手順定義、ガイド | 並列実行、専門役割 |
 
-> サブエージェントはskill内でAgent toolを呼び出す
+> `.claude/agents/` は使用しない。サブエージェントはskill内でAgent toolを呼び出す
 
 ## 優先度
 
