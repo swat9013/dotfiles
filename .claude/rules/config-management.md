@@ -18,7 +18,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 |-----------|---------|--------|
 | **settings.json command パス** | settings.json の hooks[*].command, fileSuggestion, statusLine ↔ 実スクリプトの存在・実行権限 | スクリプトリネーム/移動→コマンドパス不一致でhook/UI機能が無効化。シンボリックリンク先の実パス（`~/.dotfiles/.claude-global/...`）で記述必須 |
 | **permissions.allow スクリプトパス** | settings.json permissions.allow ↔ 実スクリプトの存在 | スクリプト追加時にallow未更新→実行ブロック。allow追加で実体なし→空振り（エラーにならないため気づきにくい） |
-| **二層防御の対応** | pretooluse-guard.sh（第1層）↔ permissions.deny（第2層） | guard.sh にルール追加してもdenyに未反映→hook未起動時（Task toolバイパス等）のフォールバック欠落。逆にdenyのみ追加でguard.sh が未対応→カスタムエラーメッセージなし |
+| **二層防御の対応** | guard-*.sh（第1層）↔ permissions.deny（第2層） | guard スクリプトにルール追加してもdenyに未反映→hook未起動時（Task toolバイパス等）のフォールバック欠落。逆にdenyのみ追加でguard が未対応→カスタムエラーメッセージなし |
 
 ### 中連動（整合性確認が必要）
 
@@ -35,12 +35,12 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 
 1. `settings.json` hooks[*].command を実パスで更新
 2. `settings.json` permissions.allow にパスを追加
-3. 禁止ルールを含む場合: `pretooluse-guard.sh` にチェック追加
+3. 禁止ルールを含む場合: 該当の `guard-*.sh` にチェック追加（git→guard-git.sh、shell→guard-shell.sh、Write/Edit→pretooluse-guard-write.sh）
 4. 禁止ルールを含む場合: `permissions.deny` にも同等ルールを追加（二層防御の完全性）
 
 ### permissions.deny にルールを追加するとき
 
-- `pretooluse-guard.sh` にも同等のチェックを追加する（hook 未起動時のフォールバック保証）
+- 該当の `guard-*.sh` にも同等のチェックを追加する（hook 未起動時のフォールバック保証）
 
 ### スキル設計ルールを変更するとき
 

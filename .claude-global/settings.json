@@ -122,7 +122,8 @@
       "Write(.claude/plans/**)",
       "Write(.claude/research/**)",
       "Write(.claude/implement/**)",
-      "Write(.claude/tmp/**)"
+      "Write(.claude/tmp/**)",
+      "Bash(mkdir:*)"
     ],
     "deny": [
       "NotebookEdit",
@@ -205,21 +206,35 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash|Write|Edit",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.dotfiles/.claude-global/hooks/pretooluse-guard.sh"
+            "command": "~/.dotfiles/.claude-global/hooks/guard-multiline.sh"
+          },
+          {
+            "type": "command",
+            "if": "Bash(git *)",
+            "command": "~/.dotfiles/.claude-global/hooks/guard-git.sh"
+          },
+          {
+            "type": "command",
+            "if": "Bash(bash *)",
+            "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh"
+          },
+          {
+            "type": "command",
+            "if": "Bash(sh *)",
+            "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh"
           }
         ]
       },
       {
-        "matcher": "*",
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"'$(date)'\"}}'",
-            "timeout": 5
+            "command": "~/.dotfiles/.claude-global/hooks/pretooluse-guard-write.sh"
           }
         ]
       }
