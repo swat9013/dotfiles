@@ -165,6 +165,7 @@ agent: true
 | drawio | 「drawio」「.drawio」「図を作って」 |
 | claude-code-release | 「Claude Code リリースノート」「最新バージョン」「アップデート内容」 |
 | claude-config | 「設定を最適化」「config」「Claude設定チェック」「ベストプラクティス反映」 |
+| wt | 「/wt」「wt init」「wt switch」「worktree作成」「ワークツリー作成」 |
 
 ### 知識系スキル（user-invocable: false）
 
