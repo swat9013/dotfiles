@@ -7,7 +7,10 @@
   "env": {
     "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
-    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "CLAUDE_CODE_NO_FLICKER": "1"
   },
   "permissions": {
     "allow": [
@@ -115,6 +118,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/todoist-url-inject.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/stop-open-zed.sh:*)",
       "Bash(shellcheck:*)",
       "Bash(/Applications/draw.io.app/Contents/MacOS/draw.io:*)",
       "Write(.claude/dialogues/**)",
@@ -272,6 +276,17 @@
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/posttooluse-open-zed.sh",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/stop-open-zed.sh",
+            "timeout": 10000
           }
         ]
       }
