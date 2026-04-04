@@ -6,6 +6,8 @@ paths: .claude-global/skills/discovery/**, .claude-global/skills/researcher/**, 
 
 各スキルの実装詳細は各 SKILL.md を参照。本ドキュメントは SKILL.md 単体では読み取れない設計意図・スキル間のコナセンス（connascence）・暗黙の契約を記述する。
 
+**Harness Architecture** → harness-architecture.md
+
 **更新タイミング**: コナセンスに該当する規約を変更したとき / コアパイプラインまたは連動スキルを追加・削除したとき / フェーズ境界の設計判断を変更したとき
 
 ## 1. サイクル全体像

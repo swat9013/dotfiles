@@ -26,3 +26,12 @@ brew bundle --global        # Homebrewパッケージ更新
 - 詳細は各`rules/`ファイルを参照
 - 同じ指示を CLAUDE.md と rules/ に重複記載しない
 
+## Harness Architecture 原則
+
+- **Guide First, Sense Second** — 事前方向づけを優先する。事後検出は逸脱確認に限定し、予防的誘導を先行させる。
+- **Computational First** — 計測可能な基準はスクリプト化する。判断が必要なものだけ推論に委ねる。
+- **ライフサイクル配置** — 制御をタスク開始時・実行中・実行後・セッション後・定期の各フェーズに分散させる。
+- **自己メンテナンス** — Harness 自体の劣化を検出・修正する仕組みを組み込む。陳腐化を放置しない。
+
+詳細は `rules/harness-architecture.md` を参照
+

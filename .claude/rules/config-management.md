@@ -6,7 +6,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 
 各設定要素の実装詳細は各ファイル/SKILL.md を参照。本ドキュメントは単体では読み取れない連動契約（コナセンス）を記述する。
 
-**責務分担ポインタ**: 構造の概要 → CLAUDE.md、配置判断 → context-architecture.md（references/）、診断・自己改善 → `/claude-config`
+**責務分担ポインタ**: 構造の概要 → CLAUDE.md、配置判断 → context-architecture.md（references/）、診断・自己改善 → `/claude-config`、統治原則 → harness-architecture.md
 
 **更新タイミング**: コナセンスに該当する設定を変更したとき / hooks スクリプトを追加・削除したとき / permissions 体系を変更したとき
 
