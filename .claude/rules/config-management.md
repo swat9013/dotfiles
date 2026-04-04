@@ -25,9 +25,11 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 | コナセンス | 連動箇所 | 影響 |
 |-----------|---------|------|
 | **スキル設計ルールの重複保有** | managing-skills/references/patterns.md ↔ claude-config/references/skills.md | 両ファイルが「description 130字以下」「500行制限」等の判定基準を保有。一方だけ更新→診断基準と設計ガイドが乖離。正規ソースは `rules/claude-global-skills.md` |
-| **Gotchas 追記ルール** | claude-config/references/update-guide.md（「Gotchas は dotfiles CLAUDE.md に追記」と明示）↔ managing-skills/SKILL.md（同ルール未記載） | 新スキル作成時に発見したGotchasの追記先がmanaging-skills側で案内されない |
+| **Gotchas 追記ルール** | claude-config/references/update-guide.md（「Gotchas は該当ドメインの rules/ ファイルに追記」と明示）↔ managing-skills/SKILL.md（同ルール未記載） | 新スキル作成時に発見したGotchasの追記先がmanaging-skills側で案内されない |
 | **skill-activation.sh の3ステップ構造** | hooks/skill-activation.sh の出力テキスト（EVALUATE/ACTIVATE/IMPLEMENT）↔ 全スキルのSKILL.md description設計 | 出力テキスト変更→スキル自動選択精度が変化。hook無効化→選択率が大幅低下。description の最適化はhook有効を前提としている |
 | **todoist-refine のスクリプトパス参照** | todoist-refine/SKILL.md のスクリプトパス ↔ todoist/scripts/todoist.py の実体パス | todoist.py のパス変更時に todoist-refine 側が壊れる（コマンド不在エラー） |
+| **researcher 調査原則参照** | claude-config/SKILL.md Step A2（`Read researcher/SKILL.md` で調査原則を展開）↔ researcher/SKILL.md | researcher/SKILL.md の調査原則セクション構造変更時に Step A2 の展開ロジックが壊れる |
+| **scan スクリプト分割** | scan-config.sh（共通コンテキスト）↔ scan-hooks.sh（Agent 1）↔ scan-claude-md.sh（Agent 2）↔ scan-skills.sh（Agent 3） | スクリプト追加/移動時に SKILL.md の Agent テーブルと不整合。scan-config.sh の出力は全 Agent に共有される前提 |
 
 ## 2. 変更ガイド
 
@@ -37,6 +39,11 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 2. `settings.json` permissions.allow にパスを追加
 3. 禁止ルールを含む場合: 該当の `guard-*.sh` にチェック追加（git→guard-git.sh、shell→guard-shell.sh、Write/Edit→pretooluse-guard-write.sh）
 4. 禁止ルールを含む場合: `permissions.deny` にも同等ルールを追加（二層防御の完全性）
+
+### scan スクリプトを追加/移動するとき
+
+1. SKILL.md の Agent テーブル（Step 2）を更新
+2. config-management.md のコナセンス「scan スクリプト分割」行を更新
 
 ### permissions.deny にルールを追加するとき
 
@@ -50,7 +57,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 
 ### 新しい Gotchas を発見したとき
 
-- `dotfiles CLAUDE.md` の Gotchas セクションに追記（update-guide.md の指示に従う）
+- 該当ドメインの `rules/` ファイルの Gotchas セクションに追記（例: lib関連 → `lib-scripts.md`、スキル関連 → `claude-global-skills.md`）
 
 ### パス参照の規則
 

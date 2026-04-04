@@ -1,8 +1,7 @@
 ---
 name: domain-modeling
 description: |-
-  ドメインモデリングの手法選択・記述法・設計原則のガイド。
-  手法の段階的組み合わせ、記述法の目的別選択、アンチパターン回避を支援する。
+  ドメインモデリングの手法選択・記述法・設計原則を案内する。
   Use when「ドメインモデリング」「DDD」「Bounded Context」「Event Storming」「ドメイン設計」「集約」「Aggregate」「ドメインイベント」。
 user-invocable: false
 ---

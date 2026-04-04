@@ -1,5 +1,6 @@
 #!/bin/sh
-# Stop hook: 蓄積されたファイルをまとめてZedで開く
+# Stop/PermissionRequest hook: 蓄積されたファイルをまとめてZedで開く
+# Claude停止時・権限確認待ち時にキューをフラッシュする
 INPUT=$(cat)
 if [ "$(printf '%s\n' "$INPUT" | jq -r '.stop_hook_active' 2>/dev/null)" = "true" ]; then
   exit 0

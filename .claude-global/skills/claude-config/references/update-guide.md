@@ -13,7 +13,7 @@
 | skills（SKILL.md設計） | `rules/` | `project-skills.md` |
 | claude-md（CLAUDE.md設計） | `references/` | claude-md 系 references |
 | context-architecture | `references/` | overview 系 references |
-| Gotchas（環境制約・既知バグ） | `references/` | dotfiles CLAUDE.md Gotchas セクション |
+| Gotchas（環境制約・既知バグ） | `rules/` | 該当ドメインの rules/ ファイルの Gotchas セクション |
 
 複数カテゴリにまたがる場合は両方を更新する。
 
@@ -46,7 +46,7 @@
 
 - 全文書き換えは禁止。Edit で差分のみ適用する
 - 既存の構造・フォーマット（表/リスト/見出し階層）に合わせる
-- Gotchas の追加は `## Gotchas` セクション末尾に箇条書きで追記する
+- Gotchas の追加は該当ドメインの rules/ ファイルの `## Gotchas` セクション末尾に箇条書きで追記する
 
 ### 5. 整合性チェックを実施する
 
@@ -77,5 +77,5 @@
 | 既存の記述と完全に同じ内容 | 更新不要。サマリーに「変更なし」と記載 |
 | 既存記述を上書きする新情報 | Edit で該当箇所を置き換える |
 | 既存にない新情報 | 適切なセクション末尾に追記する |
-| Gotchas 系の環境制約・既知バグ | dotfiles CLAUDE.md の `## Gotchas` に追記 |
+| Gotchas 系の環境制約・既知バグ | 該当ドメインの rules/ ファイルの `## Gotchas` に追記 |
 | rules/ にすでにある情報を references/ に書こうとした場合 | references/ への追記をやめ、rules/ の既存記述で十分か確認する |

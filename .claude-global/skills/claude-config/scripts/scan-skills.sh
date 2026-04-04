@@ -57,8 +57,23 @@ scan_dir_and_count() {
     fi
 
     # 検証2: description 文字数チェック (≤ 130)
+    # ブロックスカラー（|- / >-）対応: 後続インデント行を連結して取得
     desc_val=""
-    desc_val="$(grep -m1 '^description:' "${skill_md}" | sed 's/^description:[[:space:]]*//' || true)"
+    desc_val="$(awk '
+      /^description:/ {
+        val = $0; sub(/^description:[[:space:]]*/, "", val)
+        if (val == "|-" || val == ">-" || val == "|" || val == ">") {
+          val = ""
+          while ((getline line) > 0) {
+            if (line ~ /^[[:space:]]/) {
+              sub(/^[[:space:]]+/, "", line)
+              val = (val == "" ? line : val " " line)
+            } else { break }
+          }
+        }
+        print val; exit
+      }
+    ' "${skill_md}")"
     desc_len="${#desc_val}"
     if [ "${desc_len}" -le 130 ]; then
       echo "[${dname}] description length: ${desc_len} ... PASS"
@@ -86,6 +101,35 @@ scan_dir_and_count() {
     else
       echo "[${dname}] .claude/commands/: not found ... PASS"
     fi
+
+    # 検証5: references 行数チェック (各ファイル ≤ 200)
+    refs_dir="${dpath}/references"
+    if [ -d "${refs_dir}" ]; then
+      find "${refs_dir}" -name "*.md" -type f | sort | while IFS= read -r ref_file; do
+        ref_name="${ref_file##*/}"
+        ref_lines=""
+        ref_lines="$(wc -l < "${ref_file}" | tr -d ' ')"
+        if [ "${ref_lines}" -le 200 ]; then
+          echo "[${dname}] references/${ref_name}: ${ref_lines} lines ... PASS"
+        else
+          echo "[${dname}] references/${ref_name}: ${ref_lines} lines ... WARN (> 200)"
+          increment_warn
+        fi
+      done
+    fi
+
+    # 検証6: description 三人称チェック
+    first_word=""
+    first_word="$(printf '%s' "${desc_val}" | awk '{print $1}')"
+    case "${first_word}" in
+      I|You)
+        echo "[${dname}] description first-person/second-person: WARN (starts with '${first_word}')"
+        increment_warn
+        ;;
+      *)
+        echo "[${dname}] description third-person: PASS"
+        ;;
+    esac
 
     echo ""
   done

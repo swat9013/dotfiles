@@ -168,12 +168,4 @@ description: MUST BE USED for all security-related code reviews.
 
 ## 既知の制約
 
-| 制約 | 詳細 |
-|------|------|
-| 孫エージェントスポーン | サブエージェントは他のサブエージェントをスポーン不可（1段階のみ、**仕様確定**） |
-| PreToolUse/PostToolUse hooks | サブエージェント内でバイパスされる（frontmatter `hooks` で部分対応可）。**plugin subagents は `hooks`/`mcpServers`/`permissionMode` frontmatter を無視（仕様確定）**。回避策: `.claude/agents/` にコピーして非プラグインエージェントとして定義 |
-| スキル間参照 | 自動読み込みされない。references/ は同一スキル内のみ機能 |
-| Haiku での ToolSearch | `tool_reference blocks` 非対応（使用不可） |
-| TaskOutput 非推奨（v2.1.83） | `TaskOutput` は非推奨化。バックグラウンドタスクの出力は `Read` でファイルパスから取得 |
-| Resume | `SendMessage` でエージェント ID 指定して再開（`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 時のみ） |
-| Agent Teams | Experimental。詳細は `agent-teams.md` 参照 |
+既知の制約は `rules/claude-global-skills.md` の Gotchas セクションを参照。Agent Teams 固有の制限は `agent-teams.md` 参照。

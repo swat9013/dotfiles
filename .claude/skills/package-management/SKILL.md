@@ -10,7 +10,7 @@ description: |-
 
 ## バージョン情報
 
-現在: !`./scripts/versions.sh`
+現在: !`~/.dotfiles/.claude/skills/package-management/scripts/versions.sh`
 記録: brew 5.1.1 | mise 2026.3.17 | mas 6.0.1
 
 バージョンが異なる場合、ユーザーに通知。確認後にWebFetchでリリースノートを取得し、スキル内容を更新。
