@@ -8,6 +8,7 @@
 | rules（paths/frontmatter） | `rules/` | `project-rules.md` |
 | hooks | `references/` | hooks 系 references |
 | subagent / Task tool | `references/` | subagent 系 references |
+| agent-teams | `references/` | `agent-teams.md` |
 | task-management | `references/` | task 系 references |
 | skills（SKILL.md設計） | `rules/` | `project-skills.md` |
 | claude-md（CLAUDE.md設計） | `references/` | claude-md 系 references |

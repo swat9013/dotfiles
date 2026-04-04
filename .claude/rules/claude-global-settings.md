@@ -70,7 +70,9 @@ hook type と使い分け:
 | `prompt` | 定型チェック | Haiku 1ターン、低コスト |
 | `agent` | 深いレビュー（ファイル読み込みあり） | マルチターン、最大50ターン |
 
-応用例: `PreToolUse` の matcher に `ExitPlanMode` を指定 → plan提案前にレビュー自動挿入
+応用例:
+- `PreToolUse` の matcher に `ExitPlanMode` を指定 → plan提案前にレビュー自動挿入
+- **Stop + $PPID キューパターン**: PostToolUse で毎回処理すると外部ツール（Zed等）が複数回起動される問題の解決策。PostToolUse でキューファイル（`/tmp/queue-$PPID`）にパスを蓄積 → Stop でまとめて1回処理 → キューファイル削除。`$PPID` は PostToolUse/Stop 間で同一値のためキーに使える
 
 ## settings.local.json の安全な更新フロー
 

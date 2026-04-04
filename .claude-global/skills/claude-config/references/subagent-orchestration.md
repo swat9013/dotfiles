@@ -1,20 +1,18 @@
 # サブエージェントオーケストレーション リファレンス
 
 ## TOC
-1. [Agent tool パラメータ全量](#agent-tool-パラメータ全量)
+1. [Agent tool パラメータ・呼び出し](#agent-tool-パラメータ呼び出し)
 2. [subagent_type 一覧](#subagent_type-一覧)
 3. [モデル選択ガイド](#モデル選択ガイド)
 4. [run_in_background 制約](#run_in_background-制約)
 5. [isolation: "worktree" 仕様](#isolation-worktree-仕様)
 6. [カスタムエージェント frontmatter 完全仕様](#カスタムエージェント-frontmatter-完全仕様)
-7. [permissionMode 5種類](#permissionmode-5種類)
-8. [高信号フィルタリング基準](#高信号フィルタリング基準)
-9. [出力形式標準化](#出力形式標準化)
-10. [既知の制約](#既知の制約)
+7. [permissionMode 6種類](#permissionmode-6種類)
+8. [既知の制約](#既知の制約)
 
 ---
 
-## Agent tool パラメータ全量
+## Agent tool パラメータ・呼び出し
 
 | パラメータ | 必須 | 型 | デフォルト | 説明 |
 |-----------|------|-----|----------|------|
@@ -24,22 +22,35 @@
 | `model` | - | enum | `inherit` | `sonnet` / `opus` / `haiku` / `inherit` |
 | `run_in_background` | - | boolean | `false` | 非同期実行 |
 | `isolation` | - | string | なし | `"worktree"` で git worktree 内で実行 |
-| `resume` | - | string | - | 既存セッション ID を指定して再開 |
-| `max_turns` | - | number | 設定依存 | 最大ターン数 |
+
+**モデル解決優先順位**: ① 環境変数 `CLAUDE_CODE_SUBAGENT_MODEL` → ② Agent tool `model` パラメータ → ③ frontmatter `model` → ④ メインセッションのモデル（inherit）
+
+**呼び出し方法**:
+
+| 方法 | 例 | 特徴 |
+|------|-----|------|
+| 自然言語 | `Use the code-reviewer subagent to...` | Claude が判断して委譲 |
+| @メンション | `@"code-reviewer (agent)" look at...` | 確実に指定エージェントを呼ぶ |
+| セッション全体 | `claude --agent code-reviewer` | メインスレッド自体がそのエージェントになる |
+
+settings.json `"agent": "code-reviewer"` でデフォルト化可能。
+
+**Resume**: `SendMessage` ツールでエージェント ID を指定して再開（`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 時のみ）。各起動は新インスタンス（フレッシュコンテキスト）。
 
 ---
 
 ## subagent_type 一覧
 
-| タイプ | 利用可能ツール | 用途 |
-|--------|--------------|------|
-| `general-purpose` | 全ツール | 複雑な多段階タスク、探索+修正 |
-| `Explore` | 読み取り専用（Read, Glob, Grep 等） | コードベース探索・検索（高速・低コスト） |
-| `Plan` | 読み取り専用 | プランモードでの調査 |
-| `Bash` | Bash のみ | コマンド実行（独立コンテキスト） |
-| `claude-code-guide` | WebFetch, WebSearch, Read 等 | ビルトイン: Claude Code 機能Q&A |
-| `statusline-setup` | Read, Edit | ビルトイン: `/statusline` 設定 |
-| カスタム名 | frontmatter `tools` 設定次第 | `.claude/agents/` または `~/.claude/agents/` で定義 |
+| タイプ | モデル | 利用可能ツール | 用途 |
+|--------|--------|--------------|------|
+| `general-purpose` | 継承 | 全ツール | 複雑な多段階タスク、探索+修正 |
+| `Explore` | Haiku | 読み取り専用（Read, Glob, Grep 等） | コードベース探索・検索（高速・低コスト） |
+| `Plan` | 継承 | 読み取り専用 | プランモードでの調査 |
+| `claude-code-guide` | Haiku | WebFetch, WebSearch, Read 等 | ビルトイン: Claude Code 機能Q&A |
+| `statusline-setup` | Sonnet | Read, Edit | ビルトイン: `/statusline` 設定 |
+| カスタム名 | frontmatter 依存 | frontmatter `tools` 設定次第 | `.claude/agents/` または `~/.claude/agents/` で定義 |
+
+**スコープ優先度**: Managed settings > `--agents` CLI > `.claude/agents/` > `~/.claude/agents/` > Plugin `agents/`
 
 ---
 
@@ -86,6 +97,8 @@ Agent tool:
 - `.claude/worktrees/` 以下に一時的な git worktree を作成（HEAD ベース）
 - 複数エージェントが同一ファイルを修正しても競合しない
 - 変更がない場合は実行後に自動削除、変更があった場合はブランチ名と worktree パスが返される
+- クラッシュで孤立した worktree は `cleanupPeriodDays` 設定後に自動削除
+- 非 Git VCS（SVN/Perforce 等）では `WorktreeCreate` / `WorktreeRemove` hooks で代替可能
 
 使用場面: 複数エージェントが同一リポジトリで独立した機能を並列実装する場合。
 
@@ -102,9 +115,10 @@ Agent tool:
 | `tools` | - | string | 許可ツールリスト（省略時: 全ツール継承） |
 | `disallowedTools` | - | string | 拒否ツールリスト |
 | `model` | - | enum | `sonnet` / `opus` / `haiku` / `inherit` |
-| `permissionMode` | - | enum | 下記5種参照 |
+| `permissionMode` | - | enum | 下記6種参照 |
 | `maxTurns` | - | number | 最大ターン数 |
-| `effort` | - | enum | effort レベル（`low` / `medium` / `high`） |
+| `effort` | - | enum | `low` / `medium` / `high` / `max`（`max` は extended thinking 最大活用、主に Opus 系で効果大） |
+| `color` | - | enum | UI表示色: `red`/`blue`/`green`/`yellow`/`purple`/`orange`/`pink`/`cyan` |
 | `initialPrompt` | - | string | `--agent` 起動時の自動サブミットプロンプト |
 | `skills` | - | array | 起動時コンテキスト注入スキル（明示列挙必須） |
 | `mcpServers` | - | object | 使用可能な MCP サーバー |
@@ -131,67 +145,24 @@ description: Use PROACTIVELY when code is written or modified.
 description: MUST BE USED for all security-related code reviews.
 ```
 
-エージェントスコープ優先度: `--agents` CLI引数 > `.claude/agents/` > `~/.claude/agents/`
+**`permissions.deny` で個別無効化**: `["Agent(Explore)", "Agent(my-custom-agent)"]`
 
 ---
 
-## permissionMode 5種類
+## permissionMode 6種類
 
 | モード | 動作 | 用途 |
 |--------|------|------|
 | `default` | 標準的な権限チェック | 汎用 |
 | `acceptEdits` | ファイル編集を自動承認 | コード修正エージェント |
+| `auto` | 全操作を自動承認（対話的確認なし） | 自動化パイプライン |
 | `dontAsk` | 権限プロンプトを自動拒否 | 読み取り専用分析 |
 | `bypassPermissions` | 全権限チェックをスキップ | CI/CD等の信頼環境のみ |
 | `plan` | 読み取り専用（プランモード） | 計画策定エージェント |
 
-`bypassPermissions` は信頼できる自動化環境のみ使用。ローカル開発での使用は避ける。
+`bypassPermissions` / `auto` は信頼できる自動化環境のみ使用。ローカル開発での使用は避ける。
 
----
-
-## 高信号フィルタリング基準
-
-| フラグすべき（高信号） | フラグしない（偽陽性回避） |
-|---------------------|------------------------|
-| コンパイル/パースエラー | コードスタイルの懸念（Linter がカバー） |
-| 型エラー、missing imports | 入力値依存の潜在的問題 |
-| 明白なロジックエラー（引用可能なコード行あり） | 主観的な改善提案 |
-| CLAUDE.md / rules に明記された違反（引用可能） | 確実でない問題（「かもしれない」レベル） |
-| セキュリティ欠陥（SQLインジェクション、XSS、認証不備） | 既存コードに存在する問題（新規導入ではない） |
-
-**判断テスト**: 「このissueを GitHub PR コメントに書いて恥ずかしくないか？」
-
-**重み付きルーブリック**: 評価エージェントに採点基準と重みを定義し、各次元に失敗例を含めると、汎用指示より信頼性が高い。例: `正確性(30%), 完全性(25%), 簡潔性(20%), 形式準拠(15%), 実用性(10%)`。本スキルの `review-criteria.md` の4観点も同パターン。
-
-**検証サブエージェントパターン**:
-1. Agent A: issue 検出（並列）
-2. Agent B: 各issueの妥当性を個別検証（並列）
-3. 検証されなかったissueは破棄
-
----
-
-## 出力形式標準化
-
-**GitHub リンク形式**: `https://github.com/owner/repo/blob/[FULL_SHA]/path/to/file.ts#L42-L55`
-- フル git SHA 必須（短縮形 NG）、行範囲: `#L[start]-L[end]`、対象行の前後1行以上を含める
-
-**コメントサイズ別**:
-
-| サイズ | 方針 |
-|--------|------|
-| 6行以下 | 修正提案コードブロックを含める |
-| 6行超 | 説明のみ、修正提案なし |
-| 1 issue | 1 comment（重複禁止） |
-
-**サブエージェントへのルール継承**: サブエージェントは親のコンテキストを継承しない。prompt に必要なルールを明示:
-
-```markdown
-## 全エージェント共通ルール
-- フラグすべき: コンパイルエラー、型エラー、明白なロジックバグ
-- フラグしない: スタイル問題、潜在的な問題、確実でないもの
-- 出力形式: | ファイル | 行 | 種別 | 説明 |
-- 1 issue = 1 行（重複禁止）
-```
+> レビュー・出力パターン（高信号フィルタリング基準、出力形式標準化、検証パターン）は `review-patterns.md` に分離。
 
 ---
 
@@ -199,9 +170,10 @@ description: MUST BE USED for all security-related code reviews.
 
 | 制約 | 詳細 |
 |------|------|
-| 孫エージェントスポーン | Agent tool は1段階のみ（孫エージェント起動不可） |
+| 孫エージェントスポーン | サブエージェントは他のサブエージェントをスポーン不可（1段階のみ、**仕様確定**） |
 | PreToolUse/PostToolUse hooks | サブエージェント内でバイパスされる（frontmatter `hooks` で部分対応可）。**plugin subagents は `hooks`/`mcpServers`/`permissionMode` frontmatter を無視（仕様確定）**。回避策: `.claude/agents/` にコピーして非プラグインエージェントとして定義 |
 | スキル間参照 | 自動読み込みされない。references/ は同一スキル内のみ機能 |
 | Haiku での ToolSearch | `tool_reference blocks` 非対応（使用不可） |
 | TaskOutput 非推奨（v2.1.83） | `TaskOutput` は非推奨化。バックグラウンドタスクの出力は `Read` でファイルパスから取得 |
-| セッション再開 | `resume` パラメータでセッション ID 指定。チームメイトは再開不可 |
+| Resume | `SendMessage` でエージェント ID 指定して再開（`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 時のみ） |
+| Agent Teams | Experimental。詳細は `agent-teams.md` 参照 |

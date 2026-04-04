@@ -213,6 +213,10 @@ TaskUpdate(taskId, status: "in_progress")  # 開始前
 - Lint: 成功
 - テスト: 全XX件通過
 
+### 受け入れ条件（plan.md 由来）
+- [x] [条件1] — TASK-001, TASK-002 の成功基準充足により達成
+- [ ] [条件2] — [未充足理由と対応]
+
 ### 次Phase概要
 - 並列実行可能タスク: X件
 ```
@@ -345,6 +349,7 @@ prompt: |
 2. 全 Phase の品質ゲートをクリアしている
 3. 最終レビューサイクルを完了している（issueゼロ or 最大3サイクル到達）
 4. implementation.md に記載された成功基準を満たしている
+5. implementation.md の各 Phase 受け入れ条件（plan.md 由来）が全充足されている
 
 ## 完了チェックリスト
 
@@ -352,6 +357,7 @@ prompt: |
 - [ ] 全品質ゲートをクリア
 - [ ] 最終レビューサイクル完了（レビュー結果ファイル書き出し済み）
 - [ ] implementation.md の成功基準を満たしている
+- [ ] 各 Phase の受け入れ条件が全充足されている
 
 ## Gotchas
 

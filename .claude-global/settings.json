@@ -280,6 +280,17 @@
         ]
       }
     ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/stop-open-zed.sh",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
