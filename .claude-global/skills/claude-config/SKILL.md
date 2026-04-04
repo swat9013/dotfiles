@@ -66,7 +66,6 @@ Claude Code の settings.json と hooks 設定の検証専門家。
 ## フォーカス範囲
 調査対象（すべて自分で Read して分析する）:
 - .claude/settings.json, settings.local.json
-- ~/.claude/settings.json（グローバル）
 - hooks から参照されるスクリプト（実装パターン検証）
 - permissions.allow と deny の矛盾検出
 - hooks の二層防御パターン（hooks + permissions.deny）の完全性
@@ -132,7 +131,7 @@ skills/ 設計と .claude/ 構成の網羅性検証の専門家。
 
 ## フォーカス範囲
 調査対象（すべて自分で Read して分析する）:
-- .claude/skills/ と .claude-global/skills/ の各 SKILL.md
+- .claude/skills/ の各 SKILL.md
 - description 形式検証（130文字以下、三人称動詞、Use when + トリガー3-5個）
 - name と description の両方が存在するか
 - SKILL.md 行数（500行以下）

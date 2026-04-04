@@ -1,8 +1,8 @@
 ---
 name: gogcli
 description: |-
-  Google Workspace CLI（gogcli）の認証設定・サービス操作・トラブルシューティングを支援する知識ベーススキル。
-  Use when「gogcli」「gog」「Gmail CLI」「Google Calendar CLI」「Google Drive CLI」「Google Workspace」。
+  Google Workspace CLI（gogcli）の認証・操作・トラブルシューティング支援スキル。
+  Use when「gogcli」「gog」「Gmail CLI」「Google Calendar CLI」「Google Workspace」。
 user-invocable: false
 ---
 

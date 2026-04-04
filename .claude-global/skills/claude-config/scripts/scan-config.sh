@@ -6,15 +6,6 @@ set -euo pipefail
 
 PROJECT_ROOT="${PWD}"
 CLAUDE_DIR="${PROJECT_ROOT}/.claude"
-GLOBAL_CLAUDE_DIR="${HOME}/.claude"
-
-# .claude-global のシンボリックリンク元を特定（dotfiles 構成を考慮）
-GLOBAL_SKILLS_DIR=""
-if [ -d "${HOME}/.dotfiles/.claude-global/skills" ]; then
-  GLOBAL_SKILLS_DIR="${HOME}/.dotfiles/.claude-global/skills"
-elif [ -d "${HOME}/.claude/skills" ]; then
-  GLOBAL_SKILLS_DIR="${HOME}/.claude/skills"
-fi
 
 # ──────────────────────────────────────────────────────────
 # セクション: CLAUDE.md
@@ -124,12 +115,6 @@ else
   echo "(.claude/skills/ not found)"
 fi
 
-# .claude-global/skills/ (dotfiles 経由)
-if [ -n "${GLOBAL_SKILLS_DIR}" ]; then
-  scan_skills_dir "${GLOBAL_SKILLS_DIR}" ".claude-global/skills"
-else
-  echo "(.claude-global/skills/ not found)"
-fi
 
 echo ""
 
@@ -189,44 +174,6 @@ scan_settings_file "${CLAUDE_DIR}/settings.local.json" ".claude/settings.local.j
 echo ""
 
 # ──────────────────────────────────────────────────────────
-# セクション: hooks（.claude-global/settings.json も確認）
-# ──────────────────────────────────────────────────────────
-echo "=== hooks (global settings) ==="
-
-GLOBAL_SETTINGS="${HOME}/.claude/settings.json"
-# dotfiles 経由の場合も考慮
-if [ -L "${GLOBAL_SETTINGS}" ]; then
-  # シンボリックリンクなら実体を解決
-  REAL_GLOBAL=""
-  REAL_GLOBAL="$(readlink "${GLOBAL_SETTINGS}")"
-  case "${REAL_GLOBAL}" in
-    /*) GLOBAL_SETTINGS="${REAL_GLOBAL}" ;;
-    *)  GLOBAL_SETTINGS="$(dirname "${GLOBAL_SETTINGS}")/${REAL_GLOBAL}" ;;
-  esac
-fi
-
-if [ -f "${GLOBAL_SETTINGS}" ]; then
-  if command -v jq > /dev/null 2>&1; then
-    has_hooks=""
-    has_hooks="$(jq -r 'if has("hooks") then "present" else "absent" end' "${GLOBAL_SETTINGS}" 2>/dev/null || true)"
-    echo "global settings.json hooks: ${has_hooks}"
-    if [ "${has_hooks}" = "present" ]; then
-      hook_types=""
-      hook_types="$(jq -r '.hooks | keys[]' "${GLOBAL_SETTINGS}" 2>/dev/null | tr '\n' ', ' | sed 's/,$//' || true)"
-      echo "hooks types: ${hook_types}"
-      # 各 hook type の matcher 数
-      jq -r '.hooks | to_entries[] | "\(.key): \(.value | length) matcher(s)"' "${GLOBAL_SETTINGS}" 2>/dev/null || true
-    fi
-  else
-    echo "(jq not available)"
-  fi
-else
-  echo "global settings.json: not found"
-fi
-
-echo ""
-
-# ──────────────────────────────────────────────────────────
 # セクション: .claude/ ディレクトリ構成（1階層）
 # ──────────────────────────────────────────────────────────
 echo "=== .claude/ directory structure (1 level) ==="
@@ -272,7 +219,7 @@ echo ""
 echo "=== hooks-scripts ==="
 if command -v jq > /dev/null 2>&1; then
   hooks_found=0
-  for settings_path in "${CLAUDE_DIR}/settings.json" "${GLOBAL_SETTINGS}"; do
+  for settings_path in "${CLAUDE_DIR}/settings.json" "${CLAUDE_DIR}/settings.local.json"; do
     if [ ! -f "${settings_path}" ]; then
       continue
     fi

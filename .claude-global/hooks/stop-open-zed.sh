@@ -1,5 +1,9 @@
 #!/bin/sh
 # Stop hook: 蓄積されたファイルをまとめてZedで開く
+INPUT=$(cat)
+if [ "$(printf '%s\n' "$INPUT" | jq -r '.stop_hook_active' 2>/dev/null)" = "true" ]; then
+  exit 0
+fi
 QUEUE="/tmp/claude-zed-queue-${PPID}"
 [ -f "$QUEUE" ] || exit 0
 

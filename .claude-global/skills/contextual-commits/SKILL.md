@@ -1,8 +1,8 @@
 ---
 name: contextual-commits
 description: >-
-  Guides structured action lines in commit bodies to preserve intent, decisions,
-  and constraints. Use when 「コミットメッセージ」「commit body」「action lines」「コミットして」.
+  Adds structured action lines to commit bodies.
+  Use when「コミットメッセージ」「commit body」「action lines」「コミットして」.
 user-invocable: false
 ---
 
