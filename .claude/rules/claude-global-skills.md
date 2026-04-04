@@ -89,6 +89,14 @@ agent: true
 
 サブエージェントとして隔離実行する場合に設定
 
+### On Demand Hooks
+
+frontmatter `hooks:` でスキル呼び出し時のみ有効なセッションスコープhooksを定義。常時有効だと邪魔だが特定作業時に必須のガードレールに最適（例: `/careful` で破壊的操作ブロック）
+
+### データ永続化
+
+`${CLAUDE_PLUGIN_DATA}`: プラグインごとの安定ストレージパス。スキルディレクトリ内のデータはアップグレード時に消えるため、永続データはこのパスに保存
+
 ## Progressive Disclosure
 
 - SKILL.md本体にワークフロー/概要のみ
@@ -112,6 +120,8 @@ agent: true
 - **品質ゲートスクリプト設計**: 環境自動検出（package.json/Makefile/pyproject.toml等）+ `--lint-cmd`等オーバーライド
 - **手順記述スタイル**: 番号リストと`####`見出しの混在を避ける。フラットなリスト構造に統一
 - **BSD/GNU互換性テスト**: スクリプト検証時にmacOS BSD awk/sed等の挙動差異を確認必須
+- **Railroading回避**: 情報と目的を与え、手順の柔軟性を保つ。過度に具体的な手順指定はClaude の適応力を制限する
+- **Setupパターン**: ユーザー固有設定が必要なスキルは `${CLAUDE_PLUGIN_DATA}/config.json` で管理。未設定時は AskUserQuestion で確認
 
 ## Gotchas
 

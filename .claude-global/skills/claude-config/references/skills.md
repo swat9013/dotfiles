@@ -8,6 +8,10 @@
 - [skills フィールド（サブエージェントへのプリロード）](#skills-フィールド)
 - [Skill(name *) 権限制御](#skill-name--権限制御)
 - [フィードバックループパターン](#フィードバックループパターン)
+- [スキル分類](#スキル分類設計時の参考)
+- [On Demand Hooks](#on-demand-hooks)
+- [データ永続化](#データ永続化)
+- [スキル間の依存・計測](#スキル間の依存・計測)
 - [トラブルシューティング](#トラブルシューティング)
 
 ---
@@ -139,6 +143,39 @@ skills:
 ```
 
 検証ループにより早期にエラーを検出できる。スキル内に明示的なチェックループを記述しておくと Claude が自律的に品質を保つ。
+
+## スキル分類（設計時の参考）
+
+| 分類 | 目的 | 例 |
+|------|------|-----|
+| Library & API Reference | 内部ライブラリ・CLIの正しい使い方とGotchas | `billing-lib`, `internal-platform-cli` |
+| Product Verification | コード動作の検証。Playwright/tmux等と連携 | `signup-flow-driver`, `checkout-verifier` |
+| Data Fetching & Analysis | データ・モニタリングスタックへの接続と分析 | `funnel-query`, `grafana` |
+| Business Process & Team Automation | 定型ワークフローの自動化 | `standup-post`, `weekly-recap` |
+| Code Scaffolding & Templates | フレームワークボイラープレート生成 | `new-migration`, `create-app` |
+| Code Quality & Review | コード品質の強制とレビュー | `adversarial-review`, `code-style` |
+| CI/CD & Deployment | ビルド・デプロイ・PR管理 | `babysit-pr`, `deploy-service` |
+| Runbooks | 症状→調査→構造化レポートの自動化 | `oncall-runner`, `log-correlator` |
+| Infrastructure Operations | メンテナンス・運用手順にガードレール付与 | `dependency-management`, `cost-investigation` |
+
+良いスキルは1分類に収まる。複数にまたがると設計が曖昧になりやすい。
+
+## On Demand Hooks
+
+スキル呼び出し時のみ有効化され、セッション終了まで持続するhooks。frontmatter の `hooks:` フィールドで定義する（構文は settings.json の hooks と同一）。
+
+- 常時有効だと邪魔だが特定作業時には必須、というガードレールに最適
+- 例: `/careful` で `rm -rf`, `DROP TABLE`, force-push をブロック
+- 例: `/freeze` で特定ディレクトリ外の Edit/Write をブロック
+
+## データ永続化
+
+`${CLAUDE_PLUGIN_DATA}`: プラグインごとの安定ストレージパス。スキルディレクトリ内のデータはアップグレード時に消えるため、永続データ（ログ・設定JSON・SQLite等）はこのパスに保存する。
+
+## スキル間の依存・計測
+
+- **依存**: ネイティブ未対応。SKILL.md内で名前参照すればインストール済みの場合にモデルが自動呼び出し。未インストール時は無視
+- **計測**: `PreToolUse` hookでスキル呼び出しをログ記録し、人気度・トリガー率を分析可能
 
 ---
 

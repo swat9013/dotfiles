@@ -6,6 +6,7 @@
 - [自由度パターン](#自由度パターン)
 - [ワークフローパターン](#ワークフローパターン)
 - [出力パターン](#出力パターン)
+- [Setupパターン](#setupパターン)
 - [リソース選択ガイド](#リソース選択ガイド)
 - [アンチパターン](#アンチパターン)
 - [肥大化パターン（P1-P6）](#肥大化パターンp1-p6)
@@ -116,6 +117,8 @@ bigquery-skill/
 
 ## 自由度パターン
 
+**Railroading回避原則**: 情報と目的を与え、手順の柔軟性を保つ。過度に具体的な手順指定はClaudeの適応力を制限する。「必ずXの後にYを実行し、Zで終了する」より「目的はXの達成。通常はY→Zだが状況に応じて判断する」。
+
 ### 高自由度（テキストベースの指示）
 
 複数アプローチが有効な場合。Claudeの判断に委ねる。
@@ -211,6 +214,10 @@ feat(auth): implement JWT-based authentication
 Add login endpoint and token validation middleware
 ```
 
+## Setupパターン
+
+ユーザー固有設定（Slackチャンネル、APIキー等）が必要なスキルは、初回実行時に AskUserQuestion で確認し `${CLAUDE_PLUGIN_DATA}/config.json` に保存する。スキルディレクトリ内のデータはアップグレードで消えるため、`${CLAUDE_PLUGIN_DATA}` を使用。
+
 ## リソース選択ガイド
 
 | リソース種別 | 用途 | 例 |
@@ -218,6 +225,7 @@ Add login endpoint and token validation middleware
 | scripts/ | 反復実行するコード | validate.py, convert.sh |
 | references/ | 参照ドキュメント | api_docs.md, schema.json |
 | assets/ | 出力用ファイル | template.pptx, logo.png |
+| `${CLAUDE_PLUGIN_DATA}` | 永続データ（ログ・設定JSON・SQLite等） | config.json, history.log |
 
 ## アンチパターン
 
