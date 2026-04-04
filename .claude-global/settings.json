@@ -115,6 +115,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/scripts/review-skills.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/managing-skills/scripts/init_skill.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-config.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-skills.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/todoist-url-inject.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",

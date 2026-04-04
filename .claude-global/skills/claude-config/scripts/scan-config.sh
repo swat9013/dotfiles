@@ -60,65 +60,6 @@ fi
 echo ""
 
 # ──────────────────────────────────────────────────────────
-# セクション: skills/
-# ──────────────────────────────────────────────────────────
-echo "=== skills/ ==="
-
-# スキルディレクトリのスキャン関数
-scan_skills_dir() {
-  local base_dir="${1}"
-  local label="${2}"
-
-  if [ ! -d "${base_dir}" ]; then
-    return
-  fi
-
-  ls "${base_dir}" 2>/dev/null | sort | while IFS= read -r dname; do
-    dpath="${base_dir}/${dname}"
-    if [ ! -d "${dpath}" ]; then
-      continue
-    fi
-
-    skill_md="${dpath}/SKILL.md"
-    if [ -f "${skill_md}" ]; then
-      slines=""
-      slines="$(wc -l < "${skill_md}" | tr -d ' ' || echo "0")"
-
-      # name: の有無
-      name_val=""
-      name_val="$(grep -m1 '^name:' "${skill_md}" | sed 's/^name:[[:space:]]*//' || true)"
-
-      # description: の有無（値があるか）
-      desc_present="absent"
-      desc_val=""
-      desc_val="$(grep -m1 '^description:' "${skill_md}" | sed 's/^description:[[:space:]]*//' || true)"
-      if [ -n "${desc_val}" ]; then
-        desc_present="present"
-      fi
-
-      if [ -n "${name_val}" ]; then
-        echo "dir: ${label}/${dname}/ [SKILL.md: ${slines} lines, name: ${name_val}, description: ${desc_present}]"
-      else
-        echo "dir: ${label}/${dname}/ [SKILL.md: ${slines} lines, name: (none), description: ${desc_present}]"
-      fi
-    else
-      echo "dir: ${label}/${dname}/ [SKILL.md: not found]"
-    fi
-  done
-}
-
-# .claude/skills/
-LOCAL_SKILLS="${CLAUDE_DIR}/skills"
-if [ -d "${LOCAL_SKILLS}" ]; then
-  scan_skills_dir "${LOCAL_SKILLS}" ".claude/skills"
-else
-  echo "(.claude/skills/ not found)"
-fi
-
-
-echo ""
-
-# ──────────────────────────────────────────────────────────
 # セクション: settings.json
 # ──────────────────────────────────────────────────────────
 echo "=== settings.json ==="
