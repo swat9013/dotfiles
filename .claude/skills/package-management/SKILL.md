@@ -2,8 +2,8 @@
 name: package-management
 user-invocable: false
 description: |-
-  dotfilesのmacOSパッケージ管理（Brewfile/mise/mas）の設計判断・分類基準・罠を提供する知識ベーススキル。
-  Use when「Brewfile」「パッケージ管理」「mise」「mas」「brew install」「ツール追加」「パッケージ追加」。
+  macOSパッケージ管理（Brewfile/mise/mas）の設計判断・分類基準を提供。
+  Use when「Brewfile」「brew install」「パッケージ管理」「パッケージ追加」。
 ---
 
 # Package Management

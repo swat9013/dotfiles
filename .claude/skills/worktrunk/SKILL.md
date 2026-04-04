@@ -2,8 +2,8 @@
 name: worktrunk
 user-invocable: false
 description: |-
-  dotfilesのworktrunk統合（シェル初期化・config管理方針・.wtp.yml移行）を提供する知識ベーススキル。
-  Use when「worktrunk設定」「wt設定」「worktree管理」「worktrunk dotfiles」「wtp移行」。
+  worktrunk統合（config管理・.wtp.yml移行）の知識ベース。
+  Use when「worktrunk設定」「wt設定」「worktree管理」「wtp移行」。
 ---
 
 # Worktrunk 知識ベース

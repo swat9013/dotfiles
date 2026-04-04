@@ -2,6 +2,14 @@
 
 リファクタリングのトリガーとなるコードスメル15種と対処法。
 
+## Contents
+- [1. Bloaters（肥大化）](#1-bloaters肥大化)
+- [2. Change Preventers（変更の障害）](#2-change-preventers変更の障害)
+- [3. Dispensables（不要な要素）](#3-dispensables不要な要素)
+- [4. Couplers（結合度の問題）](#4-couplers結合度の問題)
+- [深刻度判定基準](#深刻度判定基準)
+- [スメル検出チェックリスト](#スメル検出チェックリスト)
+
 ## 1. Bloaters（肥大化）
 
 コードが過度に大きくなり、扱いにくくなっている状態。

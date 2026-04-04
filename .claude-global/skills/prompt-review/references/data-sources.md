@@ -2,6 +2,17 @@
 
 各AIツールのログ保存場所・フォーマット・抽出方法の詳細。
 
+## Contents
+- [1. Claude Code（主要ソース）](#1-claude-code主要ソース)
+- [2. GitHub Copilot Chat](#2-github-copilot-chat)
+- [3. Cline](#3-cline)
+- [4. Roo Code](#4-roo-code)
+- [5. Windsurf (Cascade)](#5-windsurf-cascade)
+- [6. Google Antigravity](#6-google-antigravity)
+- [7. OpenAI Codex（CLI）](#7-openai-codexcli)
+- [8. OpenCode](#8-opencode)
+- [共通のサンプリング戦略](#共通のサンプリング戦略)
+
 ---
 
 ## 1. Claude Code（主要ソース）
