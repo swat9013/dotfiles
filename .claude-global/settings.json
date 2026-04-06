@@ -127,6 +127,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/stop-open-zed.sh:*)",
       "Bash(shellcheck:*)",
+      "Bash(uvx ruff:*)",
       "Bash(/Applications/draw.io.app/Contents/MacOS/draw.io:*)",
       "Write(.claude/dialogues/**)",
       "Write(.claude/discovery/**)",
@@ -283,6 +284,20 @@
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/posttooluse-open-zed.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/posttooluse-ruff-check.sh",
+            "if": "Write(*.py)",
+            "timeout": 30,
+            "statusMessage": "Python構文チェック中..."
+          },
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/posttooluse-ruff-check.sh",
+            "if": "Edit(*.py)",
+            "timeout": 30,
+            "statusMessage": "Python構文チェック中..."
           }
         ]
       }
