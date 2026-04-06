@@ -224,18 +224,18 @@
           },
           {
             "type": "command",
-            "if": "Bash(git *)",
-            "command": "~/.dotfiles/.claude-global/hooks/guard-git.sh"
+            "command": "~/.dotfiles/.claude-global/hooks/guard-git.sh",
+            "if": "Bash(git *)"
           },
           {
             "type": "command",
-            "if": "Bash(bash *)",
-            "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh"
+            "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh",
+            "if": "Bash(bash *)"
           },
           {
             "type": "command",
-            "if": "Bash(sh *)",
-            "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh"
+            "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh",
+            "if": "Bash(sh *)"
           }
         ]
       },
@@ -321,7 +321,8 @@
     "swift-lsp@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "worktrunk@worktrunk": true
+    "worktrunk@worktrunk": true,
+    "skill-creator@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "worktrunk": {
