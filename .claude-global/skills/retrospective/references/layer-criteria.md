@@ -20,7 +20,7 @@
 
 - 繰り返し実行されるワークフローの改善
 - 既存スキルへの手順追加・修正
-- 新規スキル候補（実装は /managing-skills に委譲）
+- 新規スキル候補（実装は /skill-creator に委譲）
 
 ## settings.local.json
 

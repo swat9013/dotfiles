@@ -56,7 +56,7 @@ REVIEW_PROMPT='あなたはClaude Codeスキルの品質レビュアーです。
 
 ## レビュー基準
 
-managing-skillsスキルを呼び出し、そのガイドライン・チェックリスト・設計パターンをレビュー基準として使用してください。
+Read ~/.dotfiles/.claude-global/skills/claude-config/references/skill-design-patterns.md の設計パターンをレビュー基準として使用してください。
 
 ## 修正ルール
 - 問題があればEditツールで直接修正する
@@ -85,7 +85,7 @@ if [[ -n "$TARGET_SKILL" ]]; then
 else
   SKILL_DIRS=()
   for d in "$SKILLS_DIR"/*/; do
-    [[ "$(basename "$d")" == "managing-skills" ]] && continue
+    [[ "$(basename "$d")" == "skill-design-patterns" ]] && continue
     [[ -f "$d/SKILL.md" ]] && SKILL_DIRS+=("${d%/}")
   done
 fi
@@ -108,7 +108,7 @@ review_skill() {
   local prompt="${REVIEW_PROMPT//\{\{SKILL_PATH\}\}/$skill_path}"
 
   if claude -p "$prompt" \
-      --allowedTools 'Read,Edit,Glob,Grep,Skill' \
+      --allowedTools 'Read,Edit,Glob,Grep' \
       --model "$MODEL" \
       --add-dir "$SKILLS_DIR" \
       > "$log_file" 2>&1; then

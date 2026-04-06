@@ -1,5 +1,5 @@
 ---
-paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/skills/managing-skills/**, .claude-global/skills/claude-config/**
+paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/skills/claude-config/**
 ---
 
 # CONFIG-MANAGEMENT: 設定管理系 コナセンス仕様
@@ -24,8 +24,8 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 
 | コナセンス | 連動箇所 | 影響 |
 |-----------|---------|------|
-| **スキル設計ルールの重複保有** | managing-skills/references/patterns.md ↔ claude-config/references/skills.md | 両ファイルが「description 130字以下」「500行制限」等の判定基準を保有。一方だけ更新→診断基準と設計ガイドが乖離。正規ソースは `rules/claude-global-skills.md` |
-| **Gotchas 追記ルール** | claude-config/references/update-guide.md（「Gotchas は該当ドメインの rules/ ファイルに追記」と明示）↔ managing-skills/SKILL.md（同ルール未記載） | 新スキル作成時に発見したGotchasの追記先がmanaging-skills側で案内されない |
+| **スキル設計ルールの重複保有** | claude-config/references/skill-design-patterns.md ↔ claude-config/references/skills.md | 両ファイルが「description 130字以下」「500行制限」等の判定基準を保有。一方だけ更新→診断基準と設計ガイドが乖離。正規ソースは `rules/claude-global-skills.md` |
+| **Gotchas 追記ルール** | claude-config/references/update-guide.md（「Gotchas は該当ドメインの rules/ ファイルに追記」と明示） | 新スキル作成時に発見したGotchasの追記先が案内されない |
 | **skill-activation.sh の3ステップ構造** | hooks/skill-activation.sh の出力テキスト（EVALUATE/ACTIVATE/IMPLEMENT）↔ 全スキルのSKILL.md description設計 | 出力テキスト変更→スキル自動選択精度が変化。hook無効化→選択率が大幅低下。description の最適化はhook有効を前提としている |
 | **todoist-refine のスクリプトパス参照** | todoist-refine/SKILL.md のスクリプトパス ↔ todoist/scripts/todoist.py の実体パス | todoist.py のパス変更時に todoist-refine 側が壊れる（コマンド不在エラー） |
 | **researcher 調査原則参照** | claude-config/SKILL.md Step A2（`Read researcher/SKILL.md` で調査原則を展開）↔ researcher/SKILL.md | researcher/SKILL.md の調査原則セクション構造変更時に Step A2 の展開ロジックが壊れる |
@@ -52,7 +52,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 ### スキル設計ルールを変更するとき
 
 1. `rules/claude-global-skills.md`（正規ソース）を更新
-2. `managing-skills/references/patterns.md` と `claude-config/references/skills.md` の整合性を確認
+2. `claude-config/references/skill-design-patterns.md` と `claude-config/references/skills.md` の整合性を確認
 3. 判断が難しい場合は `/claude-config` で診断
 
 ### 新しい Gotchas を発見したとき

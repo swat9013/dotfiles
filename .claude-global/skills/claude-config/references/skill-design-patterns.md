@@ -4,13 +4,13 @@
 - [Progressive Disclosure](#progressive-disclosure)
 - [処理の3層分離](#処理の3層分離)
 - [自由度パターン](#自由度パターン)
-- [ワークフローパターン](#ワークフローパターン)
-- [出力パターン](#出力パターン)
 - [Setupパターン](#setupパターン)
-- [リソース選択ガイド](#リソース選択ガイド)
 - [アンチパターン](#アンチパターン)
 - [肥大化パターン（P1-P6）](#肥大化パターンp1-p6)
 - [圧縮テクニック](#圧縮テクニック)
+- [バージョン追従パターン](#バージョン追従パターン)
+
+---
 
 ## Progressive Disclosure
 
@@ -96,6 +96,8 @@ bigquery-skill/
 ...
 ```
 
+---
+
 ## 処理の3層分離
 
 スキル内の処理を性質で分け、適切な実行方法に割り当てる。
@@ -114,6 +116,8 @@ bigquery-skill/
 
 - **終端判定キー**: スクリプトは `GATE: PASS/FAIL` や `RESULT: NO_CHANGES/PROCEED` 等のキーを出力。SKILL.mdがキーで分岐
 - **配置**: スキル固有→`scripts/`、複数スキル共有→`skills/scripts/`
+
+---
 
 ## 自由度パターン
 
@@ -164,78 +168,21 @@ python scripts/migrate.py --verify --backup
 コマンドの変更やフラグの追加は禁止。
 ````
 
-## ワークフローパターン
-
-### チェックリスト付きワークフロー
-
-複雑な多段階タスクで進捗を追跡:
-
-````markdown
-## フォーム入力ワークフロー
-
-チェックリストをコピーして進捗を追跡:
-
-```
-- [ ] Step 1: フォームを解析 (analyze_form.py)
-- [ ] Step 2: フィールドマッピング作成 (fields.json)
-- [ ] Step 3: マッピング検証 (validate_fields.py)
-- [ ] Step 4: フォーム入力 (fill_form.py)
-- [ ] Step 5: 出力検証 (verify_output.py)
-```
-````
-
-### フィードバックループ
-
-検証→修正→再検証のサイクルで品質を確保:
-
-```markdown
-## 編集プロセス
-
-1. document.xmlを編集
-2. **即座に検証**: python scripts/validate.py dir/
-3. 検証失敗時:
-   - エラーメッセージを確認
-   - 問題を修正
-   - 再度検証
-4. **検証通過後のみ**次のステップへ
-```
-
-## 出力パターン
-
-厳格な形式が必要な場合はテンプレートを提示。柔軟な場合は入出力ペアの例示で期待を伝える:
-
-```markdown
-## コミットメッセージの例
-
-入力: ユーザー認証にJWTトークンを追加
-出力:
-feat(auth): implement JWT-based authentication
-
-Add login endpoint and token validation middleware
-```
+---
 
 ## Setupパターン
 
 ユーザー固有設定（Slackチャンネル、APIキー等）が必要なスキルは、初回実行時に AskUserQuestion で確認し `${CLAUDE_PLUGIN_DATA}/config.json` に保存する。スキルディレクトリ内のデータはアップグレードで消えるため、`${CLAUDE_PLUGIN_DATA}` を使用。
 
-## リソース選択ガイド
-
-| リソース種別 | 用途 | 例 |
-|-------------|------|-----|
-| scripts/ | 反復実行するコード | validate.py, convert.sh |
-| references/ | 参照ドキュメント | api_docs.md, schema.json |
-| assets/ | 出力用ファイル | template.pptx, logo.png |
-| `${CLAUDE_PLUGIN_DATA}` | 永続データ（ログ・設定JSON・SQLite等） | config.json, history.log |
+---
 
 ## アンチパターン
 
-避けるべき設計:
+`rules/claude-global-skills.md` アンチパターン表の項目（500行超、15,000文字超、TOCなし、トリガーなしdescription、汎用description、深い参照ネスト）は除外。以下はそれ以外の独自項目。
 
-1. **冗長な説明**: Claudeは賢い。既知の情報を繰り返さない
-2. **深いネスト**: A→B→C の参照チェーンは避ける。SKILL.mdから1階層まで
-3. **巨大なSKILL.md**: 500行超えたらreferencesに分離
-4. **曖昧なdescription**: トリガーキーワードを明示的に含める
-5. **選択肢の提示しすぎ**: デフォルトを1つ示し、代替はエスケープハッチとして提示
+### 選択肢の提示しすぎ
+
+デフォルトを1つ示し、代替はエスケープハッチとして提示する。
 
 ```markdown
 # 悪い例
@@ -246,7 +193,9 @@ pypdf、pdfplumber、PyMuPDF、pdf2imageのいずれかを使用...
 スキャンPDFでOCRが必要な場合のみpdf2image + pytesseractを使用。
 ```
 
-6. **用語の不統一**: 同じ概念に複数の用語を使わない
+### 用語の不統一
+
+同じ概念に複数の用語を使わない。
 
 ```markdown
 # 悪い例: 混在
@@ -255,6 +204,8 @@ pypdf、pdfplumber、PyMuPDF、pdf2imageのいずれかを使用...
 # 良い例: 統一
 常に「APIエンドポイント」
 ```
+
+---
 
 ## 肥大化パターン（P1-P6）
 
@@ -269,6 +220,8 @@ pypdf、pdfplumber、PyMuPDF、pdf2imageのいずれかを使用...
 | P5 | 網羅的な NG 例・除外リスト | 「報告不要」「除外」リストが各10-20行 | 最小限に絞る（3項目以下） |
 | P6 | 出力フォーマットの詳細テンプレートをインライン | テーブル定義・出力形式が本文に埋め込み | references/ に分離 |
 
+---
+
 ## 圧縮テクニック
 
 肥大化パターンへの具体的な圧縮手法。
@@ -280,3 +233,38 @@ pypdf、pdfplumber、PyMuPDF、pdf2imageのいずれかを使用...
 | 「報告不要」「除外」リストの最小化 | architect, claude-config | 各10-20行 |
 | 冗長な例を1つに絞る | dialogue, contextual-commits | 各5-10行 |
 | 説明文→表/dense notation への変換 | 全スキル | 各10-20% |
+
+---
+
+## バージョン追従パターン
+
+外部ツールのCLIリファレンスを提供する知識系スキル（`user-invocable: false`）には、バージョン追従セクションを設ける。
+
+### パターン
+
+SKILL.mdのタイトル直後に以下を配置:
+
+```markdown
+## バージョン情報
+
+現在のバージョン: `!`<version-command> 2>/dev/null || echo "(未インストール)"``
+
+記録バージョン: `x.y.z`
+
+バージョンが異なる場合、ユーザーに通知。確認後にWebFetchでリリースノートを取得し、スキル内容を更新。
+```
+
+### 仕組み
+
+- 構文 `!` + バッククォート囲みコマンド はスキルロード時にシェル実行され、出力が動的注入される
+- 記録バージョンとの差分でClaudeがスキル陳腐化を検知し、更新フローを起動する
+- `2>/dev/null || echo "(未インストール)"` で未インストール環境でも安全に動作
+
+### 適用基準
+
+| 条件 | 適用 |
+|------|------|
+| CLIツールでバージョンコマンドあり | 適用 |
+| API/SDK依存でバージョンコマンドなし | 非適用 |
+| MCP経由のみ（Serena等） | 非適用 |
+| 概念的知識（log-designing等） | 非適用 |
