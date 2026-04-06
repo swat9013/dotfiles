@@ -18,7 +18,7 @@ disable-model-invocation: true
 | 自身（オーケストレーター） | スクリプト実行 | サブエージェント委譲 |
 |--------------------------|---------------|-------------------|
 | issue同一性判定 | 対象ファイル特定（changed-files.sh） | レビュー（opus） |
-| review-fix.md書き出し | Lint・テスト実行（quality-gate.sh） | コード修正（sonnet） |
+| review-fix.md書き出し | Lint・テスト実行（quality-gate.py） | コード修正（sonnet） |
 | サイクル継続判断・報告 | | |
 
 ## 実行手順
@@ -153,13 +153,13 @@ Bash toolでスクリプトを直接実行:
 
 ```bash
 # implementation.md にコマンド定義がある場合
-~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh --lint-cmd="npm run lint" --test-cmd="npm test"
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.py --lint-cmd="npm run lint" --test-cmd="npm test"
 
 # 自動検出に任せる場合
-~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.py
 ```
 
-出力の `GATE: PASS/FAIL` で判定する。
+出力JSONの `gate` フィールドで判定する。
 
 **GATE: FAIL**: 修正サブエージェントを起動して修正を委譲（Step 5と同じ要領）。
 修正後、Step 2 へ戻る（次サイクル）。

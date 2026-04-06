@@ -3,6 +3,8 @@
 ## Contents
 - [Progressive Disclosure](#progressive-disclosure)
 - [処理の3層分離](#処理の3層分離)
+  - [言語選択基準](#言語選択基準)
+  - [Python スクリプト共通構造](#python-スクリプト共通構造)
 - [自由度パターン](#自由度パターン)
 - [Setupパターン](#setupパターン)
 - [アンチパターン](#アンチパターン)
@@ -114,8 +116,56 @@ bigquery-skill/
 
 ### スクリプト設計の要点
 
-- **終端判定キー**: スクリプトは `GATE: PASS/FAIL` や `RESULT: NO_CHANGES/PROCEED` 等のキーを出力。SKILL.mdがキーで分岐
+- **終端判定キー**: quality-gate.py は JSON `gate` フィールド (`PASS`/`FAIL`/`SKIP`)、changed-files.sh は `RESULT: NO_CHANGES/PROCEED` 等のテキストキーを出力。SKILL.mdが判定キーで分岐
 - **配置**: スキル固有→`scripts/`、複数スキル共有→`skills/scripts/`
+
+### 言語選択基準
+
+| 判定 | 条件 |
+|------|------|
+| **シェル維持** | CLIコマンドの薄い合成（パイプ・`&&`チェーン中心、ロジック最小） |
+| **Python移行** | ロジック含む処理（JSON解析、パターンマッチ、条件分岐が多い、50行超の関数） |
+
+判断の問い: 「このスクリプトはコマンドをつなぐだけか、それともデータを変換・判定しているか？」
+
+### Python スクリプト共通構造
+
+PEP 723 shebang パターン（`uv run --script` で依存を自己完結させる）:
+
+```python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "some-package>=1,<2",
+# ]
+# ///
+"""スクリプトの説明。
+
+Usage:
+    script.py <subcommand> [options]
+"""
+
+import argparse
+import json
+import sys
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    # サブコマンド・引数定義
+    args = parser.parse_args()
+    result = {"key": "value"}
+    print(json.dumps(result, ensure_ascii=False))
+
+if __name__ == "__main__":
+    main()
+```
+
+規約:
+- `argparse` でCLI引数を定義（位置引数・サブコマンド・オプション）
+- `json.dumps` で構造化出力（SKILL.mdが `jq` 等で解析）
+- 終端判定キーが必要な場合は JSON に `"gate": "PASS"` 等を含める
+- `ensure_ascii=False` で日本語を可読出力
 
 ---
 

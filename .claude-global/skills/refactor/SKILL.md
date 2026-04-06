@@ -174,16 +174,16 @@ refactor-plan.md のステップを順次実行。
 
 ```
 各ステップで:
-1. ベースラインテスト: quality-gate.sh でテスト・Lintが通ることを確認
+1. ベースラインテスト: quality-gate.py でテスト・Lintが通ることを確認
 2. 単一の変更を実施（サブエージェント委譲）
-3. 品質ゲート: quality-gate.sh で再確認
-4. 成功（GATE: PASS） → コミット作成
-5. 失敗（GATE: FAIL） → 即座にロールバック（git checkout .）
+3. 品質ゲート: quality-gate.py で再確認
+4. 成功（gate: "PASS"） → コミット作成
+5. 失敗（gate: "FAIL"） → 即座にロールバック（git checkout .）
 ```
 
 品質ゲートの実行:
 ```bash
-~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.py
 ```
 
 #### 3.2 コミットメッセージ形式

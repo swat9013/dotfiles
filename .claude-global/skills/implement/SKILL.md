@@ -29,7 +29,7 @@ plan.md (What/Why) → implementation.md (How) → TaskCreate (Status)
 ### 絶対ルール
 
 - **コードの実装・修正は絶対に自分でやらない**
-- **テスト・Lint・ビルドの実行はスクリプト（quality-gate.sh）で実行する**
+- **テスト・Lint・ビルドの実行はスクリプト（quality-gate.py）で実行する**
 - **AI判断を要する作業（レビュー、修正、設計判断）はサブエージェントに委譲する**
 
 ### 行動の3分類
@@ -37,7 +37,7 @@ plan.md (What/Why) → implementation.md (How) → TaskCreate (Status)
 | 分類 | 行動 | ツール |
 |------|------|--------|
 | **自身で行う** | implementation.md読込、タスク分析、TaskCreate登録、進捗監視、報告 | Read, TaskCreate, TaskUpdate, TaskList, TaskGet, 出力 |
-| **スクリプト実行** | テスト実行、Lint、ビルド（品質ゲート） | Bash tool（quality-gate.sh） |
+| **スクリプト実行** | テスト実行、Lint、ビルド（品質ゲート） | Bash tool（quality-gate.py） |
 | **サブエージェント委譲** | 実装、修正、レビュー | Task tool |
 | **スキル委譲** | 複雑なサブワークフロー | Skill tool |
 
@@ -189,13 +189,13 @@ TaskUpdate(taskId, status: "in_progress")  # 開始前
 
 ```bash
 # implementation.md にコマンド定義がある場合
-~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh --lint-cmd="npm run lint" --test-cmd="npm test"
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.py --lint-cmd="npm run lint" --test-cmd="npm test"
 
 # 自動検出に任せる場合
-~/.dotfiles/.claude-global/skills/scripts/quality-gate.sh
+~/.dotfiles/.claude-global/skills/scripts/quality-gate.py
 ```
 
-出力の `GATE: PASS/FAIL` で判定する。
+出力JSONの `gate` フィールドで判定する。
 
 **GATE: PASS**: 品質ゲートタスクを completed → 次Phase のタスクが自動アンブロック
 **GATE: FAIL**: 修正サブエージェントを起動し、修正後にスクリプトを再実行
@@ -317,7 +317,7 @@ prompt: |
   修正後、既存のテストを破壊しないこと。
 ```
 
-**品質ゲート**: quality-gate.sh 実行。FAIL → 修正サブエージェント起動後にサイクル先頭へ。
+**品質ゲート**: quality-gate.py 実行。FAIL → 修正サブエージェント起動後にサイクル先頭へ。
 
 **最大3サイクル到達**: 残存issueを報告しStep 8 へ。
 

@@ -129,9 +129,11 @@ WebSearch/WebFetchを使用して最新情報を収集すること。
 
 調査結果をファイルに整理。
 
-**保存先**: `.claude/research/YYYY-MM-DD-HHMMSS-{topic}.md`
+**保存先**: `{project_root}/.claude/research/YYYY-MM-DD-HHMMSS-{topic}.md`
+- `{project_root}`: `git rev-parse --show-toplevel` で取得（gitリポジトリ外なら `$PWD`）
 - `{topic}`: $ARGUMENTS または調査対象からkebab-caseで生成（例: `auth-library-comparison`）
 
+ディレクトリが存在しない場合は `mkdir -p` で作成してからファイルを書く。
 
 **テンプレート**: `~/.claude/skills/researcher/templates/report.md`
 
@@ -162,7 +164,7 @@ research ファイルのセクション構成:
 
 ## 完了チェックリスト
 
-- [ ] `.claude/research/` に所定のセクション構成でファイルが作成されている
+- [ ] `{project_root}/.claude/research/` に所定のセクション構成でファイルが作成されている
 - [ ] 公式ドキュメントを参照し、情報の鮮度を確認している
 - [ ] 比較表が公平な評価軸で作成されている
 - [ ] トレードオフが「得るもの↔失うもの」の関係で記述されている

@@ -68,7 +68,7 @@ flowchart LR
 |-----------|---------|--------|
 | **ファイル命名** `YYYY-MM-DD-HHMMSS-{topic}.md` | 書き出し: 全コアスキル。読み込み: architect(discovery/), breakdown(plans/), implement(implement/) | 命名変更 → 読み込み側の「Glob後に名前降順で先頭」ロジックが最新ファイルを誤選択 |
 | **成果物ディレクトリ契約** | 下表参照。書き出し側の Write パス + 読み込み側の Glob パスが連動 | ディレクトリ名変更 → 生成側の Write パス、読み込み側の Glob パス、両方を更新しないとファイルが見つからない |
-| **品質ゲート判定キー** `GATE: PASS/FAIL/SKIP` | 出力: quality-gate.sh。分岐: implement(品質ゲート, レビューサイクル), review-fix(品質ゲート), refactor(ステップ実行) | キー文字列変更 → 3スキルの分岐ロジックが判定不能。PASS後のフローが implement(次Phase進行)と review-fix(次レビューサイクル)で異なる点に注意。SKIP はコマンド未検出時に出力 |
+| **品質ゲート判定キー** JSON出力の `gate` フィールド | 出力: quality-gate.py。分岐: implement(品質ゲート, レビューサイクル), review-fix(品質ゲート), refactor(ステップ実行) | キー文字列変更 → 3スキルの分岐ロジックが判定不能。PASS後のフローが implement(次Phase進行)と review-fix(次レビューサイクル)で異なる点に注意。SKIP はコマンド未検出時に出力 |
 | **変更検出判定キー** `RESULT: NO_CHANGES/CONFIG_ONLY/TOO_LARGE/PROCEED` | 出力: changed-files.sh。分岐: implement(対象ファイル特定), review-fix(対象ファイル特定) | キー追加/変更 → 2スキルの分岐に未処理パスが発生。注意: CONFIG_ONLY の扱いが implement(スキップ)と review-fix(中止報告)で微妙に異なる |
 | **plans/ への二重書き込み** | 書き込み: plan, architect。読み込み: breakdown | breakdown は「名前降順で先頭」を無条件に読む。plan と architect を同日に実行すると意図しないファイルを参照する可能性がある |
 | **受け入れ条件チェーン** | plan/architect(フェーズ受け入れ条件) → breakdown(Phase完了基準に転記) → implement(Phase完了時に検証) | plan のフェーズ受け入れ条件の構造変更 → breakdown テンプレート更新漏れ → implement が検証できない |
@@ -112,5 +112,5 @@ flowchart LR
 
 | スクリプト | 判定キー | 設計意図 |
 |-----------|---------|---------|
-| quality-gate.sh | `GATE: PASS/FAIL/SKIP` | Lint/Test/Build の複合結果を集約。SKIP はコマンド未検出時 |
+| quality-gate.py | JSON出力の `gate` フィールド (`PASS`/`FAIL`/`SKIP`) | Lint/Test/Build の複合結果を集約。SKIP はコマンド未検出時 |
 | changed-files.sh | `RESULT: NO_CHANGES/CONFIG_ONLY/TOO_LARGE/PROCEED` | レビュー不要ケースの早期スキップ。50ファイル超の TOO_LARGE はバッチ分割のトリガー |
