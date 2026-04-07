@@ -1,6 +1,6 @@
 ---
 name: dashboard-design
-description: ダッシュボード設計の判断基準と既存ダッシュボード診断フレームワークを提供する。Use when「ダッシュボード設計」「メトリクス選定」「ダッシュボード診断」「KPI設計」「vanity metric」。
+description: ダッシュボード設計の判断基準・ツール選定・既存ダッシュボード診断フレームワークを提供する。Use when「ダッシュボード設計」「メトリクス選定」「ダッシュボード診断」「KPI設計」「vanity metric」「ダッシュボードツール」。
 user-invocable: false
 ---
 
@@ -76,7 +76,29 @@ user-invocable: false
 
 ---
 
+## 5. 実装ツール選定 — 3問で候補を絞る
+
+ダッシュボードの「何を表示するか」が決まった後、「何で作るか」を決める。以下の3問で6カテゴリから1-2候補に絞り、選定後に公式ドキュメントで詳細調査する。
+
+| 問 | 分岐 | 候補 |
+|---|------|------|
+| Q1: データソースの性質は？ | 時系列メトリクス（Prometheus等） | **Grafana** |
+| | SQL DB（PostgreSQL, BigQuery等） | Q2へ |
+| | ファイル/API/Python処理結果 | Q3へ |
+| Q2: 閲覧者にSQL知識があり、組織的BI基盤が必要か？ | Yes + インフラ運用チームあり | **Apache Superset** |
+| | No、またはインフラ運用不可 | **Streamlit** |
+| Q3: サーバー運用を許容するか？ | No（静的配信のみ） | **Plotly.js + HTML** |
+| | Yes + Python完結で最速 | **Streamlit** |
+| | Yes + 再現性・Git統合重視 | **marimo** |
+
+**補足判断**: 探索的分析のプロトタイプ → Jupyter + Voilà も選択肢。ただしダッシュボードとしての本番運用には移行コストが発生する。
+
+詳細な選定基準・トレードオフ・アンチパターン → `references/tool-selection.md`
+
+---
+
 ## References
 
 - `references/design-guide.md` — 3A 基準の詳細・3 層情報階層・Leading/Lagging 配置の判断基準
 - `references/diagnosis-rubric.md` — 診断採点の詳細ルーブリック・アンチパターン対策の実装例
+- `references/tool-selection.md` — ツール選定の意思決定フロー・トレードオフ・アンチパターン
