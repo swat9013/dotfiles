@@ -6,7 +6,6 @@ tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 tap "k1low/tap"
 tap "oven-sh/bun"
-tap "qmk/qmk"
 tap "satococoa/tap"
 tap "songmu/tap"
 
@@ -79,7 +78,6 @@ brew "ollama"
 
 # Keyboard
 brew "libusb"
-brew "qmk/qmk/qmk"
 brew "laminate"
 
 # File manager
