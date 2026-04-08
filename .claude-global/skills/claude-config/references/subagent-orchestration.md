@@ -8,7 +8,10 @@
 5. [isolation: "worktree" 仕様](#isolation-worktree-仕様)
 6. [カスタムエージェント frontmatter 完全仕様](#カスタムエージェント-frontmatter-完全仕様)
 7. [permissionMode 6種類](#permissionmode-6種類)
-8. [既知の制約](#既知の制約)
+8. [委譲判断基準](#委譲判断基準)
+9. [ワークフローパターン](#ワークフローパターン)
+10. [アンチパターン](#アンチパターン)
+11. [既知の制約](#既知の制約)
 
 ---
 
@@ -56,16 +59,11 @@ settings.json `"agent": "code-reviewer"` でデフォルト化可能。
 
 ## モデル選択ガイド
 
-| タスク種別 | モデル | 判断基準 |
-|-----------|--------|---------|
-| ファイル検索、前提条件チェック、定型出力収集 | `haiku` | 決定論的・高速（Opusの1/10コスト） |
-| サマリー生成、コンプライアンスチェック | `sonnet` | バランス型 |
-| バグ検出、セキュリティ分析、複雑な推論 | `opus` | 精度優先 |
+CLAUDE.md の基本方針（基本 sonnet、軽量タスクのみ haiku）に加えて:
 
-- 親セッションのデフォルトモデルを引き継ぐ場合は `inherit`（省略時も同じ）
-- 検証サブエージェントはバグ検出と同じモデルを使う
-- 同じ観点で複数並列させる場合は同モデルで統一
 - **推論サンドイッチ**: 計画+検証フェーズに高推論（opus/high effort）、実装フェーズに中推論（sonnet/medium effort）を割り当てると精度と効率のバランスが取れる
+- 検証サブエージェントは検出対象と同じモデルを使う
+- 同じ観点で複数並列させる場合は同モデルで統一
 
 ---
 
@@ -75,32 +73,21 @@ settings.json `"agent": "code-reviewer"` でデフォルト化可能。
 |------|----------------|----------------|
 | 権限プロンプト | 実行中に表示 | 事前承認が必要（なければ失敗） |
 | MCP ツール | 利用可 | **利用不可** |
-| TaskOutput での取得 | 即時 | `block: true` で完了待機 |
+| 出力取得 | 即時 | ファイルパスへの `Read` で取得（`TaskOutput` は v2.1.83 で非推奨） |
 | 推奨同時実行数 | 5-7個 | 3-5個 |
 | 用途 | 短時間・インタラクティブ | 長時間・CPU集約型・完全自律 |
 
-`run_in_background` 使用時は MCP ツール（glab, gh, etc.）が使えない。CLI ツールは Bash 経由で代替。
-
-> **v2.1.83**: `TaskOutput` ツールは**非推奨化**。バックグラウンドタスクの出力はファイルパスへの `Read` で取得する。フォアグラウンドで最大5並列が安全上限。
+`run_in_background` 使用時は MCP ツール（glab, gh, etc.）が使えない。CLI ツールは Bash 経由で代替。フォアグラウンドで最大5並列が安全上限。
 
 ---
 
 ## isolation: "worktree" 仕様
 
-```yaml
-Agent tool:
-- isolation: "worktree"
-- run_in_background: true
-- prompt: authentication モジュールをリファクタリング...
-```
-
 - `.claude/worktrees/` 以下に一時的な git worktree を作成（HEAD ベース）
 - 複数エージェントが同一ファイルを修正しても競合しない
-- 変更がない場合は実行後に自動削除、変更があった場合はブランチ名と worktree パスが返される
-- クラッシュで孤立した worktree は `cleanupPeriodDays` 設定後に自動削除
-- 非 Git VCS（SVN/Perforce 等）では `WorktreeCreate` / `WorktreeRemove` hooks で代替可能
-
-使用場面: 複数エージェントが同一リポジトリで独立した機能を並列実装する場合。
+- 変更なし→自動削除、変更あり→ブランチ名と worktree パスが返される
+- 孤立 worktree は `cleanupPeriodDays` 後に自動削除
+- 非 Git VCS では `WorktreeCreate` / `WorktreeRemove` hooks で代替可能
 
 ---
 
@@ -121,9 +108,9 @@ Agent tool:
 | `color` | - | enum | UI表示色: `red`/`blue`/`green`/`yellow`/`purple`/`orange`/`pink`/`cyan` |
 | `initialPrompt` | - | string | `--agent` 起動時の自動サブミットプロンプト |
 | `skills` | - | array | 起動時コンテキスト注入スキル（明示列挙必須） |
-| `mcpServers` | - | object | 使用可能な MCP サーバー |
+| `mcpServers` | - | object | MCP サーバー。インライン定義=エージェント専用、文字列参照=既存接続共有 |
 | `hooks` | - | object | スコープ付きhooks（PreToolUse, PostToolUse, Stop） |
-| `memory` | - | enum | `user` / `project` / `local` |
+| `memory` | - | enum | `user`(~/.claude/agent-memory/) / `project`(.claude/agent-memory/, 推奨) / `local`(.claude/agent-memory-local/) |
 | `background` | - | boolean | `true` で常にバックグラウンド実行 |
 | `isolation` | - | string | `"worktree"` で一時 worktree 内で実行 |
 
@@ -163,6 +150,43 @@ description: MUST BE USED for all security-related code reviews.
 `bypassPermissions` / `auto` は信頼できる自動化環境のみ使用。ローカル開発での使用は避ける。
 
 > レビュー・出力パターン（高信号フィルタリング基準、出力形式標準化、検証パターン）は `review-patterns.md` に分離。
+
+---
+
+## 委譲判断基準
+
+| 状況 | 選択肢 | 理由 |
+|------|--------|------|
+| 大量出力を生成するタスク（テスト結果・ログ・ドキュメント取得） | Subagent | メイン会話のコンテキスト汚染を防止 |
+| ツール制限・権限制御を強制したい | Subagent | `tools` / `disallowedTools` で最小権限を実現 |
+| 独立した複数の調査パスを並列実行 | Subagent（並列） | 各パスが自己完結し結果サマリで十分 |
+| 頻繁な往復・反復改善が必要 | メイン会話 | Subagent はコンテキスト収集のオーバーヘッドがある |
+| 複数フェーズが重要コンテキストを共有（計画→実装→テスト） | メイン会話 | コンテキスト分断のコスト > 委譲のメリット |
+| 小さなピンポイント変更 | メイン会話 | Subagent の起動コストに見合わない |
+| メイン会話コンテキストで再利用可能なプロンプト/ワークフロー | Skills | Subagent の独立コンテキストは不要 |
+| Teammate 間で情報共有・相互検証・自律協調が必要 | Agent Teams | Subagent は単方向報告のみ |
+
+**選択フレームワーク**: 単一会話 → Skills → Subagents → Agent Teams の順で検討。最もシンプルなパターンから始める。
+
+---
+
+## ワークフローパターン
+
+- **Sequential**: 各ステップが前の出力に依存する場合。アンチパターン: 独立可能なタスクを無駄に逐次化
+- **Parallel**: 独立サブタスクを同時実行・集約。**必須**: 集約戦略を実装前に設計。アンチパターン: 累積コンテキストが必要な場合
+- **Evaluator-Optimizer**: Generator → Evaluator ループ。**必須**: 最大反復回数と品質閾値を事前定義。アンチパターン: 評価基準が主観的、初回品質で十分な場合
+
+---
+
+## アンチパターン
+
+| パターン | 問題 | 対策 |
+|---------|------|------|
+| description が曖昧 | 自動委譲が機能しない | 具体的トリガー条件を記述（`Use proactively after code changes`） |
+| 多数の Subagent が詳細な結果を返す | メイン会話のコンテキスト消費 | サマリのみ返すよう prompt に明示 |
+| 逐次化すべき作業を並列化 | 依存関係エラー・不整合 | 依存関係を明確化してから並列化判断 |
+| ネスト 3 レベル超 | 管理困難・効率低下 | Skills でメイン会話ベースに変更 |
+| `bypassPermissions` の安易な使用 | セキュリティリスク | `auto` mode を検討 |
 
 ---
 
