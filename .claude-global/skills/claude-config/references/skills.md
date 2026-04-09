@@ -68,6 +68,13 @@ agent: Explore   # 探索・調査系
 - `context: fork` でサブエージェントとして隔離実行
 - SKILL.md の内容がサブエージェントへのプロンプトになる
 - `agent` フィールドで種別を指定（省略時は general-purpose）
+- **制約: fork内からAgent/Task/Skill toolは使用不可**（孫スポーン不可。1段階のみ）
+- `model` フィールドで実行モデルを指定可能（省略時は親セッションのモデルを継承）
+
+**fork適用の前提条件チェック**:
+1. スキル内でAgent/Task toolを使っていないか → 使っていたら fork 不可
+2. 対話型（AskUserQuestion等）でないか → 対話型なら fork 不可
+3. 直前の会話コンテキストに依存しないか → 依存するなら fork 不可
 
 動的コンテキスト注入との組み合わせ例:
 
