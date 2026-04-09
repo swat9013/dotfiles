@@ -71,6 +71,7 @@ brew "awscli"
 brew "aws-cdk"
 brew "colima"
 brew "deck"
+brew "docker"
 brew "openfortivpn"
 
 # AI

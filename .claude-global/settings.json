@@ -1,9 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "fileSuggestion": {
-    "type": "command",
-    "command": "~/.dotfiles/.claude-global/file-suggestion.sh"
-  },
   "env": {
     "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
@@ -135,6 +131,12 @@
       "Write(.claude/research/**)",
       "Write(.claude/implement/**)",
       "Write(.claude/tmp/**)",
+      "Edit(.claude/dialogues/**)",
+      "Edit(.claude/discovery/**)",
+      "Edit(.claude/plans/**)",
+      "Edit(.claude/research/**)",
+      "Edit(.claude/implement/**)",
+      "Edit(.claude/tmp/**)",
       "Bash(mkdir:*)"
     ],
     "deny": [
@@ -350,7 +352,7 @@
   },
   "language": "日本語でMBTIでINTJの人がわかりやすい話し方",
   "spinnerTipsEnabled": false,
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "promptSuggestionEnabled": false,
   "plansDirectory": ".claude/plans"
 }
