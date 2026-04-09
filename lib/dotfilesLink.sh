@@ -74,6 +74,12 @@ if [ -d "$HOME"/.dotfiles/.claude-global/rules ]; then
     ln -snfv "$HOME"/.dotfiles/.claude-global/rules "$HOME"/.claude/rules
 fi
 
+# pip設定
+if [ ! -e "$HOME"/.config/pip ]; then
+    mkdir -p "$HOME"/.config
+    ln -snfv "$HOME"/.dotfiles/pip "$HOME"/.config/pip
+fi
+
 # Colima設定
 if [ -f "$HOME"/.dotfiles/colima/colima.yaml ]; then
     mkdir -p "$HOME"/.colima/default

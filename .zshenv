@@ -43,3 +43,8 @@ export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
 ## Gemini CLI用の環境変数
 export GOOGLE_CLOUD_PROJECT="gen-lang-client-0404398232"
+
+# パッケージマネージャセキュリティ設定
+export UV_REQUIRE_VIRTUALENV=true
+export HOMEBREW_VERIFY_ATTESTATIONS=true
+export GOFLAGS="-mod=readonly"
