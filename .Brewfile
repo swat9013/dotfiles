@@ -5,6 +5,7 @@ tap "beeftornado/rmtree"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 tap "k1low/tap"
+tap "osx-cross/avr"
 tap "oven-sh/bun"
 tap "satococoa/tap"
 tap "songmu/tap"
@@ -78,8 +79,10 @@ brew "openfortivpn"
 brew "ollama"
 
 # Keyboard
-brew "libusb"
+brew "osx-cross/avr/avr-gcc@8"
+brew "avrdude"
 brew "laminate"
+brew "libusb"
 
 # File manager
 brew "yazi"
