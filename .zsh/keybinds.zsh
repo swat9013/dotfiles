@@ -51,6 +51,7 @@ if which fzf > /dev/null 2>&1; then
         local file=$(rg --files --hidden --follow --glob '!.git' 2>/dev/null | \
             fzf --height=100% --preview 'bat --color=always {}' --preview-window='right:60%')
         if [ -n "$file" ]; then
+            echo -n "$file" | pbcopy
             BUFFER="bat ${(q)file}"
             zle accept-line
         fi
@@ -71,7 +72,7 @@ if which fzf > /dev/null 2>&1; then
     zle -N fzf-edit-file
     bindkey '\e[101;6u' fzf-edit-file
 
-    function fzf-grep-edit() {
+    function fzf-grep-copy() {
         local result=$(
             fzf --ansi --disabled \
                 --height=100% \
@@ -83,17 +84,13 @@ if which fzf > /dev/null 2>&1; then
         if [ -n "$result" ]; then
             local file=$(echo "$result" | cut -d: -f1)
             local line=$(echo "$result" | cut -d: -f2)
-            if [[ "$EDITOR" == *code* ]]; then
-                BUFFER="code --goto ${(q)file}:${line}"
-            else
-                BUFFER="${EDITOR:-vim} +${line} ${(q)file}"
-            fi
-            zle accept-line
+            echo -n "${file}:${line}" | pbcopy
+            zle -M "Copied: ${file}:${line}"
         fi
         zle reset-prompt
     }
-    zle -N fzf-grep-edit
-    bindkey '\e[103;6u' fzf-grep-edit
+    zle -N fzf-grep-copy
+    bindkey '\e[103;6u' fzf-grep-copy
 fi
 
 ## C-^ で一つ上のディレクトリへ

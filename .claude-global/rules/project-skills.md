@@ -79,8 +79,6 @@ description: |-
 
 **参照原則**: 動的コンテキストを定義した場合、手順内では「動的コンテキストの出力を参照」と記述し、同じコマンドを手順内で再実行しない
 
-**パーミッション一致**: `!` `` のコマンド文字列は settings.local.json の `permissions.allow` エントリと文字列完全一致で判定される。相対パス `./scripts/foo.sh` は絶対パス `/Users/.../foo.sh` や `~/.dotfiles/.../foo.sh` とマッチしない。SKILL.md のコマンドとパーミッションエントリのパス表記を統一すること
-
 ### Extended Thinking
 
 SKILL.md内に `ultrathink` を含めると拡張思考モード有効化

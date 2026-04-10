@@ -70,67 +70,19 @@ function ccl() {
   if [[ $sub_count -gt 0 ]]; then
     local rss_mb=$((sub_rss / 1024))
     echo ""
-    echo "Subagents: $sub_count (RSS: ${rss_mb} MB) — use 'cck --sub' to clean up"
+    echo "Subagents: $sub_count (RSS: ${rss_mb} MB) — use 'cck' to clean up"
   fi
 }
 
-# Kill Claude Code sessions
-# Usage: cck [options] [pid]
-#   <pid>       Kill specific process
-#   -s, --sub   Kill all subagents
-#   -a, --all   Kill all Claude processes (main + sub)
+# Kill all running subagents
 function cck() {
-  local mode="pid"
-  local target_pid=""
-
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      -s|--sub) mode="sub"; shift ;;
-      -a|--all) mode="all"; shift ;;
-      *)
-        if [[ "$1" =~ ^[0-9]+$ ]]; then
-          target_pid="$1"
-        fi
-        shift ;;
-    esac
+  local pids=($(pgrep '^claude$' 2>/dev/null))
+  local count=0
+  for pid in "${pids[@]}"; do
+    local args=$(ps -p $pid -o args= 2>/dev/null)
+    if [[ "$args" == *"stream-json"* ]]; then
+      kill -9 $pid 2>/dev/null && ((count++))
+    fi
   done
-
-  case "$mode" in
-    pid)
-      if [[ -z "$target_pid" ]]; then
-        echo "Usage: cck [options] [pid]"
-        echo "  <pid>       Kill specific process"
-        echo "  -s, --sub   Kill all subagents"
-        echo "  -a, --all   Kill all Claude processes"
-        return 1
-      fi
-      local cmd=$(ps -p $target_pid -o comm= 2>/dev/null)
-      if [[ "$cmd" != "claude" ]]; then
-        echo "Error: PID $target_pid is not a Claude process"
-        return 1
-      fi
-      kill $target_pid && echo "Killed Claude session $target_pid"
-      ;;
-    sub)
-      local pids=($(pgrep '^claude$' 2>/dev/null))
-      local count=0
-      for pid in "${pids[@]}"; do
-        local args=$(ps -p $pid -o args= 2>/dev/null)
-        if [[ "$args" == *"stream-json"* ]]; then
-          kill -9 $pid 2>/dev/null && ((count++))
-        fi
-      done
-      echo "Killed $count subagent(s)"
-      ;;
-    all)
-      local pids=($(pgrep '^claude$' 2>/dev/null))
-      local count=${#pids[@]}
-      if [[ $count -eq 0 ]]; then
-        echo "No Claude processes running"
-        return 0
-      fi
-      kill "${pids[@]}" 2>/dev/null
-      echo "Killed $count Claude process(es)"
-      ;;
-  esac
+  echo "Killed $count subagent(s)"
 }

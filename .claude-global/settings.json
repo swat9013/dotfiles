@@ -215,7 +215,15 @@
       "Bash(npm publish:*)",
       "Bash(kubectl:*)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "default",
+    "allowedPaths": [
+      "**/.claude/tmp/**",
+      "**/.claude/review/**",
+      "**/.claude/discovery/**",
+      "**/.claude/plan/**",
+      "**/.claude/research/**",
+      "**/.claude/dialogue/**"
+    ]
   },
   "hooks": {
     "PreToolUse": [

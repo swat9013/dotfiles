@@ -148,6 +148,20 @@ alias cca='claude --permission-mode auto'
 alias cco='claude --model opus'
 alias ccp='claude --setting-sources project,local'  # user設定を除外してプロジェクト+ローカルのみ適用
 alias ccs='claude --model sonnet'
+alias cch='claude --model haiku'
+# breakdownで分解 → implementで実装の2段階ワークフロー
+function cc-implement() {
+    echo "⏳ [1/2] breakdown (sonnet) ..."
+    claude --model sonnet -p "/breakdown"
+    if [[ $? -eq 0 ]]; then
+        echo "✅ [1/2] breakdown complete"
+        echo "🚀 [2/2] implement (opus) ..."
+        claude --model opus "/implement"
+    else
+        echo "❌ breakdown failed (exit $?)" >&2
+        return 1
+    fi
+}
 
 # 軽量Claude Codeでワンライナー質問（ファイル参照オプション対応）
 # Usage: ccask "質問内容" [file1] [file2] ...
