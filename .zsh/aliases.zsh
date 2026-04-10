@@ -151,6 +151,7 @@ alias ccs='claude --model sonnet'
 alias cch='claude --model haiku'
 # breakdownで分解 → implementで実装の2段階ワークフロー
 function cc-implement() {
+    mkdir -p .claude/implement .claude/tmp
     echo "⏳ [1/2] breakdown (sonnet) ..."
     claude --model sonnet -p "/breakdown"
     if [[ $? -eq 0 ]]; then
