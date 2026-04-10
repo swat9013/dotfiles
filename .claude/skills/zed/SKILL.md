@@ -10,7 +10,7 @@ user-invocable: false
 
 現在のバージョン: `!`zed --version``
 
-記録バージョン: `0.229.0`
+記録バージョン: `0.231.2`
 
 バージョンが異なる場合、ユーザーに通知。確認後にWebFetchでリリースノートを取得し、スキル内容を更新。
 
@@ -28,7 +28,7 @@ user-invocable: false
 | 自動保存 | on_focus_change |
 | format_on_save | off |
 | telemetry | 無効 |
-| カスタムkeybind | cmd-shift-c → CopyRelativePath |
+| カスタムkeybind | cmd-shift-c → CopyRelativePath、cmd-shift-p → markdown::OpenPreview (md) |
 
 ---
 

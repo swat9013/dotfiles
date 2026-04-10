@@ -102,7 +102,7 @@
 | `assistant.version` | string | `"2"` | UIバージョン |
 
 ```json
-"assistant": { "default_model": { "provider": "anthropic", "model": "claude-opus-4-5" }, "version": "2" }
+"assistant": { "default_model": { "provider": "anthropic", "model": "claude-opus-4-6" }, "version": "2" }
 ```
 
 ---
@@ -128,7 +128,9 @@
 ]
 ```
 
-現行バインド: `cmd-shift-c` → `editor::CopyRelativePath` ★
+現行バインド:
+- `cmd-shift-c` → `editor::CopyRelativePath` ★
+- `cmd-shift-p` → `markdown::OpenPreview`（`context: Editor && extension == md`）★
 
 | 項目 | 説明 |
 |------|------|
