@@ -3,6 +3,8 @@ name: troubleshooting
 description: バグ調査・トラブルシュートの仮説駆動ワークフロー。Use when「デバッグ」「バグ調査」「エラー解析」「動かない」。
 argument-hint: "[エラーメッセージ、症状、またはログファイルパス]"
 disable-model-invocation: true
+model: sonnet
+effort: high
 ---
 
 # Troubleshooting

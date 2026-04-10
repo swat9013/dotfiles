@@ -6,6 +6,8 @@ description: |-
 user-invocable: true
 disable-model-invocation: true
 argument-hint: "init | switch [タスク説明]"
+model: sonnet
+effort: low
 ---
 
 # wt

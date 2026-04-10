@@ -121,6 +121,32 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 - `cleanupPeriodDays: 0` はバリデーションエラー（v2.1.89+）。トランスクリプト永続化無効化は別手段を使う
 - `includeCoAuthoredBy` は非推奨 → `attribution` を使用
 
+## sandbox 設定
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "filesystem": {
+      "allowWrite": ["/tmp/build"],
+      "denyWrite": ["/etc"],
+      "denyRead": ["~/.aws/credentials"]
+    },
+    "network": {
+      "allowMachLookup": ["com.apple.coresimulator.*"]
+    }
+  }
+}
+```
+
+| キー | 説明 |
+|-----|------|
+| `enabled` | サンドボックス有効化 |
+| `failIfUnavailable` | サンドボックス利用不可時にエラー |
+| `autoAllowBashIfSandboxed` | サンドボックス有効時にBash自動許可 |
+| `allowUnsandboxedCommands` | サンドボックス非対応コマンドの実行許可 |
+
 ## セキュリティ
 
 - 機密ファイルは `deny` に追加

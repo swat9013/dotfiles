@@ -1,6 +1,8 @@
 ---
 name: setup-linter-hooks
 description: プロジェクトのlinter/formatterをClaude Code hooksに自動設定。Use when「lint設定」「hooks設定」「自動フォーマット」「pre-commit」。
+model: sonnet
+effort: medium
 ---
 
 # Setup Linter Hooks

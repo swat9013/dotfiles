@@ -3,6 +3,8 @@ name: retrospective
 description: セッション会話からドメイン知識を抽出し4層に永続化。Use when「学びを保存」「振り返り」「retrospective」「ドメイン知識更新」。
 disable-model-invocation: true
 argument-hint: "[--since=Nd] [--limit=N]"
+model: sonnet
+effort: medium
 ---
 
 # Retrospective

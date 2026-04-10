@@ -4,6 +4,8 @@ description: |-
   Sycophancyを排除した構造的対話モードを起動する。
   Use when「対話したい」「議論したい」「意見を聞きたい」「反論して」「/dialogue」。
 argument-hint: "<topic>"
+model: sonnet
+effort: medium
 ---
 
 # Dialogue Mode

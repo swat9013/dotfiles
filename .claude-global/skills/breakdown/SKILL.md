@@ -2,6 +2,8 @@
 name: breakdown
 description: 設計書から実装タスクリストを生成するタスク分解エージェント。Use when「/breakdown」「タスク分解」「実装計画を作って」。
 disable-model-invocation: true
+model: sonnet
+effort: high
 ---
 
 # /breakdown コマンド

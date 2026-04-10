@@ -1,6 +1,8 @@
 ---
 name: drawio
 description: draw.io XMLを生成し.drawioファイル保存、CLIでPNG/SVG/PDFエクスポート。Use when「drawio」「.drawio」「図を作って」。
+model: sonnet
+effort: medium
 ---
 
 # draw.io Diagram Skill

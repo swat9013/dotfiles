@@ -198,6 +198,11 @@ skills:
 2. `disable-model-invocation: true` で手動呼び出しのみに制限
 
 ### スキルが読み込まれない
-- skills description は **15,000 文字の budget 制限**あり
+- skills description バジェット: コンテキストウィンドウの **1%**（fallback: 8,000文字）。各エントリは **250文字**でトランケート
 - `/context` で除外されたスキルを確認
 - `SLASH_COMMAND_TOOL_CHAR_BUDGET` 環境変数で上限を調整可能
+
+### スキルのコンテキストライフサイクル
+
+- 呼び出し後、セッション全体でコンテキストに残存
+- auto-compaction 時は最近呼び出したスキルから優先的に再アタッチ（5,000トークン/スキル、合計25,000トークンのバジェット）

@@ -2,6 +2,8 @@
 name: critical-think
 description: 前回回答の厳密批評と改善。6セクション分析で論理的欠陥を特定。Use when「批判的に見て」「自己レビュー」「本当に正しい？」「穴を探して」。
 disable-model-invocation: true
+model: opus
+effort: high
 ---
 
 # Critical Think

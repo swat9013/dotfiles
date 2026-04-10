@@ -1,6 +1,8 @@
 ---
 name: implement
 description: implementation.mdのタスクを品質ゲート付きで並列実行。Use when「/implement」「タスク実行」「実装して」「実装開始」。
+model: sonnet
+effort: medium
 ---
 
 # /implement コマンド

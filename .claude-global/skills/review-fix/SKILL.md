@@ -2,6 +2,7 @@
 name: review-fix
 description: 実装後コードをOpusレビュー＋自動修正する最大3サイクル。Use when「/review-fix」「レビュー修正」「実装後レビュー」。
 model: opus
+effort: high
 disable-model-invocation: true
 ---
 

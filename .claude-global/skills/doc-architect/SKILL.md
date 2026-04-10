@@ -2,6 +2,8 @@
 name: doc-architect
 description: Diátaxisフレームワークに基づくドキュメント構造設計・作成支援。Use when「ドキュメント設計」「docs作成」「文書構成」「Diátaxis」。
 disable-model-invocation: true
+model: sonnet
+effort: high
 ---
 
 # doc-architect

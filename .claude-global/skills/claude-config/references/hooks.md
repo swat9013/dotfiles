@@ -40,6 +40,7 @@
 | `InstructionsLoaded` | 不可 | `file_path` |
 | `Elicitation` | 可 | MCP ツールの入力要求 |
 | `ElicitationResult` | 可 | MCP 入力要求の結果 |
+| `PermissionDenied` | 不可 | `tool_name`, `tool_input`, `permission_type` |
 | `WorktreeCreate` | 可 | `worktree_path`, `branch` |
 | `WorktreeRemove` | 可 | `worktree_path` |
 
@@ -101,15 +102,21 @@ exit 0 の stdout に出力する JSON。イベントごとに使えるフィー
 
 **AskUserQuestion 自動応答**（v2.1.85+）: `tool_name: "AskUserQuestion"` 検出時に `updatedInput` + `permissionDecision: "allow"` を返すことでユーザー確認を自動処理可能。
 
+### UserPromptSubmit
+
+```json
+{ "hookSpecificOutput": { "hookEventName": "UserPromptSubmit", "sessionTitle": "セッションタイトル" } }
+```
+
+`sessionTitle`（v2.1.94+）: セッションタイトルをプログラム的に設定。
+
 ### SubagentStart / PostToolUse / SessionStart
 
 ```json
 { "hookSpecificOutput": { "hookEventName": "SubagentStart", "additionalContext": "コンテキスト文字列" } }
 ```
 
-### Stop / SubagentStop
-
-exit 2 + stderr が標準。hookSpecificOutput は使わない。
+Stop / SubagentStop は exit 2 + stderr が標準（hookSpecificOutput は使わない）。
 
 ---
 
@@ -173,13 +180,7 @@ printf '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContex
 
 `/hooks`（登録済みhook確認）、`claude --debug`（実行詳細確認）、一括無効化: `{ "disableAllHooks": true }`
 
-**段階的導入手順**:
-1. PostToolUse formatter から開始（最も安全、ブロックなし）
-2. スクリプト単体テスト: `echo '{"tool_name":"Write","tool_input":{"file_path":"test.ts"}}' | ./hook.sh`
-3. ログ追加: `echo "[hook] FILE=$FILE_PATH" >> /tmp/hook.log`
-4. PreToolUse ガードは最後に追加（全ツール実行に影響）
-
-**デバッグ用入力キャプチャ**: `printf '%s\n' "$INPUT" > /tmp/hook-debug.json` を一時追加して実際の入力を保存。原因特定後に削除。
+**段階的導入手順**: PostToolUse formatter → スクリプト単体テスト(`echo '...' | ./hook.sh`) → ログ追加 → PreToolUse ガード（最後に追加）
 
 **Exit code 規則**:
 
@@ -188,8 +189,6 @@ printf '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContex
 | `0` | 成功 | stdout が JSON なら解析 |
 | `2` | ブロッキングエラー | stderr が Claude へフィードバック |
 | その他 | 非ブロッキングエラー | 実行継続 |
-
-`exit 2` 時は stdout の JSON は無視。ブロックしつつ JSON も返す場合は `exit 0 + hookSpecificOutput deny`。
 
 ### ハマりポイント
 

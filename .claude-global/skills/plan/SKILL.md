@@ -6,6 +6,8 @@ disable-model-invocation: true
 denied-tools:
   - Edit
   - NotebookEdit
+model: sonnet
+effort: high
 ---
 
 # Plan Agent

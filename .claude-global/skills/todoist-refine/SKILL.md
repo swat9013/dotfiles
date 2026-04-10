@@ -2,6 +2,8 @@
 name: todoist-refine
 description: Refines Todoist tasks by clarifying background, intent, and done criteria. Use when「タスクリファイン」「タスク整理」「タスク明確化」。
 user-invocable: true
+model: sonnet
+effort: medium
 ---
 
 # todoist-refine

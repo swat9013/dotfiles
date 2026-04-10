@@ -5,6 +5,8 @@ user-invocable: true
 disable-model-invocation: true
 argument-hint: "[バージョン（例: v2.1.90、省略時は最新）]"
 allowed-tools: Bash
+model: sonnet
+effort: medium
 ---
 
 # Claude Code Release Notes

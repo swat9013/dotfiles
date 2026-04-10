@@ -2,6 +2,8 @@
 name: refactor
 description: 既存コードの安全なリファクタリング。振る舞いを保ち内部構造を改善。Use when「リファクタリング」「コード改善」「コード整理」「構造改善」。
 disable-model-invocation: true
+model: sonnet
+effort: high
 ---
 
 # Refactor

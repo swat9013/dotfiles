@@ -6,6 +6,8 @@ disable-model-invocation: true
 denied-tools:
   - Edit
   - NotebookEdit
+model: opus
+effort: high
 ---
 
 # Architect Agent

@@ -3,6 +3,8 @@ name: researcher
 description: 技術調査を担当する専門エージェント。Use when「調査して」「リサーチして」「技術比較」「ベストプラクティスを調べて」。
 allowed-tools: WebSearch, WebFetch
 disable-model-invocation: true
+model: sonnet
+effort: medium
 ---
 
 # Researcher Agent
