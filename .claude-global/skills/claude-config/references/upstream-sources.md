@@ -2,21 +2,32 @@
 
 ## 最終更新日
 
-last-auto-update: 2026-04-10
-last-known-version: 2.1.98
+last-auto-update: 2026-04-12
+last-known-version: 2.1.101
 
 ---
 
 ## 固定URL
 
+researcherサブエージェントが直接WebFetchする対象。ドキュメントページの差分検出は `docs-diff.py` が担うため、ここにはCHANGELOGのみ記載。
+
 | URL | カテゴリ |
 |-----|---------|
 | `https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md` | 全般（リリースノート） |
-| `https://code.claude.com/docs/en/settings` | settings |
-| `https://code.claude.com/docs/en/hooks` | hooks |
-| `https://code.claude.com/docs/en/sub-agents` | subagent |
-| `https://code.claude.com/docs/en/overview` | context-architecture |
-| `https://code.claude.com/docs/en/agent-teams` | agent-teams |
+
+### docs-diff.py 監視対象
+
+以下のページは `scripts/docs-diff.py` がスナップショット比較で差分検出する。追加・削除時はスクリプト内の `MONITORED_PAGES` を更新すること。
+
+| slug | カテゴリ |
+|------|---------|
+| `settings` | settings |
+| `hooks` | hooks |
+| `sub-agents` | subagent |
+| `overview` | context-architecture |
+| `agent-teams` | agent-teams |
+| `best-practices` | best-practices |
+| `skills` | skills |
 
 ---
 

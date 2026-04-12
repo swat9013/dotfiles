@@ -82,6 +82,7 @@ flowchart LR
 | `.claude/plans/` | plan, architect | breakdown |
 | `.claude/implement/` | breakdown | implement |
 | `.claude/dialogues/` | dialogue | (対話ログ) |
+| `.claude/domain-models/` | problem-domain-modeling | (モデリング成果物) |
 | `.claude/tmp/review/` | implement, review-fix, claude-config | (一時成果物、git管理外) |
 
 ### 中連動（方針・パターンの共有。変更時に全箇所の整合性確認が必要）

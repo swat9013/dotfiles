@@ -180,6 +180,8 @@ printf '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContex
 
 `/hooks`（登録済みhook確認）、`claude --debug`（実行詳細確認）、一括無効化: `{ "disableAllHooks": true }`
 
+**hookエラー診断（v2.1.98+）**: hookが非ゼロで終了した場合、stderrの最初の行がエラーメッセージに含まれるようになった。エラーの自己診断に活用可能。
+
 **段階的導入手順**: PostToolUse formatter → スクリプト単体テスト(`echo '...' | ./hook.sh`) → ログ追加 → PreToolUse ガード（最後に追加）
 
 **Exit code 規則**:

@@ -107,14 +107,26 @@ AskUserQuestion で確認: `all`（全適用）/ `1,3`（番号指定）/ `none`
 
 `Read ~/.claude/skills/claude-config/references/upstream-sources.md` で `last-auto-update` 日付・`last-known-version` と、固定URL・検索クエリ・監視対象ワークアラウンドを把握する。
 
-### Step A2: 調査サブエージェント起動
+### Step A2a: ドキュメント差分検出（スクリプト）
+
+Bash tool で docs-diff.py を実行し、前回スナップショットからのドキュメント変更を検出する。
+
+```
+~/.dotfiles/.claude-global/skills/claude-config/scripts/docs-diff.py \
+  --snapshot-dir ~/.dotfiles/.claude-global/skills/claude-config/snapshots/docs
+```
+
+`RESULT` 判定: 出力全体を保持し、Step A2b でサブエージェントに渡す。
+
+### Step A2b: 調査サブエージェント起動
 
 事前に `Read ~/.claude/skills/researcher/SKILL.md` で調査原則・引用ルールを取得し、Task tool (sonnet, allowed-tools: WebSearch, WebFetch, Write, Bash) で委譲する。
 
 プロンプトに含める要素:
 - researcher/SKILL.md から取得した調査原則・引用ルール
 - 調査期間: `{last-auto-update}` から今日まで（バージョン起点: `{last-known-version}` 以降のリリース）
-- upstream-sources.md の固定URL・検索クエリ・監視対象ワークアラウンドを全文転記
+- **docs-diff.py の出力全文**（ドキュメント差分。サブエージェントはこの差分を分析対象とし、固定URLへの個別WebFetchは不要）
+- upstream-sources.md の検索クエリ・監視対象ワークアラウンドを全文転記
 - 調査観点: 新機能・破壊的変更・非推奨化 / settings/hooks/skills/CLAUDE.md 仕様変更 / Gotchas / ワークアラウンド解消確認
 - バージョン調査: CHANGELOG.md から `{last-known-version}` 以降の全バージョンと変更内容を取得。調査時点の最新バージョンを記録する
 - 成功基準: カテゴリ別整理・変更なし明記・出典URL付与
@@ -131,13 +143,20 @@ AskUserQuestion で確認: `all`（全適用）/ `1,3`（番号指定）/ `none`
 
 `Read ~/.claude/skills/claude-config/references/update-guide.md` でフローを把握し、各変更を処理する（カテゴリ特定 → 対象 Read → Edit 差分 → 整合性チェック）。
 
-### Step A5: last-auto-update と last-known-version を更新
+### Step A5: メタデータ・スナップショット更新
 
 レポートから調査時点の最新バージョンを確認し、`upstream-sources.md` を以下の通り更新する:
 - `last-auto-update` を本日日付（YYYY-MM-DD）に更新
 - `last-known-version` を調査時点の最新バージョン番号（例: `2.1.98`）に更新
 
 バージョンが不明な場合は `claude --version` を実行して現在値を取得する。
+
+ドキュメントスナップショットを現在の内容で更新する:
+```
+~/.dotfiles/.claude-global/skills/claude-config/scripts/docs-diff.py \
+  --snapshot-dir ~/.dotfiles/.claude-global/skills/claude-config/snapshots/docs \
+  --update-snapshots
+```
 
 → 共通レビューフェイズ（R1〜R3）へ
 

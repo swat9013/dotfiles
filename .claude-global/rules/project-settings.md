@@ -44,6 +44,8 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 | `fileSuggestion` | `@` ファイル補完カスタム | スクリプトパス |
 | `includeGitInstructions` | git指示のシステムプロンプト注入 | `true`/`false` |
 | `autoMemoryDirectory` | auto memoryカスタム保存先 | ディレクトリパス |
+| `autoUpdatesChannel` | アップデートチャネル指定 | `"stable"` または `"latest"` |
+| `plansDirectory` | planファイルの保存先カスタマイズ | ディレクトリパス |
 
 ## hooks設定
 
@@ -120,6 +122,7 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 
 - `cleanupPeriodDays: 0` はバリデーションエラー（v2.1.89+）。トランスクリプト永続化無効化は別手段を使う
 - `includeCoAuthoredBy` は非推奨 → `attribution` を使用
+- 認識不明なhookイベント名があっても設定ファイル全体は無視されなくなった（v2.1.101+）
 
 ## sandbox 設定
 

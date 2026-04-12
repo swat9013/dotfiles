@@ -131,12 +131,14 @@
       "Write(**/.claude/research/**)",
       "Write(**/.claude/implement/**)",
       "Write(**/.claude/tmp/**)",
+      "Write(.claude/tmp/**)",
       "Edit(**/.claude/dialogues/**)",
       "Edit(**/.claude/discovery/**)",
       "Edit(**/.claude/plans/**)",
       "Edit(**/.claude/research/**)",
       "Edit(**/.claude/implement/**)",
       "Edit(**/.claude/tmp/**)",
+      "Edit(.claude/tmp/**)",
       "Bash(mkdir:*)"
     ],
     "deny": [
@@ -360,7 +362,7 @@
   },
   "language": "日本語でMBTIでINTJの人がわかりやすい話し方",
   "spinnerTipsEnabled": false,
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "promptSuggestionEnabled": false,
   "plansDirectory": ".claude/plans"
 }
