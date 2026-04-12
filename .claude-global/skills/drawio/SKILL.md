@@ -38,18 +38,19 @@ Write toolで`.drawio`ファイルを保存。ファイル名はkebab-case、内
 draw.io CLIでエクスポート:
 
 ```bash
-/Applications/draw.io.app/Contents/MacOS/draw.io -x -f <format> -e -b 10 -o <name>.drawio.<ext> <name>.drawio
+/Applications/draw.io.app/Contents/MacOS/draw.io -x -f <format> -b 10 -o <name>.drawio.<ext> <name>.drawio
 ```
 
 主要フラグ:
 - `-x`: エクスポートモード
 - `-f png|svg|pdf`: 出力フォーマット
-- `-e`: ダイアグラムXML埋め込み（エクスポート後も編集可能）
 - `-b 10`: ボーダー幅
 - `-t`: 透過背景（PNGのみ）
 - `-s <scale>`: スケール
 
-エクスポート成功後、中間の`.drawio`ファイルは`rmtrash`で削除。
+> **Gotcha: `-e`（XML埋め込み）フラグ禁止** — v29.6.6 で PNG の `IEND` チャンクが欠損し破損ファイルになる。Claude API が `400 "Could not process image"` を返す原因。`.drawio` ソースファイルを保持すれば編集可能性は担保される。
+
+エクスポート成功後、`.drawio`ソースファイルは保持する（XMLの正本）。
 
 ### 4. 結果表示
 

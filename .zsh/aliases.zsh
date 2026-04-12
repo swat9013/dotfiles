@@ -152,16 +152,35 @@ alias cch='claude --model haiku'
 # breakdownで分解 → implementで実装の2段階ワークフロー
 function cc-implement() {
     mkdir -p .claude/implement .claude/tmp
+
+    local before_count
+    before_count=$(ls -1 .claude/implement/ 2>/dev/null | wc -l | tr -d ' ')
+
+    local session_name="breakdown-$(date +%Y%m%d-%H%M%S)"
     echo "⏳ [1/2] breakdown (sonnet) ..."
-    claude --model sonnet -p "/breakdown"
-    if [[ $? -eq 0 ]]; then
-        echo "✅ [1/2] breakdown complete"
-        echo "🚀 [2/2] implement (opus) ..."
-        claude --model opus "/implement"
-    else
-        echo "❌ breakdown failed (exit $?)" >&2
+    echo "   session: ${session_name}"
+    claude --model sonnet -p "/breakdown" -n "${session_name}"
+    local exit_code=$?
+
+    if [[ ${exit_code} -ne 0 ]]; then
+        echo "❌ breakdown failed (exit ${exit_code})" >&2
+        echo "   resume: claude --resume \"${session_name}\"" >&2
         return 1
     fi
+
+    local after_count
+    after_count=$(ls -1 .claude/implement/ 2>/dev/null | wc -l | tr -d ' ')
+
+    if [[ "${after_count}" -le "${before_count}" ]]; then
+        echo "❌ breakdown succeeded but no implementation.md was created" >&2
+        echo "   resume: claude --resume \"${session_name}\"" >&2
+        return 1
+    fi
+
+    echo "✅ [1/2] breakdown complete"
+    echo "   resume: claude --resume \"${session_name}\""
+    echo "🚀 [2/2] implement (opus) ..."
+    claude --model opus "/implement"
 }
 
 # 軽量Claude Codeでワンライナー質問（ファイル参照オプション対応）

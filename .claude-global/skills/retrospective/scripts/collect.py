@@ -205,6 +205,35 @@ def _sanitize(text: str) -> str:
 OUTPUT_FILE = "/tmp/retro-data.json"
 
 
+def read_metrics_file(path: Path | None = None) -> dict:
+    """PermissionRequest 計測 JSONL を読み込み tool 別集計を返す。"""
+    if path is None:
+        path = Path.home() / ".claude" / "tmp" / "metrics" / "permission-requests.jsonl"
+
+    if not path.exists():
+        return {"tool_counts": {}, "total": 0}
+
+    tool_counts: dict[str, int] = {}
+    total = 0
+
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            tool = entry.get("tool")
+            if tool is None:
+                continue
+            tool_counts[tool] = tool_counts.get(tool, 0) + 1
+            total += 1
+
+    return {"tool_counts": tool_counts, "total": total}
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="retrospective用セッションデータを収集しJSONで出力する"
@@ -221,9 +250,10 @@ def main():
 
     # 1. セッション検索
     sessions = find_sessions(args.since, args.limit)
+    metrics_summary = read_metrics_file()
 
     if not sessions:
-        _write_output([], collect_existing_context(), 0, 0)
+        _write_output([], collect_existing_context(), 0, 0, metrics_summary)
         return
 
     # 2. メッセージ抽出
@@ -243,17 +273,19 @@ def main():
 
     # 4. ファイル出力 + サマリー表示
     skipped = len(sessions) - len(session_data)
-    _write_output(session_data, existing_context, len(session_data), skipped)
+    _write_output(session_data, existing_context, len(session_data), skipped, metrics_summary)
 
 
 def _write_output(
-    sessions: list[dict], existing_context: str, total: int, skipped: int
+    sessions: list[dict], existing_context: str, total: int, skipped: int,
+    metrics_summary: dict | None = None
 ) -> None:
     """JSONをファイルに書き出し、サマリーをstdoutに表示する。"""
     output = {
         "sessions": sessions,
         "existing_context": existing_context,
         "stats": {"total": total, "skipped": skipped},
+        "metrics_summary": metrics_summary or {"tool_counts": {}, "total": 0},
     }
 
     try:

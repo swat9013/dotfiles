@@ -118,10 +118,12 @@
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-skills.py:*)",
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-hooks.py:*)",
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-claude-md.py:*)",
+      "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-review.py:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/todoist-url-inject.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/stop-open-zed.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/log-permission-request.sh:*)",
       "Bash(shellcheck:*)",
       "Bash(uvx ruff:*)",
       "Bash(/Applications/draw.io.app/Contents/MacOS/draw.io:*)",
@@ -320,6 +322,11 @@
           {
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/stop-open-zed.sh",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/log-permission-request.sh",
             "timeout": 10000
           }
         ]
