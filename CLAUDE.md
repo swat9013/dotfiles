@@ -35,3 +35,7 @@ brew bundle --global        # Homebrewパッケージ更新
 
 詳細は `rules/harness-architecture.md` を参照
 
+## Gotchas
+
+- **`.git/info/exclude` の `/.claude` 罠**: `.claude/skills/` 等を git 追跡したい場合は `.git/info/exclude` に `/.claude` が混入していないか確認。`.gitignore` の個別除外よりも `exclude` が優先されてディレクトリ全体をブロックする。修正: `exclude` から `/.claude` 行を削除し `.gitignore` で細粒度管理。
+
