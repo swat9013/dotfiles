@@ -48,7 +48,7 @@ description: |-
 ---
 ```
 
-オプション: `argument-hint`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `model`, `effort`, `context`, `agent`, `hooks`, `paths`, `shell`
+オプション: `argument-hint`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `model`, `effort`, `context`, `agent`, `hooks`, `paths`, `shell`, `keep-coding-instructions`（Plugin出力スタイル制御、v2.1.94+）
 
 ## description設計
 

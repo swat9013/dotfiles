@@ -118,7 +118,7 @@
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-skills.py:*)",
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-hooks.py:*)",
       "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-claude-md.py:*)",
-      "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-review.py:*)",
+      "Bash(~/.dotfiles/.claude-global/skills/claude-config/scripts/scan-metrics.py:*)",
       "Bash(~/.dotfiles/.claude-global/skills/todoist/scripts/todoist.py:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/todoist-url-inject.sh:*)",
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",

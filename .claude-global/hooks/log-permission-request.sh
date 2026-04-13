@@ -10,15 +10,20 @@ METRICS_DIR="$HOME/.claude/tmp/metrics"
 mkdir -p "$METRICS_DIR"
 OUTPUT_FILE="$METRICS_DIR/permission-requests.jsonl"
 
-TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-TOOL=$(printf '%s\n' "$INPUT" | jq -r '.tool // "unknown"')
-INPUT_PREVIEW=$(printf '%s\n' "$INPUT" | jq -r '.input // "" | .[0:100]')
-
-jq -n \
-  --arg timestamp "$TIMESTAMP" \
-  --arg tool "$TOOL" \
-  --arg input_preview "$INPUT_PREVIEW" \
-  '{"timestamp": $timestamp, "tool": $tool, "input_preview": $input_preview}' \
-  >> "$OUTPUT_FILE"
+printf '%s\n' "$INPUT" | jq -c '{
+  timestamp: (now | strftime("%Y-%m-%dT%H:%M:%SZ")),
+  session_id: (.session_id // "unknown"),
+  permission_mode: (.permission_mode // "unknown"),
+  cwd: (.cwd // "unknown"),
+  tool: (.tool_name // "unknown"),
+  key_info: (
+    if .tool_name == "Bash" then (.tool_input.command // "" | .[0:200])
+    elif .tool_name == "Edit" or .tool_name == "Write" then (.tool_input.file_path // "")
+    elif .tool_name == "Agent" then (.tool_input.prompt // "" | .[0:200])
+    else (.tool_input // {} | tostring | .[0:200])
+    end
+  ),
+  input_preview: (.tool_input // {} | tostring | .[0:200])
+}' >> "$OUTPUT_FILE"
 
 exit 0

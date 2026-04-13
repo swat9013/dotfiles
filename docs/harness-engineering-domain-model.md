@@ -54,7 +54,7 @@
 | A: ガード | 禁止操作の遮断 | 充実（permissions.deny, guard-*.sh） |
 | B: 検証 | 品質チェック | 部分的（ruff-check.sh, Pythonのみ） |
 | C: 注入 | 情報制御 | 部分的（paths条件付き注入, skill-activation.sh） |
-| D: 計測 | 可観測性 | ほぼ不在（statusLineのみ） |
+| D: 計測 | 可観測性 | 部分的（PermissionRequest hook + scan-metrics.py） |
 
 **改善の優先順位: D → C。** 何が起きているか見えれば（D）、何を渡すべきか（C）の判断材料になる。
 
@@ -125,7 +125,7 @@ retrospective が捕捉と昇格の両方を担うと、昇格の質が落ちる
 |--------|------|------|
 | retrospective | スキル存在、手動実行のみ | 定期トリガー未実装 |
 | セッション中の逸脱FB | ユーザーの集中力に依存 | 属人的、漏れが多い |
-| opusレビュー結果 | その場で消費して終了 | 頻出パターンの蓄積・還元なし |
+| opusレビュー結果 | その場で消費して終了 | retrospective が tmp/review を Read して memory に捕捉し、claude-config Step 3 で昇華判定（解消済み） |
 
 ---
 
@@ -143,10 +143,10 @@ retrospective が捕捉と昇格の両方を担うと、昇格の質が落ちる
 
 | Tier | 手段 | 取得可能な指標 |
 |------|------|---------------|
-| Tier 1 | retrospective経由（JSONL解析） | tool_use回数, 同一ファイル繰り返し, guardブロック(is_error), Agent起動数, lint失敗(is_error), turn_duration |
-| Tier 2 | hook追加 | PermissionRequest回数, ユーザーツール拒否回数 |
+| Tier 1 | retrospective経由（JSONL解析） | tool_use回数, 同一ファイル繰り返し, guardブロック(is_error), Agent起動数, lint失敗(is_error), turn_duration（定性データ・会話JSONLのみ） |
+| Tier 2 | hook追加 → scan-metrics.py（claude-config Agent 1） | PermissionRequest回数, ユーザーツール拒否回数 |
 
-大部分はTier 1（retrospective拡張）で取れる。JSONLにPermissionRequestが記録されないため、不足分のみhook追加が必要。
+retrospective は定性データ（会話JSONL）のみを処理する。JSONLにPermissionRequestが記録されないため、不足分のみhook追加が必要。PermissionRequestログは scan-metrics.py（claude-config Agent 1）が消費する。
 
 ---
 
@@ -156,11 +156,12 @@ retrospective が捕捉と昇格の両方を担うと、昇格の質が落ちる
 
 **問題**: PermissionRequestがJSONLに記録されず、ユーザーの許可/拒否パターンが不可視。
 
-**方針**: `PermissionRequest` hookで外部ログに追記。
+**方針**: `PermissionRequest` hookで外部ログに追記。**実装済み。**
 
-- hookスクリプトで `.claude/tmp/metrics/permission-requests.jsonl` に1行1JSON（`timestamp`, `tool`, `input_preview`）を記録
-- `PermissionRequest` hookは `stop-open-zed.sh` で確立済みのパターンを踏襲
-- retrospective の `collect.py` にこのファイルの読み込みを追加して統合
+- hookスクリプト（`log-permission-request.sh`）で `.claude/tmp/metrics/permission-requests.jsonl` に1行1JSONを記録
+- 記録フィールド: `timestamp`, `session_id`, `permission_mode`, `cwd`, `tool`, `key_info`（ツール別要点抽出）, `input_preview`（200文字）
+- `key_info` はツール別に最重要情報を抽出: Bash→`command`, Edit/Write→`file_path`, Agent→`prompt`, その他→`tool_input`全体
+- 計測データの消費は scan-metrics.py（claude-config Agent 1）が担う。retrospective は定性データ（会話JSONL）のみ処理
 
 ### 6.2 計測データの消費フロー（Steering Loopの設計不足）
 
@@ -170,12 +171,12 @@ retrospective が捕捉と昇格の両方を担うと、昇格の質が落ちる
 
 ```
 JSONL + hookログ
-  → collect.py (retrospective) → memory/metrics_*.md
-  → scan-*.py (claude-config)  → 構造改善提案
+  → scan-metrics.py (claude-config) → 構造改善提案
+  retrospective → memory（定性知見のみ）
 ```
 
-- retrospective: collect.py を拡張し、計測データも収集→分析サブエージェントに渡す。知見として「ガードブロック急増→ruleの粒度問題」等のパターンを検出
-- claude-config: retrospective が蓄積した計測memoryを診断の入力に追加し、構造改善に接続
+- retrospective: 定性データのみ（会話JSONL）を処理し、知見をmemoryに捕捉する。計測データ（hookログ等）は処理しない
+- claude-config: scan-metrics.py（Agent 1）がJSONLとhookログを解析し、構造改善提案を生成する
 
 ### 6.3 retrospective定期トリガー（知見源の安定化）
 
@@ -191,11 +192,10 @@ JSONL + hookログ
 
 **問題**: opusレビュー結果が `tmp/review/` に保存されるが、一回きりの消費で終わる。
 
-**方針**: claude-config の診断フェーズに `tmp/review/` 走査を統合。
+**方針**: Agent 4 廃止。Step 3 のメモリ昇華チェックで頻出パターンを吸収。
 
-- §4.2 の責務分離原則に従い、「昇格」の責務を持つclaude-configに配置
-- `scan-review.py` を新設（レビューファイルを読み、指摘カテゴリを抽出、頻度カウント）
-- 頻出閾値（3回以上）を超えた指摘を昇格候補として診断レポートに含める
+- retrospective が `tmp/review/` ファイルを Read して memory に捕捉し、claude-config Step 3 で昇格判定する
+- 専用エージェントによる頻出抽出は Step 3 のメモリ昇華チェックに統合済み
 
 ### 6.5 逸脱FBの属人性軽減（課題6.3に依存）
 

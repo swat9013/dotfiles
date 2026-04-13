@@ -121,15 +121,15 @@ opusレビュー ────→ tmp/review ─┘    (昇華+頻出抽出)    (
 ```
 
 **責務分離の原則**:
-- **retrospective**: 知見の「捕捉」に専念（memory 蓄積のみ）。計測データ（metrics_summary）は事実の記録に留め、評価・昇格は行わない
-- **claude-config**: 「昇格」に専念（memory/tmp → rule/skill/CLAUDE.md）。scan-review.py で tmp/review/ の頻出パターンを抽出し、昇格候補として診断レポートに含める
+- **retrospective**: 知見の「捕捉」に専念（memory 蓄積のみ）。評価・昇格は行わない
+- **claude-config**: 「昇格」に専念（memory/tmp → rule/skill/CLAUDE.md）。Step 3 のメモリ昇華チェックで昇格候補を診断レポートに含める
 
 ### 計測データの流れ
 
 | データ | 収集 | 蓄積先 | 消費 |
 |--------|------|--------|------|
-| PermissionRequest | hook（log-permission-request.sh） | `~/.claude/tmp/metrics/permission-requests.jsonl` | collect.py → metrics_summary → retrospective サブエージェント |
-| opusレビュー結果 | implement / claude-config のレビューサイクル | `~/.claude/tmp/review/*.md` | scan-review.py → claude-config 診断 |
+| PermissionRequest | hook（log-permission-request.sh）。フィールド: timestamp, session_id, permission_mode, cwd, tool, key_info（ツール別要点）, input_preview（200文字） | `~/.claude/tmp/metrics/permission-requests.jsonl` | scan-metrics.py → claude-config Agent 1 |
+| opusレビュー結果 | implement / claude-config のレビューサイクル | `~/.claude/tmp/review/*.md` | retrospective が memory に抽出 → claude-config Step 3 で昇華判定 |
 
 ### 劣化のシグナル
 
@@ -139,8 +139,8 @@ opusレビュー ────→ tmp/review ─┘    (昇華+頻出抽出)    (
 | フックが無効化されたまま残存 | settings.json とスクリプト実体の整合確認 | 設定管理のコナセンス |
 | rules/ ファイルが肥大化 | 行数 200 超のファイルを検出 | skills/ への分離 |
 | 同一情報の重複 | references/ と rules/ の並走を確認 | 正規ソースへの集約 |
-| PermissionRequest の偏り | metrics_summary の tool_counts 集計 | permissions.allow / guard の見直し |
-| opusレビュー指摘の頻出 | scan-review.py の frequent_dimensions | rule/skill への昇格検討 |
+| PermissionRequest の偏り | scan-metrics.py（claude-config Agent 1）の tool_counts 集計 | permissions.allow / guard の見直し |
+| opusレビュー指摘の頻出 | claude-config Step 3 のメモリ昇華チェックで検出 | rule/skill への昇格検討 |
 
 ### 修正の責務分担
 
