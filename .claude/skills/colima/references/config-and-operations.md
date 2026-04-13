@@ -182,10 +182,6 @@ colima delete -p dev
 
 現行dotfiles設定では `kubernetes.enabled: false`。参考のみ。
 
-```bash
-colima start --kubernetes
-```
-
 ```yaml
 kubernetes:
   enabled: true

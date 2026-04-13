@@ -65,7 +65,7 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 
 主要イベント: `PreToolUse`, `PostToolUse`, `Stop`, `SessionStart`, `SubagentStart`, `SessionEnd`
 
-**`if` フィールド**（v2.1.85+）: パーミッションルール構文で条件フィルタリング。例: `"if": "Bash(git *)"`
+**`if` フィールド**（v2.1.85+）: パーミッションルール構文で条件フィルタリング。例: `"if": "Bash(git:*)"`（スペース区切り `Bash(git *)` は exact マッチになるため不可）
 
 | type | 用途 | 特徴 |
 |------|------|------|
@@ -156,3 +156,9 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 - 機密ファイルは `deny` に追加
 - `"Bash(*)"` の広範許可は禁止
 - 危険な操作は `ask` に設定
+
+## Gotchas
+
+- **`permissions.allow` と `allowedPaths` の両方が必要**: `.claude/tmp/**` 等のパスを追加する際は `permissions.allow` だけでなく `allowedPaths` にも `**/.claude/tmp/**` を追加する。`allowedPaths` が漏れると sensitive file 判定になり権限確認が毎回発生する
+- **`.claude/` 系パターンには `**/` プレフィックスが必要**: `Write(.claude/tmp/**)` のような相対パスは別プロジェクトの絶対パス `/Users/.../project/.claude/tmp/...` にマッチしない。`Write(**/.claude/tmp/**)` のように `**/` プレフィックスを付与すること
+- **`if` フィールドの prefix 構文**: `"if": "Bash(git:*)"` が正しい形式（`Bash(git *)` ではない）。スペース区切りは exact マッチになりサブコマンドを取りこぼす

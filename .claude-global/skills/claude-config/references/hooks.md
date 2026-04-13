@@ -9,7 +9,6 @@
 6. [実装パターン](#実装パターン)
 7. [環境変数](#環境変数)
 8. [デバッグ・段階的導入](#デバッグ段階的導入)
-設計パターン・アンチパターンは `hooks-patterns.md` 参照
 
 ---
 
@@ -55,7 +54,7 @@
 permission rule 構文で hook 実行を条件フィルタリング。プロセス起動オーバーヘッドを削減:
 
 ```json
-{ "type": "command", "command": "~/.dotfiles/.claude-global/hooks/git-guard.sh", "if": "Bash(git *)" }
+{ "type": "command", "command": "~/.dotfiles/.claude-global/hooks/guard-git.sh", "if": "Bash(git:*)" }
 ```
 
 - `if` がマッチしない場合、hook スクリプトは起動されない（matcher は通常通り評価）
@@ -122,7 +121,7 @@ Stop / SubagentStop は exit 2 + stderr が標準（hookSpecificOutput は使わ
 
 ## stdin JSON 構造
 
-すべてのhookはstdinでJSONを受け取る。`INPUT=$(cat)` で受け取り、`printf '%s\n' "$INPUT" | jq -r '.tool_name // empty'` で各フィールドを取得。
+すべてのhookはstdinでJSONを受け取る。`INPUT=$(cat)` で受け取り、`printf '%s\n' "$INPUT" | jq -r '.tool_name // empty'` で各フィールドを取得。フィールド名は `.tool_name` / `.tool_input`（`.tool` / `.input` ではない）— 誤記すると jq が空値を返す。
 
 注意: `$()` コマンド置換の禁止は **Claude CodeのBash tool内でのみ適用**。hookスクリプト内では `$()` は問題なく使用可能。
 
@@ -169,8 +168,7 @@ printf '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContex
 | `CLAUDE_ENV_FILE` | SessionStart専用の環境変数永続化ファイル |
 | `CLAUDE_CODE_REMOTE` | リモート環境なら `"true"` |
 | `CLAUDE_PLUGIN_ROOT` | プラグインディレクトリパス |
-| `CLAUDE_CODE_MCP_SERVER_NAME` | MCP サーバー名（`headersHelper` スクリプト用） |
-| `CLAUDE_CODE_MCP_SERVER_URL` | MCP サーバーURL（`headersHelper` スクリプト用） |
+| `CLAUDE_CODE_MCP_SERVER_{NAME,URL}` | MCPサーバー名/URL（`headersHelper` スクリプト用） |
 
 スクリプト内パス参照は必ず `"$CLAUDE_PROJECT_DIR"/...` 形式（相対パス禁止）。
 

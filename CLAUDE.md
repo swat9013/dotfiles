@@ -21,9 +21,8 @@ brew bundle --global        # Homebrewパッケージ更新
 
 ## コーディング原則
 
-- シンプルさ優先（KISS）
 - 既存パターンに従う（新規ツールは`.zsh/[tool].zsh`）
-- 詳細は各`rules/`ファイルを参照
+- 詳細は各`rules/`ファイルを参照（KISS等の一般原則は`rules/coding-principles.md`）
 - 同じ指示を CLAUDE.md と rules/ に重複記載しない
 
 ## Harness Architecture 原則

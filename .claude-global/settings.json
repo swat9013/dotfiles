@@ -124,6 +124,10 @@
       "Bash(~/.dotfiles/.claude-global/skills/scripts/open-in-zed.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/stop-open-zed.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/log-permission-request.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/pretooluse-guard-write.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/skill-activation.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/session-cleanup.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/posttooluse-ruff-check.sh:*)",
       "Bash(shellcheck:*)",
       "Bash(uvx ruff:*)",
       "Bash(/Applications/draw.io.app/Contents/MacOS/draw.io:*)",
@@ -224,9 +228,10 @@
       "**/.claude/tmp/**",
       "**/.claude/review/**",
       "**/.claude/discovery/**",
-      "**/.claude/plan/**",
+      "**/.claude/plans/**",
       "**/.claude/research/**",
-      "**/.claude/dialogue/**"
+      "**/.claude/dialogues/**",
+      "**/.claude/implement/**"
     ]
   },
   "hooks": {
@@ -241,17 +246,17 @@
           {
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/guard-git.sh",
-            "if": "Bash(git *)"
+            "if": "Bash(git:*)"
           },
           {
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh",
-            "if": "Bash(bash *)"
+            "if": "Bash(bash:*)"
           },
           {
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh",
-            "if": "Bash(sh *)"
+            "if": "Bash(sh:*)"
           }
         ]
       },
@@ -297,7 +302,7 @@
           {
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/posttooluse-open-zed.sh",
-            "timeout": 10
+            "timeout": 10000
           },
           {
             "type": "command",

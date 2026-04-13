@@ -2,6 +2,15 @@
 
 GitHub Copilot Chat / Cline / Roo Code / Windsurf / Google Antigravity / OpenAI Codex / OpenCode のログ詳細。
 
+## TOC
+- [2. GitHub Copilot Chat](#2-github-copilot-chat)
+- [3. Cline](#3-cline)
+- [4. Roo Code](#4-roo-code)
+- [5. Windsurf (Cascade)](#5-windsurf-cascade)
+- [6. Google Antigravity](#6-google-antigravity)
+- [7. OpenAI Codex（CLI）](#7-openai-codexcli)
+- [8. OpenCode](#8-opencode)
+
 ---
 
 ## 2. GitHub Copilot Chat
@@ -18,13 +27,8 @@ SQLite データベース（`state.vscdb`）
 
 ### 抽出方法
 ```bash
-# 利用可能なキーの一覧を取得
 sqlite3 "<path>/state.vscdb" "SELECT key FROM ItemTable WHERE key LIKE '%chat%';"
-
-# チャットセッションインデックスを取得
 sqlite3 "<path>/state.vscdb" "SELECT value FROM ItemTable WHERE key = 'interactive.sessions';" 2>/dev/null
-
-# 代替キー（バージョンにより異なる）
 sqlite3 "<path>/state.vscdb" "SELECT value FROM ItemTable WHERE key = 'chat.ChatSessionStore.index';" 2>/dev/null
 ```
 
@@ -32,7 +36,6 @@ sqlite3 "<path>/state.vscdb" "SELECT value FROM ItemTable WHERE key = 'chat.Chat
 - `sqlite3` コマンドが必要（Windows では Git Bash 付属のものや別途インストール）
 - ワークスペースごとに別の `state.vscdb` が存在する
 - セッションデータはJSON文字列としてvalueカラムに格納
-- ユーザーのプロンプトは `request` や `message` フィールドに含まれる
 
 ---
 
@@ -48,13 +51,11 @@ sqlite3 "<path>/state.vscdb" "SELECT value FROM ItemTable WHERE key = 'chat.Chat
 ### ファイル構造
 ```
 saoudrizwan.claude-dev/
-├── state/
-│   └── taskHistory.json              # タスク履歴インデックス
-└── tasks/
-    └── {task-id}/
-        ├── api_conversation_history.json  # API会話ログ
-        ├── ui_messages.json               # UI表示メッセージ
-        └── task_metadata.json             # タスクメタデータ
+├── state/taskHistory.json              # タスク履歴インデックス
+└── tasks/{task-id}/
+    ├── api_conversation_history.json   # API会話ログ
+    ├── ui_messages.json                # UI表示メッセージ
+    └── task_metadata.json              # タスクメタデータ
 ```
 
 ### 抽出方法
@@ -99,12 +100,11 @@ Cline と同じ手順。
 1. `~/.codeium/windsurf/memories/` 配下をGlobで検索
 2. テキストファイルをReadで読み込み
 3. `~/.cascade_backups/` が存在する場合はそちらも読み込み
-4. メモリファイルのため、直接のプロンプトではなくCascadeの要約情報として扱う
+4. メモリファイルのため、Cascadeの要約情報として扱う
 
 ### 注意事項
 - Windsurf の会話ログ自体はローカルに直接保存されない場合がある
 - memories/ はワークスペース単位で分離されている
-- メモリの内容は要約であり、元のプロンプトとは異なる
 
 ---
 
@@ -120,24 +120,19 @@ Cline と同じ手順。
 ### ファイル構造
 ```
 ~/.gemini/antigravity/
-├── brain/
-│   └── {conversation-id}/
-│       └── .system_generated/
-│           └── logs/                  # 会話ログ
-└── conversations/
-    └── *.pb                           # Protocol Buffers 形式
+├── brain/{conversation-id}/.system_generated/logs/  # 会話ログ
+└── conversations/*.pb                               # Protocol Buffers（バイナリ）
 ```
 
 ### 抽出方法
 1. `~/.gemini/antigravity/brain/` 配下をGlobで探索
 2. `.system_generated/logs/` 内のテキストファイルを読み込み
-3. `.pb` ファイル（Protocol Buffers）はバイナリのため直接読み取り不可 → スキップ
+3. `.pb` ファイルはバイナリのため直接読み取り不可 → スキップ
 4. テキスト形式のログファイルのみ対象
 
 ### 注意事項
-- Antigravity は比較的新しいツールのため、ログ形式が変更される可能性がある
-- `.gemini/` フォルダが削除されると会話リストは残るが内容は読めなくなる（既知のバグ）
-- Protocol Buffers 形式のファイルはテキストとして読めないためスキップする
+- Antigravity は比較的新しいツールのためログ形式が変更される可能性がある
+- Protocol Buffers 形式のファイルはスキップする
 
 ---
 
@@ -155,39 +150,25 @@ Cline と同じ手順。
 ### ファイル構造
 ```
 ~/.codex/
-├── config.toml                                    # 設定ファイル
-├── state-v5.db                                    # スレッドメタデータ（SQLite）
-├── session_index.jsonl                            # セッションインデックス
-└── sessions/
-    └── YYYY/MM/DD/
-        └── rollout-YYYY-MM-DDThh-mm-ss-<id>.jsonl # セッション別会話ログ
+├── state-v5.db              # スレッドメタデータ（SQLite）
+└── sessions/YYYY/MM/DD/
+    └── rollout-*.jsonl      # セッション別会話ログ
 ```
 
 ### rollout JSONL の形式
-各行がJSONオブジェクト。行の種別は以下のキーで判別する:
-
-**SessionMeta（セッション開始時のメタ情報）**
-```json
-{"timestamp": "2025-06-15T10:30:00.123Z", "SessionMeta": {"cwd": "/path/to/project", "model_provider": "openai", ...}}
-```
-
-**ResponseItem（会話アイテム）**
-```json
-{"timestamp": "2025-06-15T10:30:01.000Z", "ResponseItem": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "ユーザーの入力"}]}}
-```
+各行がJSONオブジェクト。主要な種別:
+- **SessionMeta**: `{"SessionMeta": {"cwd": "/path/to/project", "model_provider": "openai", ...}}`
+- **ResponseItem**: `{"ResponseItem": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "ユーザーの入力"}]}}`
 
 ### 抽出方法
 1. `~/.codex/sessions/` 配下の `rollout-*.jsonl` を再帰的に走査（最新50件）
-2. 各ファイルから `SessionMeta` 行の `cwd` でプロジェクト情報を取得
+2. `SessionMeta` 行の `cwd` でプロジェクト情報を取得
 3. `ResponseItem` で `type: "message"`, `role: "user"` のメッセージを抽出
-4. `content` 配列から `type: "input_text"` または `type: "text"` のパートを連結
-5. 1ファイルあたりユーザーメッセージ100件上限
+4. `content` 配列から `type: "input_text"` または `type: "text"` のパートを連結（1ファイルあたり100件上限）
 
 ### 注意事項
 - セッションはグローバル保存（プロジェクト別ディレクトリではない）
 - プロジェクト情報は `SessionMeta` の `cwd` フィールドから取得
-- `state-v5.db` にもスレッドメタデータがあるが、会話内容は rollout JSONL に保存される
-- Codex は Rust 製のため、JSONL のキー名が CamelCase（`SessionMeta`, `ResponseItem`）
 
 ---
 
@@ -200,22 +181,17 @@ Cline と同じ手順。
 | macOS | `~/.local/share/opencode/` |
 | Linux | `~/.local/share/opencode/` |
 
-環境変数 `XDG_DATA_HOME` が設定されている場合は、`$XDG_DATA_HOME/opencode/` を使用する。
-
-### ファイル形式
-SQLite データベース（`opencode.db` または `opencode-<channel>.db`）
+環境変数 `XDG_DATA_HOME` が設定されている場合は `$XDG_DATA_HOME/opencode/` を使用する。SQLite データベース（`opencode.db` または `opencode-<channel>.db`）。
 
 ### 主要テーブル
-- `project` - `worktree`, `name` などのプロジェクト情報
+- `project` - worktree, name 等のプロジェクト情報
 - `session` - セッション単位のメタデータ
-- `message` - メッセージ単位の情報。`data` カラムはJSON
-- `part` - メッセージの各パート。`data` カラムはJSON
+- `message` - role/data 等（data カラムはJSON）
+- `part` - メッセージの各パート（data カラムはJSON）
 
 ### 抽出方法
-1. `opencode.db` を優先し、存在しない場合は `opencode-*.db` を探索
-2. `project`, `session`, `message`, `part` を結合
-3. `session.parent_id IS NULL` の親セッションのみ対象（サブエージェントの子セッションは除外）
-4. `message.data.role == "user"` のメッセージのみ対象
-5. `part.data.type == "text"` かつ `part.data.synthetic != true` かつ `part.data.ignored != true` のパートを連結してプロンプト化
-6. タイムスタンプは `message.time_created`（Unix epoch ミリ秒）を使用
-7. プロジェクト名は `project.worktree` の basename を使用
+1. `opencode.db` を優先、なければ `opencode-*.db` を探索
+2. `session.parent_id IS NULL` の親セッションのみ（サブエージェントの子セッションは除外）
+3. `message.data.role == "user"` のメッセージのみ対象
+4. `part.data.type == "text"` かつ `synthetic != true` かつ `ignored != true` のパートを連結してプロンプト化
+5. タイムスタンプは `message.time_created`（Unix epoch ミリ秒）を使用

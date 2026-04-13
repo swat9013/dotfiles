@@ -1,5 +1,6 @@
 #!/bin/sh
-COMMAND=$(jq -r '.tool_input.command // empty')
+INPUT=$(cat)
+COMMAND=$(printf '%s\n' "$INPUT" | jq -r '.tool_input.command // empty')
 
 deny() {
   printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"%s"}}\n' "$1"

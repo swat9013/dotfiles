@@ -136,6 +136,7 @@ def main() -> None:
     claude_dir = project_root / ".claude"
 
     settings_targets = [
+        (Path.home() / ".claude" / "settings.json", "~/.claude/settings.json"),
         (claude_dir / "settings.json", ".claude/settings.json"),
         (claude_dir / "settings.local.json", ".claude/settings.local.json"),
     ]
