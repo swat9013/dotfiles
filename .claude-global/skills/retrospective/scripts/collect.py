@@ -210,7 +210,14 @@ def _sanitize(text: str) -> str:
     return text.encode("utf-8", errors="replace").decode("utf-8")
 
 
-OUTPUT_FILE = "/tmp/retro-data.json"
+OUTPUT_DIR = Path.home() / ".claude" / "tmp" / "retrospective"
+
+
+def _build_output_path() -> str:
+    """日時付き出力パスを生成し、ディレクトリを作成する。"""
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    return str(OUTPUT_DIR / f"{timestamp}.json")
 
 
 def main():
@@ -262,6 +269,7 @@ def _write_output(
     review_files: list[str],
 ) -> None:
     """JSONをファイルに書き出し、サマリーをstdoutに表示する。"""
+    output_file = _build_output_path()
     output = {
         "sessions": sessions,
         "existing_context": existing_context,
@@ -270,14 +278,14 @@ def _write_output(
     }
 
     try:
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             json.dump(output, f, ensure_ascii=False, indent=2)
     except OSError as e:
-        print(f"Error: failed to write {OUTPUT_FILE}: {e}", file=sys.stderr)
+        print(f"Error: failed to write {output_file}: {e}", file=sys.stderr)
         sys.exit(1)
 
     # 親エージェント向けサマリー（stdoutに表示）
-    print(f"file={OUTPUT_FILE}")
+    print(f"file={output_file}")
     print(f"total={total} skipped={skipped}")
     if sessions:
         for s in sessions:
