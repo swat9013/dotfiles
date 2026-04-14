@@ -19,7 +19,7 @@ fi
 if printf '%s\n' "$COMMAND" | grep -qE 'git checkout -- '; then
   deny "git checkout -- は禁止。git stashで退避してから操作してください"
 fi
-if printf '%s\n' "$COMMAND" | grep -qE 'git restore ' && ! printf '%s\n' "$COMMAND" | grep -qE 'git restore --staged'; then
+if printf '%s\n' "$COMMAND" | grep -qE '^git restore( |$)' && ! printf '%s\n' "$COMMAND" | grep -qE 'git restore --staged'; then
   deny "git restore（ワーキングツリー変更の破棄）は禁止。git stashで退避してください"
 fi
 

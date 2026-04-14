@@ -132,6 +132,19 @@ opusレビュー ────→ tmp/review ─┘    (昇華+頻出抽出)    (
 | セッション定量 | セッションJSONLを直接走査 | `~/.claude/projects/*/*.jsonl` | scan-metrics.py → claude-config Agent 1 |
 | opusレビュー結果 | implement / claude-config のレビューサイクル | `~/.claude/tmp/review/*.md` | retrospective が memory に抽出 → claude-config Agent 4 で昇華判定 |
 
+### retrospective パイプライン分離（Computational First 原則）
+
+retrospective は2パイプラインに分離済み。混在させないこと。
+
+| パイプライン | スクリプト | 入力 | 出力 |
+|------------|----------|------|------|
+| **定性** | `retrospective/scripts/collect.py` | セッション会話 + `tmp/review/*.md` | `retro-data.json`（`review_files` キー付き） |
+| **定量** | `claude-config/scripts/scan-metrics.py` | `permission-requests.jsonl` | tool別カウント JSON |
+
+- **collect.py** は `collect_review_files()` で `~/.claude/tmp/review/*.md` 一覧を返すのみ。metrics 集計ロジックを追加しない
+- **scan-metrics.py** が全数値集計を担当（`metrics_summary` は collect.py には存在しない）
+- **tmp/review** は両パイプラインにまたがる橋渡し: 知見抽出→memory は retrospective が担当、原本ファイルは scan-metrics.py の頻度集計用に保持
+
 ### 劣化のシグナル
 
 | シグナル | 検出方法 | 対応カテゴリ |
