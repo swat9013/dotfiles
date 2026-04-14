@@ -175,17 +175,19 @@ skills:
 
 ### スキルが発動しない
 1. description にユーザーが使う言葉を含めているか確認
-2. `What skills are available?` でスキル一覧を確認
-3. 直接 `/skill-name` で呼び出してテスト
+2. `when_to_use` フィールドでトリガーフレーズ・例示リクエストを追加（v2.1.105+。文字上限は下記「スキルが読み込まれない」参照）
+3. `What skills are available?` でスキル一覧を確認
+4. 直接 `/skill-name` で呼び出してテスト
 
 ### スキルが頻繁に誤発動する
 1. description をより具体的に
 2. `disable-model-invocation: true` で手動呼び出しのみに制限
 
 ### スキルが読み込まれない
-- skills description バジェット: コンテキストウィンドウの **1%**（fallback: 8,000文字）。各エントリは **250文字**でトランケート
+- skills description バジェット: コンテキストウィンドウの **1%**（fallback: 8,000文字）。各エントリは **1,536文字**（`description` + `when_to_use` 合算）でトランケート
 - `/context` で除外されたスキルを確認
 - `SLASH_COMMAND_TOOL_CHAR_BUDGET` 環境変数で上限を調整可能
+- **ライブ変更検出**（v2.1.105+）: `~/.claude/skills/` / プロジェクト `.claude/skills/` / `--add-dir` 内の `.claude/skills/` はセッション中の追加・編集・削除が即時反映。例外: セッション開始時に存在しなかったトップレベル skills ディレクトリ（`~/.claude/skills/` や `.claude/skills/` 自体）の新規作成は再起動が必要
 
 ### スキルのコンテキストライフサイクル
 

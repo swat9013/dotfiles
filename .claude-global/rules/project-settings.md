@@ -47,6 +47,7 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 | `autoUpdatesChannel` | アップデートチャネル指定 | `"stable"` または `"latest"` |
 | `plansDirectory` | planファイルの保存先カスタマイズ | ディレクトリパス |
 | `statusLine` | ステータス行設定 | `{"refreshInterval": 30}` で N 秒ごとに再実行（v2.1.97+） |
+| `viewMode` | 起動時のデフォルト表示モード | `"default"` / `"verbose"` / `"focus"`。Ctrl+O のスティッキー選択を上書き |
 
 ## hooks設定
 

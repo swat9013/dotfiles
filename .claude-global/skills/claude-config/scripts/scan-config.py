@@ -7,6 +7,7 @@
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 
 
@@ -43,7 +44,12 @@ def main() -> None:
     project_root = Path(args.project_root)
     claude_dir = project_root / ".claude"
 
+    # encoded_cwd: memory/ パスを特定するためのハイフン区切り文字列
+    # collect.py と同一の re.sub ロジック。二重管理だが Computational First 優先
+    encoded_cwd = re.sub(r"[^a-zA-Z0-9]", "-", str(project_root))
+
     result = {
+        "encoded_cwd": encoded_cwd,
         "sections": [
             scan_claude_dir(claude_dir),
             scan_project_context(project_root),

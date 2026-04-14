@@ -226,6 +226,7 @@ Key| Description| Example
 `statusLine`| Configure a custom status line to display context. See [`statusLine` documentation](/docs/en/statusline)| `{"type": "command", "command": "~/.claude/statusline.sh"}`
 `strictKnownMarketplaces`| (Managed settings only) Allowlist of plugin marketplaces users can add. Undefined = no restrictions, empty array = lockdown. Applies to marketplace additions only. See [Managed marketplace restrictions](/docs/en/plugin-marketplaces#managed-marketplace-restrictions)| `[{ "source": "github", "repo": "acme-corp/plugins" }]`
 `useAutoModeDuringPlan`| Whether plan mode uses auto mode semantics when auto mode is available. Default: `true`. Not read from shared project settings. Appears in `/config` as “Use auto mode during plan”| `false`
+`viewMode`| Default transcript view mode on startup: `"default"`, `"verbose"`, or `"focus"`. Overrides the sticky Ctrl+O selection when set| `"verbose"`
 `voiceEnabled`| Enable push-to-talk [voice dictation](/docs/en/voice-dictation). Written automatically when you run `/voice`. Requires a Claude.ai account| `true`
 
 ###

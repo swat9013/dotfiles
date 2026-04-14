@@ -2,8 +2,8 @@
 
 ## 最終更新日
 
-last-auto-update: 2026-04-13
-last-known-version: 2.1.101
+last-auto-update: 2026-04-14
+last-known-version: 2.1.105
 
 ---
 

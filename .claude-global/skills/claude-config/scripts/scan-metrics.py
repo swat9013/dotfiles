@@ -187,6 +187,94 @@ def read_metrics_file(path: Path | None = None) -> list[dict]:
     return entries
 
 
+def read_session_files(since_days: int) -> list[dict]:
+    """グローバルセッションJSONLを走査してレコードリストを返す。
+
+    agent- プレフィックスのファイルと mtime カットオフ対象を除外する。
+    """
+    import time
+    projects_dir = Path.home() / ".claude" / "projects"
+    if not projects_dir.exists():
+        return []
+
+    cutoff = time.time() - since_days * 86400
+    records = []
+    for jsonl_path in projects_dir.glob("*/*.jsonl"):
+        # agent- プレフィックスのファイルを除外
+        if jsonl_path.name.startswith("agent-"):
+            continue
+        # mtime カットオフ
+        if jsonl_path.stat().st_mtime < cutoff:
+            continue
+        with open(jsonl_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    records.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    return records
+
+
+def analyze_sessions(records: list[dict]) -> dict:
+    """セッションレコードからメトリクスを集計する。"""
+    if not records:
+        return {
+            "session_count": 0,
+            "tool_usage": {},
+            "cache_hit_rate": None,
+            "sidechain_rate": 0.0,
+            "period": None,
+        }
+
+    tool_usage: dict[str, int] = defaultdict(int)
+    total_cache_read = 0
+    total_cache_creation = 0
+    total_input = 0
+    total_user = 0
+    sidechain_user = 0
+    session_ids: set[str] = set()
+
+    for record in records:
+        role = record.get("role", "")
+        session_id = record.get("sessionId", record.get("session_id", ""))
+        if session_id:
+            session_ids.add(session_id)
+
+        # tool_usage: assistant の tool_use を集計
+        if role == "assistant":
+            content = record.get("message", {}).get("content", [])
+            if isinstance(content, list):
+                for block in content:
+                    if isinstance(block, dict) and block.get("type") == "tool_use":
+                        tool_usage[block.get("name", "unknown")] += 1
+            # キャッシュトークン集計
+            usage = record.get("message", {}).get("usage", {})
+            total_cache_read += usage.get("cache_read_input_tokens", 0)
+            total_cache_creation += usage.get("cache_creation_input_tokens", 0)
+            total_input += usage.get("input_tokens", 0)
+
+        # sidechain_rate: user メッセージの sidechain フラグ
+        if role == "user":
+            total_user += 1
+            if record.get("isSidechain") or record.get("sidechain"):
+                sidechain_user += 1
+
+    total_tokens = total_cache_read + total_cache_creation + total_input
+    cache_hit_rate = (total_cache_read / total_tokens) if total_tokens > 0 else None
+    sidechain_rate = (sidechain_user / total_user) if total_user > 0 else 0.0
+
+    return {
+        "session_count": len(session_ids),
+        "tool_usage": dict(sorted(tool_usage.items(), key=lambda x: -x[1])),
+        "cache_hit_rate": round(cache_hit_rate, 4) if cache_hit_rate is not None else None,
+        "sidechain_rate": round(sidechain_rate, 4),
+        "period": None,  # TASK-003 で period 計算を追加
+    }
+
+
 def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
     tool_counts: dict[str, int] = defaultdict(int)
     pattern_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
@@ -262,33 +350,34 @@ def main() -> None:
         help="settings.json パス（デフォルト: ~/.claude/settings.json）",
     )
     parser.add_argument(
-        "--summary",
-        action="store_true",
-        help="サマリのみ出力（suggestions + tool_counts）",
+        "--since",
+        default="14d",
+        help="集計期間（例: 14d, 7d）。デフォルト: 14d",
     )
     args = parser.parse_args()
 
+    m = re.match(r"(\d+)", args.since)
+    since_days = int(m.group(1)) if m else 14
+
     entries = read_metrics_file(args.path)
-    if not entries:
-        print(json.dumps({"tool_counts": {}, "total": 0, "suggestions": []}, ensure_ascii=False))
-        return
-
-    settings = load_settings(args.settings)
-    allow_rules = settings.get("permissions", {}).get("allow", [])
-
-    result = analyze(entries, allow_rules)
-
-    if args.summary:
-        output = {
-            "total": result["total"],
-            "session_count": result["session_count"],
-            "tool_counts": result["tool_counts"],
-            "suggestions": result["suggestions"],
-        }
+    if entries:
+        settings = load_settings(args.settings)
+        allow_rules = settings.get("permissions", {}).get("allow", [])
+        permissions_result = analyze(entries, allow_rules)
     else:
-        output = result
+        permissions_result = {
+            "tool_counts": {},
+            "total": 0,
+            "session_count": 0,
+            "patterns": {},
+            "unmatched": {},
+            "suggestions": [],
+        }
 
-    print(json.dumps(output, ensure_ascii=False, indent=2))
+    session_records = read_session_files(since_days)
+    session_metrics = analyze_sessions(session_records)
+
+    print(json.dumps({"permissions": permissions_result, "sessions": session_metrics}, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
