@@ -62,6 +62,9 @@
       "Bash(docker compose logs:*)",
       "Bash(cursor agent:*)",
       "Bash(uv run --with pytest pytest:*)",
+      "Bash(uv run pyright:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv run python -m pytest:*)",
       "Bash(glab mr view:*)",
       "Bash(glab mr list:*)",
       "Bash(glab mr diff:*)",
@@ -260,6 +263,11 @@
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh",
             "if": "Bash(sh:*)"
+          },
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh",
+            "if": "Bash(zsh:*)"
           }
         ]
       },

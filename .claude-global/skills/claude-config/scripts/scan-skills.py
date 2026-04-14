@@ -76,7 +76,13 @@ def _has_jq_deep_pipe(content: str) -> bool:
 
 def _has_while_read_parse(content: str) -> bool:
     """while read + line parsing."""
-    return bool(re.search(r"while\b.*\bread\b", content))
+    for m in re.finditer(r"while\b.*\bread\b.*", content):
+        line = m.group(0)
+        # "< file" pattern is simple file iteration, not complex parsing
+        if re.search(r"<\s*[\"']?\$?\w", line):
+            continue
+        return True
+    return False
 
 
 def _has_long_function(content: str) -> bool:
@@ -216,6 +222,45 @@ def check_skill(skill_dir: Path) -> dict:
     }
 
 
+# --- skill usage from session files ---
+
+def collect_skill_usage(since_days: int = 14) -> dict[str, int]:
+    """セッション JSONL から Skill ツール呼び出しをスキル名別に集計する。"""
+    import time
+    projects_dir = Path.home() / ".claude" / "projects"
+    if not projects_dir.exists():
+        return {}
+
+    cutoff = time.time() - since_days * 86400
+    usage: dict[str, int] = {}
+
+    for jsonl_path in projects_dir.glob("*/*.jsonl"):
+        if jsonl_path.name.startswith("agent-"):
+            continue
+        if jsonl_path.stat().st_mtime < cutoff:
+            continue
+        with open(jsonl_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if record.get("type") != "assistant":
+                    continue
+                content = record.get("message", {}).get("content", [])
+                if not isinstance(content, list):
+                    continue
+                for block in content:
+                    if isinstance(block, dict) and block.get("type") == "tool_use" and block.get("name") == "Skill":
+                        skill_name = block.get("input", {}).get("skill", "unknown")
+                        usage[skill_name] = usage.get(skill_name, 0) + 1
+
+    return dict(sorted(usage.items(), key=lambda x: -x[1]))
+
+
 # --- scan a directory ---
 
 def scan_dir(base_dir: Path, label: str) -> dict:
@@ -247,8 +292,11 @@ def main() -> None:
         all_warnings.extend(scan.pop("_warnings", []))
         scans.append(scan)
 
+    skill_usage = collect_skill_usage()
+
     output = {
         "scans": scans,
+        "skill_usage": skill_usage,
         "warn_count": len(all_warnings),
         "warnings": all_warnings,
     }

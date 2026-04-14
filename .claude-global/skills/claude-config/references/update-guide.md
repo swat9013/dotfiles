@@ -4,7 +4,8 @@
 
 | カテゴリ | 更新先 | 対象ファイル例 |
 |---------|--------|-------------|
-| settings | `rules/` | `project-settings.md` |
+| settings（一般） | `rules/` | `project-settings.md` |
+| settings（permissions） | `references/` | `settings.md`（permissions モデル・allow 構文） |
 | rules（paths/frontmatter） | `rules/` | `project-rules.md` |
 | hooks | `references/` | hooks 系 references |
 | subagent / Task tool | `references/` | subagent 系 references |

@@ -29,7 +29,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 | **skill-activation.sh の3ステップ構造** | hooks/skill-activation.sh の出力テキスト（EVALUATE/ACTIVATE/IMPLEMENT）↔ 全スキルのSKILL.md description設計 | 出力テキスト変更→スキル自動選択精度が変化。hook無効化→選択率が大幅低下。description の最適化はhook有効を前提としている |
 | **todoist-refine のスクリプトパス参照** | todoist-refine/SKILL.md のスクリプトパス ↔ todoist/scripts/todoist.py の実体パス | todoist.py のパス変更時に todoist-refine 側が壊れる（コマンド不在エラー） |
 | **researcher 調査原則参照** | claude-config/SKILL.md Step A2（`Read researcher/SKILL.md` で調査原則を展開）↔ researcher/SKILL.md | researcher/SKILL.md の調査原則セクション構造変更時に Step A2 の展開ロジックが壊れる |
-| **scan スクリプト分割** | scan-config.py（共通コンテキスト・encoded_cwd）↔ scan-hooks.py + scan-metrics.py（Agent 1、セッション定量含む）↔ scan-claude-md.py（Agent 2）↔ scan-skills.py（Agent 3）↔ memory/（Agent 2 統合） | スクリプト追加/移動時に SKILL.md の Agent テーブルと不整合。scan-config.py の出力は全 Agent に共有される前提 |
+| **scan スクリプト分割** | scan-config.py（共通コンテキスト・encoded_cwd）↔ scan-hooks.py + scan-metrics.py（Agent 1、セッション定量含む）↔ scan-claude-md.py（Agent 2）↔ scan-skills.py（Agent 3、skill_usage 自己集計含む）↔ memory/（Agent 2 統合） | スクリプト追加/移動時に SKILL.md の Agent テーブルと不整合。scan-config.py の出力は全 Agent に共有される前提。scan-metrics.py と scan-skills.py は共にセッション JSONL を走査するが集計対象が異なる（前者: tool_usage 全体 + permissions、後者: skill_usage のみ） |
 
 ## 2. 変更ガイド
 
