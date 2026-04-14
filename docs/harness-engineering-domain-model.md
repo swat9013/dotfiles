@@ -2,8 +2,6 @@
 
 ドメインモデリング（8ループ）で得られた知見の統合。ハーネスの構造・制御メカニズム・自己メンテナンスの全体像を定義する。
 
-> 2026-04-12 ドメインモデリングセッション（8ループ: 語彙採取→モデル化→歪み検証→訂正）の成果を統合。
-
 ---
 
 ## 1. 目標構造
@@ -104,6 +102,14 @@ lost in the middle ──引き起こす──→ ハレーション
 
 自己メンテナンス原則の運用サイクル: **劣化検出 → 診断 → 修正 → 検証**
 
+```mermaid
+flowchart LR
+    D[劣化検出] --> N[診断]
+    N --> F[修正]
+    F --> V[検証]
+    V --> D
+```
+
 ```
 知見源              捕捉(自動化)      蓄積          昇格(人間レビュー)
 
@@ -121,11 +127,31 @@ retrospective が捕捉と昇格の両方を担うと、昇格の質が落ちる
 
 #### 3つの知見源
 
-| 知見源 | 現状 | 課題 |
-|--------|------|------|
-| retrospective | スキル存在、手動実行のみ | 定期トリガー未実装 |
-| セッション中の逸脱FB | ユーザーの集中力に依存 | 属人的、漏れが多い |
-| opusレビュー結果 | その場で消費して終了 | retrospective が tmp/review を Read して memory に捕捉し、claude-config Step 3 で昇華判定（解消済み） |
+| 知見源 | 現状 |
+|--------|------|
+| retrospective | スキル存在、手動実行のみ（→§6.2） |
+| セッション中の逸脱FB | Auto Memory + retrospective事後回収で補完（→§6.3） |
+| opusレビュー結果 | retrospective が tmp/review → memory に捕捉、claude-config で昇格判定 |
+
+#### 計測データの流れ
+
+| データ | 収集 | 蓄積先 | 消費 |
+|--------|------|--------|------|
+| PermissionRequest | hook（log-permission-request.sh） | `~/.claude/tmp/metrics/permission-requests.jsonl` | scan-metrics.py → claude-config Agent 1 |
+| セッション定量 | セッションJSONLを直接走査 | `~/.claude/projects/*/*.jsonl` | scan-metrics.py → claude-config Agent 1 |
+| opusレビュー結果 | implement / claude-config のレビューサイクル | `~/.claude/tmp/review/*.md` | retrospective → memory → claude-config で昇格判定 |
+
+#### retrospective パイプライン分離（Computational First 原則）
+
+retrospective は2パイプラインに分離済み。混在させないこと。
+
+| パイプライン | スクリプト | 入力 | 出力 |
+|------------|----------|------|------|
+| **定性** | `retrospective/scripts/collect.py` | セッション会話 + `tmp/review/*.md` | 定性データ JSON |
+| **定量** | `claude-config/scripts/scan-metrics.py` | `permission-requests.jsonl` | tool別カウント JSON |
+
+- collect.py は定性データ収集のみ。metrics 集計ロジックを追加しない
+- scan-metrics.py が全数値集計を担当
 
 ---
 
@@ -146,39 +172,17 @@ retrospective が捕捉と昇格の両方を担うと、昇格の質が落ちる
 | Tier 1 | retrospective経由（JSONL解析） | tool_use回数, 同一ファイル繰り返し, guardブロック(is_error), Agent起動数, lint失敗(is_error), turn_duration（定性データ・会話JSONLのみ） |
 | Tier 2 | hook追加 → scan-metrics.py（claude-config Agent 1） | PermissionRequest回数, ユーザーツール拒否回数 |
 
-retrospective は定性データ（会話JSONL）のみを処理する。JSONLにPermissionRequestが記録されないため、不足分のみhook追加が必要。PermissionRequestログは scan-metrics.py（claude-config Agent 1）が消費する。
-
 ---
 
 ## 6. 課題と解決方針
 
-### 6.1 PermissionRequestの計測（計測の制約）
-
-**問題**: PermissionRequestがJSONLに記録されず、ユーザーの許可/拒否パターンが不可視。
-
-**方針**: `PermissionRequest` hookで外部ログに追記。**実装済み。**
-
-- hookスクリプト（`log-permission-request.sh`）で `.claude/tmp/metrics/permission-requests.jsonl` に1行1JSONを記録
-- 記録フィールド: `timestamp`, `session_id`, `permission_mode`, `cwd`, `tool`, `key_info`（ツール別要点抽出）, `input_preview`（200文字）
-- `key_info` はツール別に最重要情報を抽出: Bash→`command`, Edit/Write→`file_path`, Agent→`prompt`, その他→`tool_input`全体
-- 計測データの消費は scan-metrics.py（claude-config Agent 1）が担う。retrospective は定性データ（会話JSONL）のみ処理
-
-### 6.2 計測データの消費フロー（Steering Loopの設計不足）
+### 6.1 計測データの消費フロー（Steering Loopの設計不足）
 
 **問題**: データは取れるが「誰がいつ読むか」が未定義。
 
-**方針**: retrospective（捕捉）+ claude-config（昇格）の2段構え。
+**方針**: §4.2の2段構え（retrospective=捕捉、claude-config=昇格）で運用中。トリガーの自動化が未解決（→§6.2）。
 
-```
-JSONL + hookログ
-  → scan-metrics.py (claude-config) → 構造改善提案
-  retrospective → memory（定性知見のみ）
-```
-
-- retrospective: 定性データのみ（会話JSONL）を処理し、知見をmemoryに捕捉する。計測データ（hookログ等）は処理しない
-- claude-config: scan-metrics.py（Agent 1）がJSONLとhookログを解析し、構造改善提案を生成する
-
-### 6.3 retrospective定期トリガー（知見源の安定化）
+### 6.2 retrospective定期トリガー（知見源の安定化）
 
 **問題**: retrospective は手動実行のみ。定期実行の仕組みがない。
 
@@ -188,16 +192,7 @@ JSONL + hookログ
 - SessionEnd hookは重い処理に不向き（現行も軽量処理のみ）、UserPromptSubmit hookはユーザー体験を損なうため不採用
 - フォールバック: macOS launchd で `claude -p` を定期実行
 
-### 6.4 opusレビュー頻出抽出（知見フローの欠損）
-
-**問題**: opusレビュー結果が `tmp/review/` に保存されるが、一回きりの消費で終わる。
-
-**方針**: Agent 4 廃止。Step 3 のメモリ昇華チェックで頻出パターンを吸収。
-
-- retrospective が `tmp/review/` ファイルを Read して memory に捕捉し、claude-config Step 3 で昇格判定する
-- 専用エージェントによる頻出抽出は Step 3 のメモリ昇華チェックに統合済み
-
-### 6.5 逸脱FBの属人性軽減（課題6.3に依存）
+### 6.3 逸脱FBの属人性軽減（§6.2に依存）
 
 **問題**: セッション中の逸脱FBがユーザーの集中力に依存し、漏れが多い。
 
@@ -206,18 +201,6 @@ JSONL + hookログ
 - Auto Memory の feedback型memory が明確な修正指示を捕捉（既に動作中）
 - retrospective が JSONL からAuto Memoryが拾いきれなかったパターンを事後検出（暗黙の不満、ツール拒否、同一修正の繰り返し）
 - hookからLLM推論を呼ぶリアルタイム検出は、コスト・レイテンシ的に非現実的なため不採用
-
-### 6.6 実装優先順位
-
-| 順位 | 課題 | 依存 | 並列可否 |
-|------|------|------|----------|
-| 1 | 6.1 PermissionRequest hookログ | なし | ← 1と2は並列着手可 |
-| 2 | 6.3 retrospective定期トリガー | なし | ← 1と2は並列着手可 |
-| 3 | 6.2 消費フロー設計 | 6.1 | |
-| 4 | 6.4 opusレビュー頻出抽出 | 6.2 | |
-| 5 | 6.5 逸脱FB補完 | 6.3 | |
-
-方針: D（計測）→ C（注入）の順。計測基盤（6.1, 6.3）を先に整え、消費フロー（6.2）で接続し、知見還元（6.4, 6.5）を上に乗せる。
 
 ---
 
