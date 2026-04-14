@@ -85,3 +85,29 @@ allow を追加する前に確認する:
 1. 同一操作が `permissions.deny` に設定されていないか（矛盾）
 2. 対応する `guard-*.sh` のカバー範囲と重複しないか（guard なしの空白地帯にならないか）
 3. Task tool（サブエージェント）経由での実行時も hooks がバイパスされる前提で評価したか
+
+## 7. Allow 無効パターンの診断
+
+`scan-metrics.py` の `allow_ineffective` キーに出力されるデータ。allow ルールが存在するにもかかわらず PermissionRequest が発生しているパターンを示す。
+
+**前提**: PermissionRequest ログに記録されている = Claude Code が自動許可しなかった。`matches_allow_rule()` の判定と実際の Claude Code 動作が乖離している。
+
+### 原因分類
+
+| 原因 | 説明 | 確認方法 |
+|------|------|---------|
+| compound command | `&&`/`||`/`;` で結合されたコマンド。Claude Code が prefix マッチを適用しない可能性 | `allow_ineffective` の Bash パターンで compound 比率が高いか |
+| settings scope | グローバル allow がプロジェクトコンテキストで適用されない可能性 | PermissionRequest の `cwd` が特定プロジェクトに偏っているか |
+| サブエージェント | Task/Agent tool 経由で permission 設定が継承されない可能性 | PermissionRequest がサブエージェント起動後のタイミングに集中しているか |
+| パターン仕様変更 | Claude Code バージョンアップで prefix マッチ `cmd:*` の挙動が変わった可能性 | 広範なツール（Glob, Read 等のツール全体 allow 含む）が一様に出現するか |
+
+### Agent 1 の判断フロー
+
+1. `allow_ineffective` に 2回以上出現するパターンを確認
+2. 上記原因分類のいずれに該当するか判定
+3. 該当原因に応じて改善案を提示:
+   - compound command → スキル/スクリプト側でコマンド分割を推奨
+   - settings scope → プロジェクト settings.json の有無を確認、allow ルールの配置先を提案
+   - サブエージェント → `allowed-tools` frontmatter や Task 起動時の permission 設定を確認
+   - パターン仕様変更 → `/claude-config update auto` で仕様差分を調査
+4. 広範なツール（Glob, Read, Bash の基本コマンド群）が一様に出現する場合はシステミックな問題として報告し、個別対応ではなく根本原因の調査を推奨

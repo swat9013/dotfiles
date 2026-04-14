@@ -21,6 +21,11 @@ CLI_WRAPPER_LINE_LIMIT = 30
 
 BLOCK_SCALARS = {"|-", ">-", "|", ">"}
 
+BUILTIN_TOOL_NAMES = frozenset({
+    "edit", "read", "write", "bash", "read-file", "edit-file",
+    "write-file", "file-ops", "filesystem", "grep", "glob", "search",
+})
+
 # --- description extraction ---
 
 def extract_description(skill_md: Path) -> str:
@@ -75,11 +80,16 @@ def _has_jq_deep_pipe(content: str) -> bool:
 
 
 def _has_while_read_parse(content: str) -> bool:
-    """while read + line parsing."""
+    """while read + line parsing (excluding file/tmpfile redirects)."""
     for m in re.finditer(r"while\b.*\bread\b.*", content):
         line = m.group(0)
-        # "< file" pattern is simple file iteration, not complex parsing
+        # "< file" on the while line is simple file iteration
         if re.search(r"<\s*[\"']?\$?\w", line):
+            continue
+        # Check for "done < file" pattern (tmpfile redirect)
+        rest = content[m.end():]
+        done_m = re.search(r"\bdone\b[^\n]*<\s*[\"']?\$?\w", rest)
+        if done_m and not re.search(r"\bwhile\b", rest[:done_m.start()]):
             continue
         return True
     return False
@@ -258,7 +268,10 @@ def collect_skill_usage(since_days: int = 14) -> dict[str, int]:
                         skill_name = block.get("input", {}).get("skill", "unknown")
                         usage[skill_name] = usage.get(skill_name, 0) + 1
 
-    return dict(sorted(usage.items(), key=lambda x: -x[1]))
+    return dict(sorted(
+        ((k, v) for k, v in usage.items() if k not in BUILTIN_TOOL_NAMES),
+        key=lambda x: -x[1],
+    ))
 
 
 # --- scan a directory ---
@@ -294,9 +307,17 @@ def main() -> None:
 
     skill_usage = collect_skill_usage()
 
+    # Coverage: identify used skills not in any scanned directory
+    scanned_names = set()
+    for scan in scans:
+        for skill in scan.get("skills", []):
+            scanned_names.add(skill["name"])
+    unscanned_usage = {k: v for k, v in skill_usage.items() if k not in scanned_names}
+
     output = {
         "scans": scans,
         "skill_usage": skill_usage,
+        "unscanned_usage": unscanned_usage,
         "warn_count": len(all_warnings),
         "warnings": all_warnings,
     }

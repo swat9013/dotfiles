@@ -10,7 +10,8 @@
   total: 全レコード数
   patterns: ツール別の key_info パターン集計（頻度順）
   unmatched: 既存 allow ルールにマッチしないパターン（提案候補）
-  suggestions: 具体的な allow ルール追加提案
+  allow_ineffective: allow ルールにマッチするが PermissionRequest が発生したパターン（allow 無効）
+  suggestions: 具体的な allow ルール追加提案（risk=investigation は allow 無効の調査推奨）
 """
 
 import argparse
@@ -288,6 +289,8 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
     pattern_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     session_tools: dict[str, set[str]] = defaultdict(set)
     unmatched: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    # allow ルールにマッチするが PermissionRequest が発生 = allow が無効
+    allow_ineffective: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
 
     for entry in entries:
         tool = entry.get("tool", "unknown")
@@ -308,7 +311,10 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
         pattern_counts[tool][pattern] += 1
 
         # allow ルールとの照合
-        if not matches_allow_rule(tool, key_info, allow_rules):
+        if matches_allow_rule(tool, key_info, allow_rules):
+            # ログに存在する = Claude Code が自動許可しなかった。allow が無効
+            allow_ineffective[tool][pattern] += 1
+        else:
             unmatched[tool][pattern] += 1
 
     # パターンを頻度順にソート
@@ -320,6 +326,10 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
     for tool, patterns in unmatched.items():
         sorted_unmatched[tool] = dict(sorted(patterns.items(), key=lambda x: -x[1]))
 
+    sorted_allow_ineffective = {}
+    for tool, patterns in allow_ineffective.items():
+        sorted_allow_ineffective[tool] = dict(sorted(patterns.items(), key=lambda x: -x[1]))
+
     # 提案生成（2回以上出現 + allow 未マッチのみ）
     suggestions = []
     for tool, patterns in sorted_unmatched.items():
@@ -329,8 +339,18 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
                 if suggestion:
                     suggestions.append(suggestion)
 
+    # allow 無効パターンの提案（2回以上出現）
+    for tool, patterns in sorted_allow_ineffective.items():
+        for pattern, count in patterns.items():
+            if count >= 2:
+                suggestions.append({
+                    "rule": f"[INEFFECTIVE] {tool}({pattern}:*)" if tool == "Bash" else f"[INEFFECTIVE] {tool}({pattern})",
+                    "reason": f"allow ルールが存在するが {count} 回 PermissionRequest 発生。ルールが無効の可能性",
+                    "risk": "investigation",
+                })
+
     # リスク低→高の順でソート（低リスクほど採用しやすい）
-    risk_order = {"low": 0, "medium": 1, "high": 2}
+    risk_order = {"low": 0, "medium": 1, "high": 2, "investigation": -1}
     suggestions.sort(key=lambda s: (risk_order.get(s["risk"], 3), -int(re.search(r"\d+", s["reason"]).group())))
 
     return {
@@ -339,6 +359,7 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
         "session_count": len(session_tools),
         "patterns": sorted_patterns,
         "unmatched": sorted_unmatched,
+        "allow_ineffective": sorted_allow_ineffective,
         "suggestions": suggestions,
     }
 

@@ -125,6 +125,7 @@ agent: true
 - 汎用description → 誤マッチ
 - 深い参照ネスト → 1階層までに制限
 - コマンド存在確認 → 不要（fail-fastで対応）
+- `disable-model-invocation: true` + `user-invocable: false` 同時設定 → スキルが到達不能になる
 
 ## サブエージェント活用原則
 
