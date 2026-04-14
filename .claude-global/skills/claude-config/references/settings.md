@@ -96,7 +96,7 @@ allow を追加する前に確認する:
 
 | 原因 | 説明 | 確認方法 |
 |------|------|---------|
-| compound command | `&&`/`||`/`;` で結合されたコマンド。Claude Code が prefix マッチを適用しない可能性 | `allow_ineffective` の Bash パターンで compound 比率が高いか |
+| compound command | `&&`/`\|\|`/`;`/`\|` で結合されたコマンド。仕様上は各サブコマンドが独立に allow マッチすべきだが、**実装バグで手動承認になる既知不具合あり**（Issues: #27688, #27275, #14595, #28183, #16561。執筆時点いずれも Open） | `allow_ineffective` の Bash パターンで compound 比率が高いか |
 | settings scope | グローバル allow がプロジェクトコンテキストで適用されない可能性 | PermissionRequest の `cwd` が特定プロジェクトに偏っているか |
 | サブエージェント | Task/Agent tool 経由で permission 設定が継承されない可能性 | PermissionRequest がサブエージェント起動後のタイミングに集中しているか |
 | パターン仕様変更 | Claude Code バージョンアップで prefix マッチ `cmd:*` の挙動が変わった可能性 | 広範なツール（Glob, Read 等のツール全体 allow 含む）が一様に出現するか |
@@ -106,7 +106,10 @@ allow を追加する前に確認する:
 1. `allow_ineffective` に 2回以上出現するパターンを確認
 2. 上記原因分類のいずれに該当するか判定
 3. 該当原因に応じて改善案を提示:
-   - compound command → スキル/スクリプト側でコマンド分割を推奨
+   - compound command → 以下の優先順で提示（個別 compound allow 追加は組み合わせ爆発のため非推奨）:
+     1. **tool固有の出力制御オプションで pipe を排除**（推奨）: `uv run pyright foo.py 2>&1 \| tail -10` → `uv run pyright foo.py --outputjson --level error`、`pytest \| tail -N` → `pytest -q --tb=short`。コンテキスト汚染防止目的の `\| tail`/`\| head` は tool 側オプションで代替できる
+     2. **スクリプトラッパー化**: pipe が必須（`\| jq`, `\| sort -u` 等）のケースは `~/.dotfiles/bin/*.sh` にラップし `Bash(~/.dotfiles/bin/foo.sh:*)` を allow に追加
+     3. **PermissionRequest hook で AST 解析**: shfmt+jq で各 subcommand を抽出し個別評価（参考: `oryband/claude-code-auto-approve`）
    - settings scope → プロジェクト settings.json の有無を確認、allow ルールの配置先を提案
    - サブエージェント → `allowed-tools` frontmatter や Task 起動時の permission 設定を確認
    - パターン仕様変更 → `/claude-config update auto` で仕様差分を調査

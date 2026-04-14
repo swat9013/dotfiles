@@ -7,10 +7,10 @@ claude-config コンポーネント（スクリプト / Agent プロンプト / 
 
 ## TOC
 
-1. [原因分類テーブル（8 カテゴリ）](#1-原因分類テーブル)
+1. [原因分類テーブル（10 カテゴリ）](#1-原因分類テーブル)
 2. [カテゴリ別診断パターン](#2-カテゴリ別診断パターン)
    - Cat-1〜Cat-4: 本ファイル
-   - Cat-5〜Cat-8: [tuning-guide-extended.md](tuning-guide-extended.md)
+   - Cat-5〜Cat-10: [tuning-guide-extended.md](tuning-guide-extended.md)
 3. [修正時のコナセンスチェックリスト](#3-修正時のコナセンスチェックリスト)
 
 ---
@@ -27,6 +27,8 @@ claude-config コンポーネント（スクリプト / Agent プロンプト / 
 | Cat-6 | 統合ステップの情報損失 | SKILL.md Step 3（結果統合） | 知見の捕捉→蓄積→昇格フロー |
 | Cat-7 | 入力データの不足（hook レベル） | **スコープ外**（hook 追加が必要） | PermissionRequest ログ等の収集基盤 |
 | Cat-8 | モード設計の問題 | SKILL.md 構造変更 | モード定義・フロー全体 |
+| Cat-9 | Computational First 違反（skill 内 LLM 処理の script 化余地） | 対象 skill の SKILL.md / `scripts/` | LLM 手順に残る決定論的処理 |
+| Cat-10 | rules の linter/formatter 化余地 | rules/*.md / hook scripts / settings.json | Feedforward 依存の決定論的規則 |
 
 ---
 
@@ -159,7 +161,7 @@ claude-config コンポーネント（スクリプト / Agent プロンプト / 
 
 ---
 
-> **Cat-5〜Cat-8**: [tuning-guide-extended.md](tuning-guide-extended.md) を参照
+> **Cat-5〜Cat-10**: [tuning-guide-extended.md](tuning-guide-extended.md) を参照
 
 ---
 
@@ -192,6 +194,22 @@ claude-config コンポーネント（スクリプト / Agent プロンプト / 
 - [ ] 「証拠なき指摘の除外」フィルタが Steering Loop の「捕捉」フェーズを阻害していないか
 - [ ] Agent 2 のメモリ昇華候補が最終改善提案テーブルに必ず含まれるフローになっているか
 - [ ] 除外された指摘が `tmp/review/` への書き出し等で保存されているか
+
+### skill 内処理の script 化時（Cat-9）
+
+- [ ] 切り出した script が対象 skill の `scripts/` 配下に配置されているか
+- [ ] `settings.json` の `permissions.allow` に実行パスが登録されているか
+- [ ] `chmod +x` で実行権限が付与されているか
+- [ ] SKILL.md から新 script を呼び出す記述に差し替え、元の決定論的手順を削除したか
+- [ ] LLM に残す判断部分（意味解釈・設計判断）との境界が明確か
+
+### rules の linter/formatter 化時（Cat-10）
+
+- [ ] **実装は `/update-config` に委譲**。harness-tuning では提案テーブル生成で完結させる
+- [ ] 提案に hook event（Pre/PostToolUse/Stop/SessionEnd）と対象 matcher が具体的に記載されているか
+- [ ] 既存 hook scripts（guard-*.sh, ruff-check.sh 等）の拡張可能性を評価したか
+- [ ] hook 化後の rule 記述の削除/縮小提案が併せて出されているか（context lot 削減）
+- [ ] `config-management.md` の「hook scripts ↔ settings.json ↔ rules 記述」コナセンスと整合するか
 
 ### 共通（すべての修正後）
 

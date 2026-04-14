@@ -161,5 +161,9 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 ## Gotchas
 
 - **`permissions.allow` と `allowedPaths` の両方が必要**: `.claude/tmp/**` 等のパスを追加する際は `permissions.allow` だけでなく `allowedPaths` にも `**/.claude/tmp/**` を追加する。`allowedPaths` が漏れると sensitive file 判定になり権限確認が毎回発生する
-- **`.claude/` 系パターンには `**/` プレフィックスが必要**: `Write(.claude/tmp/**)` のような相対パスは別プロジェクトの絶対パス `/Users/.../project/.claude/tmp/...` にマッチしない。`Write(**/.claude/tmp/**)` のように `**/` プレフィックスを付与すること
+- **`.claude/` 系パターンのプレフィックス使い分け**: `Write(.claude/tmp/**)` のような相対パスは別プロジェクトの絶対パス `/Users/.../project/.claude/tmp/...` にマッチしない。`**/` と `/**/` を意図的に併記する:
+  - `Write(**/.claude/tmp/**)` → 相対マルチセグメント。プロジェクトカレントディレクトリ起点の一般マッチ
+  - `Write(/**/.claude/tmp/**)` → 絶対パス起点（ルート `/` からの任意階層）。Claude Code が絶対パスで判定する局面を確実に拾うための保険
+  - 両方 allow に並べることで「相対・絶対いずれのパス表現で渡されてもマッチする」冗長化が目的。片方だけに統一すると片系統で取りこぼす
 - **`if` フィールドの prefix 構文**: `"if": "Bash(git:*)"` が正しい形式（`Bash(git *)` ではない）。スペース区切りは exact マッチになりサブコマンドを取りこぼす
+- **compound command の allow マッチ不具合**: `|`/`&&`/`||`/`;` で結合した Bash は、各サブコマンドが個別に allow にあっても手動承認を要求されることがある（既知バグあり）。個別に compound パターンを allow 追加すると組み合わせ爆発するため推奨しない。回避は（a）tool 固有の出力制御オプションで pipe を排除、（b）pipe 必須なら `~/.dotfiles/bin/*.sh` にラップし `Bash(~/.dotfiles/bin/foo.sh:*)` を allow に追加。具体的な代替オプション表および関連 Issue 番号は `skills/claude-config/references/settings.md` Section 7 を参照

@@ -13,6 +13,14 @@
 - サブエージェント委譲は基本sonnet、軽量タスク（検索、ファイル存在確認、定型出力収集）のみhaiku
 - サブエージェントを設計するとき: 手順の前に「目的関数（最大化する指標）」と「判断基準reference（評価に必要な情報源）」を明記する
 - PEP 723スクリプトは `uv run` なしで直接実行する（shebang + 実行権限あり）
+- Bash出力絞り込みは tool固有オプションを使い pipe を避ける（コンテキスト汚染防止目的の `| tail`/`| head` は下表で置換）
+
+| 用途 | 禁止 | 推奨 |
+|------|------|------|
+| pyright | `\| tail -N` / `2>&1 \| tail -N` | `--outputjson --level error` |
+| ruff | `\| head -N` | `--silent --output-format concise` |
+| pytest | `\| tail -N` | `-q --tb=short`（または `--tb=no`） |
+| 汎用（どうしてもpipeしたい） | inline pipe | スクリプトラッパー化して allow に追加 |
 
 ## Epistemic Honesty
 - 確信度が低いなら明示する。自信ありげな文体で不確実性を隠さない
