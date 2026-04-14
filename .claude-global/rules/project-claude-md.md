@@ -56,6 +56,7 @@ npm test
 
 - 一般的なプログラミング原則のみ
 - README.mdとの重複
+- hooks/rules/skills/システムプロンプトでカバー済みの記述（重複排除）
 - 詳細すぎる実装ガイド → rules/ or docs/
 - 長いコード例 → 別ファイル参照
 

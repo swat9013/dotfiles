@@ -8,4 +8,4 @@ user-invocable: false
 
 スキル設計の品質パターンと判断基準を記述したリファレンスを読み込む。
 
-Read `~/.dotfiles/.claude-global/skills/claude-config/references/skill-design-patterns.md`
+Read `~/.claude/skills/claude-config/references/skill-design-patterns.md`

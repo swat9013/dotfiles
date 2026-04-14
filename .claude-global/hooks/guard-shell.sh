@@ -1,5 +1,6 @@
 #!/bin/sh
-COMMAND=$(jq -r '.tool_input.command // empty')
+INPUT=$(cat)
+COMMAND=$(printf '%s\n' "$INPUT" | jq -r '.tool_input.command // empty')
 
 # bash/sh -n → shellcheck に差し替え
 if printf '%s\n' "$COMMAND" | grep -qE '^(bash|sh) -n [^ ]+$'; then

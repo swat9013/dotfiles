@@ -32,7 +32,7 @@ brew bundle --global        # Homebrewパッケージ更新
 - **ライフサイクル配置** — 制御をタスク開始時・実行中・実行後・セッション後・定期の各フェーズに分散させる。
 - **自己メンテナンス** — Harness 自体の劣化を検出・修正する仕組みを組み込む。陳腐化を放置しない。
 
-詳細は `rules/harness-architecture.md` を参照
+詳細は `.claude/rules/harness-architecture.md` を参照
 
 ## Gotchas
 
