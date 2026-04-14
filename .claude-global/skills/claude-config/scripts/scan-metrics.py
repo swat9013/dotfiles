@@ -224,12 +224,14 @@ def analyze_sessions(records: list[dict]) -> dict:
         return {
             "session_count": 0,
             "tool_usage": {},
+            "skill_usage": {},
             "cache_hit_rate": None,
             "sidechain_rate": 0.0,
             "period": None,
         }
 
     tool_usage: dict[str, int] = defaultdict(int)
+    skill_usage: dict[str, int] = defaultdict(int)
     total_cache_read = 0
     total_cache_creation = 0
     total_input = 0
@@ -250,6 +252,11 @@ def analyze_sessions(records: list[dict]) -> dict:
                 for block in content:
                     if isinstance(block, dict) and block.get("type") == "tool_use":
                         tool_usage[block.get("name", "unknown")] += 1
+                        # Skill ツール呼び出し時はスキル名を集計
+                        if block.get("name") == "Skill":
+                            input_data = block.get("input", {})
+                            skill_name = input_data.get("skill", "unknown")
+                            skill_usage[skill_name] += 1
             # キャッシュトークン集計
             usage = record.get("message", {}).get("usage", {})
             total_cache_read += usage.get("cache_read_input_tokens", 0)
@@ -269,6 +276,7 @@ def analyze_sessions(records: list[dict]) -> dict:
     return {
         "session_count": len(session_ids),
         "tool_usage": dict(sorted(tool_usage.items(), key=lambda x: -x[1])),
+        "skill_usage": dict(sorted(skill_usage.items(), key=lambda x: -x[1])),
         "cache_hit_rate": round(cache_hit_rate, 4) if cache_hit_rate is not None else None,
         "sidechain_rate": round(sidechain_rate, 4),
         "period": None,  # TASK-003 で period 計算を追加

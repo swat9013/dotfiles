@@ -372,7 +372,7 @@
   },
   "language": "日本語でMBTIでINTJの人がわかりやすい話し方",
   "spinnerTipsEnabled": false,
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "promptSuggestionEnabled": false,
   "plansDirectory": ".claude/plans"
 }
