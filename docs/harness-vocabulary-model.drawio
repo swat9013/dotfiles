@@ -1,0 +1,160 @@
+<mxGraphModel adaptiveColors="auto">
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+
+    <mxCell id="title" value="Harness 語彙モデル（ループ6: ドメイン階層）" style="text;html=1;align=left;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="40" y="20" width="520" height="28" as="geometry"/>
+    </mxCell>
+    <mxCell id="subTitle" value="harness engineering ⊂ context engineering（Martin Fowler枠組み採用）" style="text;html=1;align=left;fontSize=10;fontColor=#666;" vertex="1" parent="1">
+      <mxGeometry x="40" y="50" width="520" height="20" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="n1" value="価値観の遵守" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="520" y="85" width="220" height="50" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="domainLayer" value="ドメイン層（責務軸 / 目的関数を持つ）" style="swimlane;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontStyle=1;fontSize=12;startSize=30;horizontal=1;" vertex="1" parent="1">
+      <mxGeometry x="40" y="170" width="1180" height="280" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="domMaint" value="Maintainability Harness" style="swimlane;whiteSpace=wrap;fillColor=#ffe0b2;strokeColor=#e65100;fontStyle=1;fontSize=11;startSize=24;" vertex="1" parent="domainLayer">
+      <mxGeometry x="20" y="40" width="370" height="230" as="geometry"/>
+    </mxCell>
+    <mxCell id="maintMax" value="最大化価値:&#xa;生成コードが長期保守可能な状態を維持" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domMaint">
+      <mxGeometry x="10" y="30" width="350" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="maintSig" value="達成シグナル:&#xa;・品質ゲートPASS率が高位安定&#xa;・型エラー・lint違反が低位安定&#xa;・リファクタ容易性が損なわれない" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domMaint">
+      <mxGeometry x="10" y="75" width="350" height="70" as="geometry"/>
+    </mxCell>
+    <mxCell id="maintBound" value="境界条件:&#xa;・過剰自動修正で意図を歪めない&#xa;・偽陽性で開発を止めない" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domMaint">
+      <mxGeometry x="10" y="150" width="350" height="55" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="domArch" value="Architecture Fitness Harness" style="swimlane;whiteSpace=wrap;fillColor=#ffe0b2;strokeColor=#e65100;fontStyle=1;fontSize=11;startSize=24;" vertex="1" parent="domainLayer">
+      <mxGeometry x="400" y="40" width="370" height="230" as="geometry"/>
+    </mxCell>
+    <mxCell id="archMax" value="最大化価値:&#xa;harness自身の劣化を検出・修正し続ける" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domArch">
+      <mxGeometry x="10" y="30" width="350" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="archSig" value="達成シグナル:&#xa;・Harness劣化シグナルがSteering Loopで回収&#xa;・未解決の逸脱が蓄積しない&#xa;・ドメインモデルと実装の乖離が小さい" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domArch">
+      <mxGeometry x="10" y="75" width="350" height="70" as="geometry"/>
+    </mxCell>
+    <mxCell id="archBound" value="境界条件:&#xa;・自己メンテナンスが本業を侵食しない&#xa;・計測のための計測にならない" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domArch">
+      <mxGeometry x="10" y="150" width="350" height="55" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="domBehav" value="Behaviour Harness" style="swimlane;whiteSpace=wrap;fillColor=#ffe0b2;strokeColor=#e65100;fontStyle=1;fontSize=11;startSize=24;" vertex="1" parent="domainLayer">
+      <mxGeometry x="780" y="40" width="380" height="230" as="geometry"/>
+    </mxCell>
+    <mxCell id="behavMax" value="最大化価値:&#xa;ユーザー価値観に沿った自律行動を少ない指示で実現" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domBehav">
+      <mxGeometry x="10" y="30" width="360" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="behavSig" value="達成シグナル:&#xa;・ユーザー修正指示の反復がない&#xa;・Feedforwardで自己抑制が効く&#xa;・Feedbackで逸脱が検出される" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domBehav">
+      <mxGeometry x="10" y="75" width="360" height="70" as="geometry"/>
+    </mxCell>
+    <mxCell id="behavBound" value="境界条件:&#xa;・過剰規則化で表現を硬直化させない&#xa;・常時必要な指示をrulesに退避しない" style="rounded=1;whiteSpace=wrap;fillColor=#fff3e0;strokeColor=#e65100;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="domBehav">
+      <mxGeometry x="10" y="150" width="360" height="55" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="axisLayer" value="二軸制御構造（ドメイン横断の下位属性）" style="swimlane;whiteSpace=wrap;fillColor=#f3e5f5;strokeColor=#6a1b9a;fontStyle=1;fontSize=12;startSize=30;" vertex="1" parent="1">
+      <mxGeometry x="40" y="480" width="580" height="200" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisHeader_tl" value="" style="rounded=0;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=10;" vertex="1" parent="axisLayer">
+      <mxGeometry x="10" y="40" width="130" height="30" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisHeader_ff" value="Feedforward (Guides)" style="rounded=0;whiteSpace=wrap;fillColor=#e1bee7;strokeColor=#6a1b9a;fontSize=10;fontStyle=1;" vertex="1" parent="axisLayer">
+      <mxGeometry x="140" y="40" width="210" height="30" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisHeader_fb" value="Feedback (Sensors)" style="rounded=0;whiteSpace=wrap;fillColor=#e1bee7;strokeColor=#6a1b9a;fontSize=10;fontStyle=1;" vertex="1" parent="axisLayer">
+      <mxGeometry x="350" y="40" width="220" height="30" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisRow_inf" value="Inferential" style="rounded=0;whiteSpace=wrap;fillColor=#e1bee7;strokeColor=#6a1b9a;fontSize=10;fontStyle=1;" vertex="1" parent="axisLayer">
+      <mxGeometry x="10" y="70" width="130" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisCell_inf_ff" value="CLAUDE.md / rule / skill&#xa;（段階開示）" style="rounded=0;whiteSpace=wrap;fillColor=#f3e5f5;strokeColor=#6a1b9a;fontSize=10;" vertex="1" parent="axisLayer">
+      <mxGeometry x="140" y="70" width="210" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisCell_inf_fb" value="独立レビュー&#xa;claude-config診断" style="rounded=0;whiteSpace=wrap;fillColor=#f3e5f5;strokeColor=#6a1b9a;fontSize=10;" vertex="1" parent="axisLayer">
+      <mxGeometry x="350" y="70" width="220" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisRow_comp" value="Computational" style="rounded=0;whiteSpace=wrap;fillColor=#e1bee7;strokeColor=#6a1b9a;fontSize=10;fontStyle=1;" vertex="1" parent="axisLayer">
+      <mxGeometry x="10" y="130" width="130" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisCell_comp_ff" value="skill内のスクリプト注入&#xa;事前品質ゲート" style="rounded=0;whiteSpace=wrap;fillColor=#f3e5f5;strokeColor=#6a1b9a;fontSize=10;" vertex="1" parent="axisLayer">
+      <mxGeometry x="140" y="130" width="210" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="axisCell_comp_fb" value="settings.json / hook&#xa;品質ゲート事後" style="rounded=0;whiteSpace=wrap;fillColor=#f3e5f5;strokeColor=#6a1b9a;fontSize=10;" vertex="1" parent="axisLayer">
+      <mxGeometry x="350" y="130" width="220" height="60" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="crossCutLayer" value="ドメイン横断の設計原則（ループ5成果を下位属性化）" style="swimlane;whiteSpace=wrap;fillColor=#e8f5e9;strokeColor=#388e3c;fontStyle=1;fontSize=12;startSize=30;" vertex="1" parent="1">
+      <mxGeometry x="640" y="480" width="580" height="200" as="geometry"/>
+    </mxCell>
+    <mxCell id="cc1" value="フラクタル構造&#xa;（サブエージェント=コンポーネントの一種）" style="rounded=1;whiteSpace=wrap;fillColor=#f1f8e9;strokeColor=#689f38;fontSize=10;" vertex="1" parent="crossCutLayer">
+      <mxGeometry x="10" y="40" width="270" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="cc2" value="委譲価値6類型&#xa;（コンテキスト分離/バイアス排除/並列化/専門化/使い捨て/コスト最適化）" style="rounded=1;whiteSpace=wrap;fillColor=#f1f8e9;strokeColor=#689f38;fontSize=10;" vertex="1" parent="crossCutLayer">
+      <mxGeometry x="290" y="40" width="280" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="cc3" value="責務分担4基準&#xa;（不可逆性/経済性/意思決定権/再現性要求）" style="rounded=1;whiteSpace=wrap;fillColor=#f1f8e9;strokeColor=#689f38;fontSize=10;" vertex="1" parent="crossCutLayer">
+      <mxGeometry x="10" y="90" width="270" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="cc4" value="静的/動的軸&#xa;（動的は親スキル側に目的関数記述）" style="rounded=1;whiteSpace=wrap;fillColor=#f1f8e9;strokeColor=#689f38;fontSize=10;" vertex="1" parent="crossCutLayer">
+      <mxGeometry x="290" y="90" width="280" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="cc5" value="静的定義昇格原則&#xa;（反復利用サブエージェントは静的化）" style="rounded=1;whiteSpace=wrap;fillColor=#fff9c4;strokeColor=#f57f17;fontSize=10;fontStyle=1;" vertex="1" parent="crossCutLayer">
+      <mxGeometry x="10" y="140" width="270" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="cc6" value="Guide First, Sense Second&#xa;Computational First" style="rounded=1;whiteSpace=wrap;fillColor=#fff9c4;strokeColor=#f57f17;fontSize=10;fontStyle=1;" vertex="1" parent="crossCutLayer">
+      <mxGeometry x="290" y="140" width="280" height="40" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="implLayer" value="コンポーネント層（実装軸 / ドメインの実装手段）" style="swimlane;whiteSpace=wrap;fillColor=#f0f4ff;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;startSize=30;" vertex="1" parent="1">
+      <mxGeometry x="40" y="710" width="1180" height="300" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="cmpNote" value="コンポーネントは1つ以上のドメインに貢献する（主 / 補助）。 skill毎は独立型三部構造（選択肢A）。" style="text;html=1;align=left;fontSize=10;fontColor=#444;" vertex="1" parent="implLayer">
+      <mxGeometry x="15" y="40" width="1150" height="20" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="cmpMaint" value="Maintainability 主実装" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=top;align=left;" vertex="1" parent="implLayer">
+      <mxGeometry x="15" y="70" width="370" height="200" as="geometry"/>
+    </mxCell>
+    <mxCell id="cmpMaintList" value="主:&#xa;・coding-principles rule&#xa;・ruff / pyright / pytest&#xa;・品質ゲート&#xa;&#xa;補助:&#xa;・CLAUDE.md のコーディング指針部" style="text;html=1;align=left;fontSize=10;" vertex="1" parent="cmpMaint">
+      <mxGeometry x="10" y="25" width="350" height="170" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="cmpArch" value="Architecture Fitness 主実装" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=top;align=left;" vertex="1" parent="implLayer">
+      <mxGeometry x="395" y="70" width="380" height="200" as="geometry"/>
+    </mxCell>
+    <mxCell id="cmpArchList" value="主:&#xa;・harness-architecture rule&#xa;・retrospective&#xa;・claude-config&#xa;・独立レビュー&#xa;・Steering Loop&#xa;&#xa;補助:&#xa;・コナセンス管理" style="text;html=1;align=left;fontSize=10;" vertex="1" parent="cmpArch">
+      <mxGeometry x="10" y="25" width="360" height="170" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="cmpBehav" value="Behaviour 主実装" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=top;align=left;" vertex="1" parent="implLayer">
+      <mxGeometry x="785" y="70" width="380" height="200" as="geometry"/>
+    </mxCell>
+    <mxCell id="cmpBehavList" value="主:&#xa;・CLAUDE.md&#xa;・dev-cycle rule&#xa;・各workflow skill（/commit 等）&#xa;・settings.json&#xa;・hook&#xa;・memory（Write + Select）&#xa;&#xa;補助:&#xa;・品質ゲート（Behaviour文脈でのFeedback）" style="text;html=1;align=left;fontSize=10;" vertex="1" parent="cmpBehav">
+      <mxGeometry x="10" y="25" width="360" height="170" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="nonCmp" value="skill内部詳細（非コンポーネント）:  SKILL.md / references/" style="rounded=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#666666;fontSize=10;dashed=1;" vertex="1" parent="1">
+      <mxGeometry x="40" y="1030" width="1180" height="35" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="e_val2dom" value="要求する" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="n1" target="domainLayer" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e_dom2impl" value="実現される" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;dashed=1;strokeColor=#6c8ebf;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="domainLayer" target="implLayer" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e_dom2axis" value="適用" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;dashed=1;strokeColor=#6a1b9a;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="domainLayer" target="axisLayer" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e_dom2cc" value="横断原則" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;dashed=1;strokeColor=#388e3c;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="domainLayer" target="crossCutLayer" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+  </root>
+</mxGraphModel>

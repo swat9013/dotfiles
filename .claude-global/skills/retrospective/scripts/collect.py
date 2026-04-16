@@ -16,28 +16,49 @@ Usage:
 import argparse
 import json
 import re
+import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
-def find_sessions(since: str, limit: int) -> list[dict]:
-    """セッションJSONLファイルを検索し、メタデータ付きリストを返す。
+SIZE_MIN = 2000
+
+
+def _get_repo_root(cwd: Path) -> Path:
+    """git rev-parse --show-toplevel でリポジトリルートを取得。非gitならcwd。"""
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=cwd, capture_output=True, text=True, check=True, timeout=5,
+        )
+        return Path(result.stdout.strip())
+    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+        return cwd
+
+
+def _list_session_dirs(repo_root: Path) -> list[Path]:
+    """~/.claude/projects/ からリポジトリに関連するセッションディレクトリを全列挙。
+
+    条件: name == encoded_root OR name.startswith(encoded_root + "-")
+    git管理外（削除済みworktree）のセッションディレクトリも包含する。
+    """
+    projects_dir = Path.home() / ".claude" / "projects"
+    if not projects_dir.is_dir():
+        return []
+    encoded_root = re.sub(r"[^a-zA-Z0-9]", "-", str(repo_root))
+    return [
+        d for d in projects_dir.iterdir()
+        if d.is_dir() and (d.name == encoded_root or d.name.startswith(encoded_root + "-"))
+    ]
+
+
+def find_sessions(session_dir: Path, cutoff: datetime) -> list[dict]:
+    """セッションディレクトリ配下のメインセッション JSONL を検索する。
 
     Returns:
-        [{"path": Path, "uuid": str, "size": int}, ...]
+        [{"path": Path, "uuid": str, "size": int, "mtime": datetime}, ...]
     """
-    project_path = Path.cwd()
-    project_dir = re.sub(r"[^a-zA-Z0-9]", "-", str(project_path))
-    session_dir = Path.home() / ".claude" / "projects" / project_dir
-
-    if not session_dir.is_dir():
-        return []
-
-    # since → datetime
-    cutoff = _parse_since(since)
-
-    # JSONL files, exclude agent-*
     candidates = []
     for f in session_dir.glob("*.jsonl"):
         if f.name.startswith("agent-"):
@@ -47,7 +68,7 @@ def find_sessions(since: str, limit: int) -> list[dict]:
         if mtime < cutoff:
             continue
         size = st.st_size
-        if size < 2000:
+        if size < SIZE_MIN:
             continue
         candidates.append({
             "path": f,
@@ -55,13 +76,6 @@ def find_sessions(since: str, limit: int) -> list[dict]:
             "size": size,
             "mtime": mtime,
         })
-
-    # 新しい順にソート
-    candidates.sort(key=lambda x: x["mtime"], reverse=True)
-
-    # limit適用（0=無制限）
-    if limit > 0:
-        return candidates[:limit]
     return candidates
 
 
@@ -234,33 +248,50 @@ def main():
     )
     args = parser.parse_args()
 
-    # 1. セッション検索
-    sessions = find_sessions(args.since, args.limit)
-
-    # 2. レビューファイル収集
+    # 1. 全セッションディレクトリ走査（現在リポジトリ関連のみ）
+    cutoff = _parse_since(args.since)
+    cwd = Path.cwd()
     review_files = collect_review_files()
 
-    if not sessions:
+    seen_dirs: set[Path] = set()
+    all_candidates: list[dict] = []
+    repo_root = _get_repo_root(cwd)
+    for sd in _list_session_dirs(repo_root):
+        if sd in seen_dirs:
+            continue
+        seen_dirs.add(sd)
+        for c in find_sessions(sd, cutoff):
+            c["session_dir_name"] = sd.name
+            all_candidates.append(c)
+
+    # 全 worktree 横断で新しい順にソート → limit 適用
+    all_candidates.sort(key=lambda x: x["mtime"], reverse=True)
+    if args.limit > 0:
+        all_candidates = all_candidates[: args.limit]
+
+    if not all_candidates:
         _write_output([], collect_existing_context(), 0, 0, review_files)
         return
 
-    # 3. メッセージ抽出
+    # 2. メッセージ抽出（親セッションのみ）
     session_data = []
-    for s in sessions:
+    for s in all_candidates:
         messages = extract_messages(s["path"], max_chars=10000)
         if not messages.strip():
             continue
+
         session_data.append({
             "uuid": s["uuid"],
+            "session_dir_name": s["session_dir_name"],
             "size": s["size"],
             "messages": messages,
         })
 
-    # 4. 既存コンテキスト収集
+    # 3. 既存コンテキスト収集
     existing_context = collect_existing_context()
 
-    # 5. ファイル出力 + サマリー表示
-    skipped = len(sessions) - len(session_data)
+    # 4. ファイル出力 + サマリー表示
+    skipped = len(all_candidates) - len(session_data)
     _write_output(session_data, existing_context, len(session_data), skipped, review_files)
 
 
@@ -285,11 +316,13 @@ def _write_output(
         sys.exit(1)
 
     # 親エージェント向けサマリー（stdoutに表示）
+    session_dirs = {s.get("session_dir_name", "") for s in sessions if s.get("session_dir_name")}
     print(f"file={output_file}")
-    print(f"total={total} skipped={skipped}")
+    print(f"total={total} skipped={skipped} session_dirs={len(session_dirs)}")
     if sessions:
         for s in sessions:
-            print(f"  {s['uuid'][:8]}... {s['size']} bytes")
+            wt_suffix = f" [{s['session_dir_name']}]" if s.get("session_dir_name") else ""
+            print(f"  {s['uuid'][:8]}... {s['size']} bytes{wt_suffix}")
     else:
         print("対象セッションなし")
 

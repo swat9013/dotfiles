@@ -238,7 +238,7 @@ TaskUpdate(taskId, status: "in_progress")  # 開始前
 #### 7.2 レビュー・修正サイクル
 
 ```
-レビュー(opus) → issue判定 → 修正(sonnet) → 品質ゲート → 次サイクル or Step 8
+独立レビュー → issue判定 → 修正(sonnet) → 品質ゲート → 次サイクル or Step 8
 ```
 
 **レビュー（サブエージェント委譲・opus）**:
@@ -250,6 +250,9 @@ subagent_type: general-purpose
 model: opus
 prompt: |
   あなたはコードレビューの専門家です。
+
+  ## 目的関数
+  `~/.claude/skills/_shared/independent-review-prompt.md` を Read し、目的関数として適用する。
 
   ## レビュー対象ファイル
   ${対象ファイルパスのリスト}

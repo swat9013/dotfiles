@@ -90,7 +90,7 @@ Harness 自体の劣化（設定の陳腐化・スキル肥大化・コナセン
 | rules/ ファイルが肥大化 | 行数 200 超のファイルを検出 | skills/ への分離 |
 | 同一情報の重複 | references/ と rules/ の並走を確認 | 正規ソースへの集約 |
 | PermissionRequest の偏り | scan-metrics.py（claude-config Agent 1）の tool_counts 集計 | permissions.allow / guard の見直し |
-| opusレビュー指摘の頻出 | claude-config Agent 2 で検出 | rule/skill への昇格検討 |
+| 独立レビュー指摘の頻出 | claude-config Agent 2 で検出 | rule/skill への昇格検討 |
 
 ### 修正の責務分担
 

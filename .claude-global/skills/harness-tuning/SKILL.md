@@ -12,7 +12,7 @@ argument-hint: "[問題の概要]"
 
 claude-config コンポーネント（スクリプト/Agentプロンプト/references）を診断し、修正案を提示・適用する。
 
-**目的関数**: ユーザーが手動で原因を説明・指示するコストを下げること。Steering Loop が期待品質の出力を自律的に返せる状態にする。
+**目的関数**: `docs/harness-engineering-domain-model.md §2.2`（Architecture Fitness Harness）の三項組を Read し目的関数とする。加えて `§2.3` の境界条件のみ Read し侵食禁止制約とする。すべての仮説・修正提案は三項組への因果（harness 自身の劣化を検出・修正し続ける最大化価値を損なう / 達成シグナルを変化させる / Behaviour境界条件を侵害する）で記述する。
 
 **判断基準 reference**:
 - `references/tuning-guide.md` — 10分類の修正パターンテーブル（Cat-5以降は `tuning-guide-extended.md`）
@@ -43,7 +43,7 @@ claude-config コンポーネント（スクリプト/Agentプロンプト/refer
 `~/.dotfiles/docs/harness-engineering-domain-model.md` を Read し、「あるべき姿」と現実のギャップを特定する。
 
 参照箇所:
-- **§4.2 Steering Loop** — 劣化検出→診断→修正→検証のサイクル。3つの知見源（retrospective/逸脱FB/opusレビュー）の責務分離
+- **§4.2 Steering Loop** — 劣化検出→診断→修正→検証のサイクル。3つの知見源（retrospective/逸脱FB/独立レビュー）の責務分離
 - **§5 計測（Observability）戦略** — 計測対象①②③と2段構えの実装（Tier1/Tier2）
 
 ギャップの記録フォーマット:

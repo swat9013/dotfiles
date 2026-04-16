@@ -1,6 +1,6 @@
 ---
 name: review-fix
-description: 実装後コードをOpusレビュー＋自動修正する最大3サイクル。Use when「/review-fix」「レビュー修正」「実装後レビュー」。
+description: 実装後コードを独立レビュー＋自動修正する最大3サイクル。Use when「/review-fix」「レビュー修正」「実装後レビュー」。
 model: opus
 effort: high
 disable-model-invocation: true
@@ -18,7 +18,7 @@ disable-model-invocation: true
 
 | 自身（オーケストレーター） | スクリプト実行 | サブエージェント委譲 |
 |--------------------------|---------------|-------------------|
-| issue同一性判定 | 対象ファイル特定（changed-files.sh） | レビュー（opus） |
+| issue同一性判定 | 対象ファイル特定（changed-files.sh） | 独立レビュー |
 | review-fix.md書き出し | Lint・テスト実行（quality-gate.py） | コード修正（sonnet） |
 | サイクル継続判断・報告 | | |
 
@@ -58,6 +58,9 @@ subagent_type: general-purpose
 model: opus
 prompt: |
   あなたはコードレビューの専門家です。
+
+  ## 目的関数
+  `~/.claude/skills/_shared/independent-review-prompt.md` を Read し、目的関数として適用する。
 
   ## レビュー対象ファイル
   ${対象ファイルパスのリスト}

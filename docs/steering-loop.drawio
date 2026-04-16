@@ -21,7 +21,7 @@
     <mxCell id="3" value="逸脱FB" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;" vertex="1" parent="1">
       <mxGeometry x="30" y="280" width="160" height="50" as="geometry"/>
     </mxCell>
-    <mxCell id="4" value="opusレビュー結果" style="rounded=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+    <mxCell id="4" value="独立レビュー結果" style="rounded=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" vertex="1" parent="1">
       <mxGeometry x="30" y="450" width="160" height="50" as="geometry"/>
     </mxCell>
 

@@ -173,6 +173,9 @@ Task tool:
     ## plan file
     [Phase 3 で書き出した plan file を全文転記]
 
+    ## 目的関数
+    `~/.claude/skills/_shared/independent-review-prompt.md` を Read し、目的関数として適用する。
+
     ## レビュー観点
     1. 設計原則の遵守 — 解決策が複雑なら問いを再定義すべきか、将来のための拡張性が混入していないか、責務が分離されているか
     2. Phase 0 との整合性 — 完了の定義と設計内容が対応しているか、スコープ外に踏み込んでいないか

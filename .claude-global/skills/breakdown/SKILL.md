@@ -80,6 +80,8 @@ plan.md の各フェーズの受け入れ条件を、Phase の完了基準とし
 
 **実行方式**: opus サブエージェント（Task tool, `model: opus`）に委譲。生成バイアスを排除するためコンテキスト分離で実行。
 
+**目的関数**: `~/.claude/skills/_shared/independent-review-prompt.md` を Read し適用する。
+
 **サブエージェントへの入力**:
 - 生成した implementation.md の全文
 - 元の plan.md の全文

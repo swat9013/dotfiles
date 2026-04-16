@@ -412,6 +412,8 @@ TaskUpdate({ taskId: "Phase3のID", status: "in_progress" })
 
 plan.md 作成後、opus サブエージェント（Task tool, `model: opus`）に品質検証を委譲。生成バイアスを排除するためコンテキスト分離で実行。
 
+**目的関数**: `~/.claude/skills/_shared/independent-review-prompt.md` を Read し、目的関数として適用する。
+
 **サブエージェントへの入力**:
 - 生成した plan.md の全文
 - 元の discovery.md の全文（`.claude/discovery/` 最新ファイル、存在する場合）
