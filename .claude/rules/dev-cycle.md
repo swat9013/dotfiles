@@ -58,6 +58,10 @@ flowchart LR
 
 **architect vs plan**: architect は discovery.md を前提入力とし、3観点並列調査→2アプローチ対立案→独立レビューのフォーマルプロセスを踏む。plan はコードベース探索ベースの軽量版で、discovery を経由せず `$ARGUMENTS` から直接開始できる。breakdown は plan/architect どちらの生成ファイルも同一扱いする。
 
+**ハブ経由注入**: 独立レビューの目的関数は `_shared/independent-review-prompt.md` に集約されており、各スキル（plan, architect, breakdown, implement, review-fix）はここを参照して目的関数を受け取る。この構造を「ハブ経由注入」と呼ぶ。目的関数を各スキルに直接埋め込む代わりにハブへの参照で注入することで、レビュー基準の一元管理と各スキルの疎結合を両立させる（詳細: `docs/harness-engineering-domain-model.md` §2.x 目的関数配置ルール表）。
+
+**discovery非参照の設計判断**: `_shared/independent-review-prompt.md` は discovery を経由せずに各スキルから直接参照される。discoveryは「問題の言語化（対話）」フェーズであり、静的な共有プロンプトの参照に問題文脈（discovery.md）は不要なため、discovery を挟む設計は不要な依存を生む。ハブとして機能する `_shared/` ファイルは、コアパイプラインの特定フェーズに依存せず全スキルから対称的にアクセスできる必要がある（discovery依存にすると plan 等 discovery 非経由ルートから参照不能になる）。
+
 ## 3. コナセンス・マップ
 
 スキル間で仕様が連動している箇所。一方を変更すると他方も更新が必要になる。横断的変更時はここを起点に影響範囲を特定する。
