@@ -19,7 +19,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 | **settings.json command パス** | settings.json の hooks[*].command, fileSuggestion, statusLine ↔ 実スクリプトの存在・実行権限 | スクリプトリネーム/移動→コマンドパス不一致でhook/UI機能が無効化。シンボリックリンク先の実パス（`~/.dotfiles/.claude-global/...`）で記述必須 |
 | **permissions.allow スクリプトパス** | settings.json permissions.allow ↔ 実スクリプトの存在 | スクリプト追加時にallow未更新→実行ブロック。allow追加で実体なし→空振り（エラーにならないため気づきにくい） |
 | **二層防御の対応** | guard-*.sh（第1層）↔ permissions.deny（第2層） | guard スクリプトにルール追加してもdenyに未反映→hook未起動時（Task toolバイパス等）のフォールバック欠落。逆にdenyのみ追加でguard が未対応→カスタムエラーメッセージなし |
-| **三項組文字列と正本 §2** | 各スキルプロンプト内の `docs/harness-engineering-domain-model.md §2.X` Read指示 ↔ 正本 §2.1-§2.3 の三項組テキスト | §2 のセクション番号変更時に全Read指示の参照先が一括破綻。三項組テキスト更新時はRead指示側の修正不要（正本参照で自動追従） |
+| **三項組文字列と正本 §2** | 各スキルプロンプト内の `docs/harness-engineering-domain-model.md §2.X` アンカー参照 ↔ 正本 §2.1-§2.3 の三項組テキスト | §2 のセクション番号変更時に全Read指示の参照先が一括破綻。三項組テキスト更新時はRead指示側の修正不要（正本参照で自動追従） |
 
 ### 中連動（整合性確認が必要）
 
@@ -70,14 +70,10 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 
 ### §2（ドメイン三項組）を更新するとき
 
-1. `docs/harness-engineering-domain-model.md §2.1〜§2.3` を更新
+1. `docs/harness-engineering-domain-model.md` §2（`#maintainability-harness` / `#architecture-fitness-harness` / `#behaviour-harness`）を更新
 2. §2 の Read 指示パターン（目的関数ブロックの構造）を変更する場合は `_shared/independent-review-prompt.md` を更新する（6 スキルが自動追従）
 3. 三項組の**テキスト内容**（最大化価値/達成シグナル/境界条件の文言）を変更した場合 → Read指示側の修正**不要**（正本参照で自動追従）
-4. **セクション番号**が変わった場合（例: §2.1 → §2.5 等）のみ、以下の Read 指示を一括 grep 置換:
-   ```
-   rg -l "harness-engineering-domain-model.md §2" .claude-global/skills/ .claude/rules/
-   ```
-   対象ファイル: `_shared/independent-review-prompt.md`（§2.1/§2.2 それぞれ 1 箇所）+ `claude-config/SKILL.md` エージェント表（3 箇所）+ `harness-tuning/SKILL.md`（1 箇所） → **計 6 箇所**
+4. **セクション番号**が変わった場合（例: §2.1 → §2.5 等）: アンカーはセクション番号変更時も不変のため置換手順不要。アンカー存在確認のみ実施。対象: 11箇所/4ファイル（`_shared/independent-review-prompt.md` 4箇所、`claude-config/SKILL.md` 4箇所、`harness-tuning/SKILL.md` 1箇所、`tuning-guide-extended.md` 2箇所）
 5. **ドメインの新設・廃止**は別タスクとして plan → breakdown → implement のフローで対応
 
 ## 3. 迷ったときは

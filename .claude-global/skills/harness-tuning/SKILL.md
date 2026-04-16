@@ -12,7 +12,7 @@ argument-hint: "[問題の概要]"
 
 claude-config コンポーネント（スクリプト/Agentプロンプト/references）を診断し、修正案を提示・適用する。
 
-**目的関数**: `docs/harness-engineering-domain-model.md §2.2`（Architecture Fitness Harness）の三項組を Read し目的関数とする。加えて `§2.3` の境界条件のみ Read し侵食禁止制約とする。すべての仮説・修正提案は三項組への因果（harness 自身の劣化を検出・修正し続ける最大化価値を損なう / 達成シグナルを変化させる / Behaviour境界条件を侵害する）で記述する。
+**目的関数**: `docs/harness-engineering-domain-model.md #architecture-fitness-harness`（Architecture Fitness Harness）の三項組を Read し目的関数とする。加えて `#behaviour-harness` の境界条件のみ Read し侵食禁止制約とする。すべての仮説・修正提案は三項組への因果（harness 自身の劣化を検出・修正し続ける最大化価値を損なう / 達成シグナルを変化させる / Behaviour境界条件を侵害する）で記述する。
 
 **判断基準 reference**:
 - `references/tuning-guide.md` — 10分類の修正パターンテーブル（Cat-5以降は `tuning-guide-extended.md`）
