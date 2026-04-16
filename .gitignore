@@ -21,3 +21,7 @@ alacritty/themes/
 tmp
 .claude/retrospective-cache
 __pycache__/
+.claude/plans
+.claude/research
+.claude/dialogues
+.claude/domain-models

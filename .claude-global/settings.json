@@ -249,7 +249,14 @@
       "**/.claude/plans/**",
       "**/.claude/research/**",
       "**/.claude/dialogues/**",
-      "**/.claude/implement/**"
+      "**/.claude/implement/**",
+      "/**/.claude/tmp/**",
+      "/**/.claude/review/**",
+      "/**/.claude/discovery/**",
+      "/**/.claude/plans/**",
+      "/**/.claude/research/**",
+      "/**/.claude/dialogues/**",
+      "/**/.claude/implement/**"
     ]
   },
   "hooks": {

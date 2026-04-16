@@ -15,7 +15,7 @@
 
 関連成果物（同ディレクトリ）:
 - drawio XML: `YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio`
-- SVG エクスポート: `YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio.svg`
+- PNG エクスポート: `YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio.png`
 
 ---
 
@@ -46,22 +46,23 @@ loop_count: 0  # ループ完了回数
 **## ループN — モデル図**
 drawio 生成物へのリンクを記載する。
 ```markdown
-![モデル図 ループN](YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio.svg)
+![モデル図 ループN](YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio.png)
 
 [drawio編集用](YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio)
 ```
 
 **## ループN — 歪み記録**
-各行: `- [歪み種別] 説明`
+各行: `- [歪み種別] 説明 (auto|user)`
+末尾の `auto`/`user` は訂正責務の区分。`auto` は次ループで自律訂正、`user` はユーザー判断待ち。
 歪み種別（5種類）:
 
 | 種別 | 意味 | 例 |
 |------|------|-----|
-| MISSING | 欠落 | `[MISSING] 「返信が来ない」の原因（多忙 vs 意図的無視）が未分類` |
-| CONFLICT | 矛盾 | `[CONFLICT] 「非同期推奨」と「即レス文化」が並立している` |
-| AMBIGUOUS | 曖昧 | `[AMBIGUOUS] 「心理的安全性」が原因か結果か不明` |
-| STANDARD-GAP | 業界標準語彙との差分（差分確認のみ、補正しない） | `[STANDARD-GAP] 「返信待ち滞留」はDDD語彙に類似なし → 組織固有概念として保持推奨` |
-| NAMING-RISK | 陳腐化リスクのある命名 | `[NAMING-RISK] 「Slack滞留」は採用技術名依存 → 「非同期チャネル応答遅延」への抽象化候補` |
+| MISSING | 欠落 | `[MISSING] 「返信が来ない」の原因（多忙 vs 意図的無視）が未分類 (user)` |
+| CONFLICT | 矛盾 | `[CONFLICT] 「非同期推奨」と「即レス文化」が並立している (user)` |
+| AMBIGUOUS | 曖昧 | `[AMBIGUOUS] 「心理的安全性」が原因か結果か不明 (user)` |
+| STANDARD-GAP | 業界標準語彙との差分（差分確認のみ、補正しない） | `[STANDARD-GAP] 「返信待ち滞留」はDDD語彙に類似なし → 組織固有概念として保持推奨 (auto)` |
+| NAMING-RISK | 陳腐化リスクのある命名 | `[NAMING-RISK] 「Slack滞留」は採用技術名依存 → 「非同期チャネル応答遅延」への抽象化候補 (auto)` |
 
 NAMING-RISK で点検する6パターン:
 
@@ -90,7 +91,7 @@ NAMING-RISK で点検する6パターン:
 完了ループ数: N
 成果物:
   - モデル: .claude/domain-models/YYYY-MM-DD-HHMMSS-{topic}.md
-  - 最終図: .claude/domain-models/YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio.svg
+  - 最終図: .claude/domain-models/YYYY-MM-DD-HHMMSS-{topic}-loopN.drawio.png
 ```
 
 ---
@@ -119,16 +120,16 @@ loop_count: 1
 
 ## ループ1 — モデル図
 
-![モデル図 ループ1](2026-04-16-100000-team-comm-friction-loop1.drawio.svg)
+![モデル図 ループ1](2026-04-16-100000-team-comm-friction-loop1.drawio.png)
 
 [drawio編集用](2026-04-16-100000-team-comm-friction-loop1.drawio)
 
 ## ループ1 — 歪み記録
 
-- [MISSING] 「返信が来ない」の原因（多忙 vs 意図的無視）が未分類
-- [AMBIGUOUS] 「心理的安全性」の低さが原因か結果か不明
-- [NAMING-RISK] 「Slackで送っても」は採用技術名依存 → 「非同期チャネルで送っても」への抽象化候補
-- [STANDARD-GAP] 「返信待ち滞留」はDDD/標準語彙に類似なし → 組織固有概念として保持推奨
+- [MISSING] 「返信が来ない」の原因（多忙 vs 意図的無視）が未分類 (user)
+- [AMBIGUOUS] 「心理的安全性」の低さが原因か結果か不明 (user)
+- [NAMING-RISK] 「Slackで送っても」は採用技術名依存 → 「非同期チャネルで送っても」への抽象化候補 (auto)
+- [STANDARD-GAP] 「返信待ち滞留」はDDD/標準語彙に類似なし → 組織固有概念として保持推奨 (auto)
 
 ## ループ1 — 次ループへの引き継ぎ
 
@@ -157,5 +158,5 @@ loop_count: 1
 完了ループ数: 1
 成果物:
   - モデル: .claude/domain-models/2026-04-16-100000-team-comm-friction.md
-  - 最終図: .claude/domain-models/2026-04-16-100000-team-comm-friction-loop1.drawio.svg
+  - 最終図: .claude/domain-models/2026-04-16-100000-team-comm-friction-loop1.drawio.png
 ```
