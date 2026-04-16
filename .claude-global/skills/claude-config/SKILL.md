@@ -203,6 +203,35 @@ Task tool (opus) で委譲。プロンプト構造:
 
 レビューを実行した場合、結果を `.claude/tmp/review/YYYY-MM-DD-HHMMSS-{topic}.md` に書き出す。
 
+## セッション終了フェーズ
+
+### L6-c: 診断ログ出力
+
+各モードの完了サマリー出力後、判断ポイントごとに1 JSONLレコードを `.claude/tmp/diagnostic-trace/{YYYY-MM-DD-HHMMSS}-{session-id}.jsonl` へ追記する。
+
+スキーマ定義: `.claude-global/skills/retrospective/output-schema.md`
+
+**出力タイミング**: 判断が発生したステップ（scan結果の解釈、agent出力の統合、issue判定、適用確認等）ごとに即時追記する。セッション終了時にまとめて書き出す方式は禁止（判断脱落防止のため）。
+
+**最低記録対象**:
+
+| スキルフェーズ | 記録する判断の例 |
+|-------------|---------------|
+| Step 3（統合・優先度付け） | Critical/High 判定根拠 |
+| Step 4（適用確認） | ユーザー選択への応答解釈 |
+| R2（独立レビュー・issue判定） | issue 採否の判定根拠 |
+
+**出力手順**:
+
+1. セッション開始時に `session_id` を `{YYYY-MM-DD-HHMMSS}-${CLAUDE_SESSION_ID}` 形式で確定する
+2. 出力先ディレクトリ `.claude/tmp/diagnostic-trace/` が存在しない場合は Bash tool で作成する
+3. 各判断ポイントで output-schema.md のフィールド定義に従い JSON オブジェクトを構築し、Bash tool で追記する:
+   ```bash
+   echo '{"timestamp":"...","session_id":"...","skill":"claude-config","phase":"Step 3","judgment_type":"reference","reference_cited":"...","value_stated":null,"rationale":"...","tool_used":"...","context_size":null}' \
+     >> .claude/tmp/diagnostic-trace/{YYYY-MM-DD-HHMMSS}-{session-id}.jsonl
+   ```
+4. 任意フィールドも可能な限り記録する（output-schema.md の採用原則に従う）
+
 ---
 
 ## 注意事項

@@ -88,6 +88,9 @@ flowchart LR
 | `.claude/dialogues/` | dialogue | (対話ログ) |
 | `.claude/domain-models/` | problem-domain-modeling | (モデリング成果物) |
 | `.claude/tmp/review/` | implement, review-fix, claude-config | (一時成果物、git管理外) |
+| `.claude/tmp/diagnostic-trace/` | claude-config（L6-c） | (診断ログ、git管理外) |
+
+**診断ログ参照の設計判断（L6-c連動）**: claude-config は retrospective 実行時（L6レンズ適用時）に `.claude/tmp/diagnostic-trace/` へ診断ログを出力する。目的は語彙混入率（reference↔value誤写）の事後検出であり、Guide First 原則の「事後検出は逸脱確認に限定」に対応する位置づけ。ログスキーマは `retrospective/output-schema.md` を参照（JSON Lines 形式、10フィールド）。
 
 ### 中連動（方針・パターンの共有。変更時に全箇所の整合性確認が必要）
 
