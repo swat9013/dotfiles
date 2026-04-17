@@ -26,7 +26,7 @@ Claude performs dramatically better when it can verify its own work, like run te
 
 Strategy| Before| After
 ---|---|---
-**Provide verification criteria**|  _”implement a function that validates email addresses "_| _" write a validateEmail function. example test cases: [[email protected]](/cdn-cgi/l/email-protection#REDACTED) is true, invalid is false, [[email protected]](/cdn-cgi/l/email-protection#REDACTED) is false. run the tests after implementing”_
+**Provide verification criteria**|  _”implement a function that validates email addresses "_| _" write a validateEmail function. example test cases: [user@example.com](mailto:user@example.com) is true, invalid is false, [user@.com](mailto:user@.com) is false. run the tests after implementing”_
 **Verify UI changes visually**|  _”make the dashboard look better "_| _"[paste screenshot] implement this design. take a screenshot of the result and compare it to the original. list differences and fix them”_
 **Address root causes, not symptoms**|  _”the build is failing "_| _" the build fails with this error: [paste error]. fix it and verify the build succeeds. address the root cause, don’t suppress the error”_
 

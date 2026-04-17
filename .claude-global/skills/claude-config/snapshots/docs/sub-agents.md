@@ -234,7 +234,7 @@ Field| Required| Description
 `description`| Yes| When Claude should delegate to this subagent
 `tools`| No| Tools the subagent can use. Inherits all tools if omitted
 `disallowedTools`| No| Tools to deny, removed from inherited or specified list
-`model`| No| Model to use: `sonnet`, `opus`, `haiku`, a full model ID (for example, `claude-opus-4-6`), or `inherit`. Defaults to `inherit`
+`model`| No| Model to use: `sonnet`, `opus`, `haiku`, a full model ID (for example, `claude-opus-4-7`), or `inherit`. Defaults to `inherit`
 `permissionMode`| No| Permission mode: `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, or `plan`
 `maxTurns`| No| Maximum number of agentic turns before the subagent stops
 `skills`| No| [Skills](/docs/en/skills) to load into the subagent’s context at startup. The full skill content is injected, not just made available for invocation. Subagents don’t inherit skills from the parent conversation
@@ -242,7 +242,7 @@ Field| Required| Description
 `hooks`| No| Lifecycle hooks scoped to this subagent
 `memory`| No| Persistent memory scope: `user`, `project`, or `local`. Enables cross-session learning
 `background`| No| Set to `true` to always run this subagent as a background task. Default: `false`
-`effort`| No| Effort level when this subagent is active. Overrides the session effort level. Default: inherits from session. Options: `low`, `medium`, `high`, `max` (Opus 4.6 only)
+`effort`| No| Effort level when this subagent is active. Overrides the session effort level. Default: inherits from session. Options: `low`, `medium`, `high`, `xhigh`, `max`; available levels depend on the model
 `isolation`| No| Set to `worktree` to run the subagent in a temporary [git worktree](/docs/en/common-workflows#run-parallel-claude-code-sessions-with-git-worktrees), giving it an isolated copy of the repository. The worktree is automatically cleaned up if the subagent makes no changes
 `color`| No| Display color for the subagent in the task list and transcript. Accepts `red`, `blue`, `green`, `yellow`, `purple`, `orange`, `pink`, or `cyan`
 `initialPrompt`| No| Auto-submitted as the first user turn when this agent runs as the main session agent (via `--agent` or the `agent` setting). [Commands](/docs/en/commands) and [skills](/docs/en/skills) are processed. Prepended to any user-provided prompt
@@ -256,7 +256,7 @@ Choose a model
 The `model` field controls which [AI model](/docs/en/model-config) the subagent uses:
 
   * **Model alias** : Use one of the available aliases: `sonnet`, `opus`, or `haiku`
-  * **Full model ID** : Use a full model ID such as `claude-opus-4-6` or `claude-sonnet-4-6`. Accepts the same values as the `--model` flag
+  * **Full model ID** : Use a full model ID such as `claude-opus-4-7` or `claude-sonnet-4-6`. Accepts the same values as the `--model` flag
   * **inherit** : Use the same model as the main conversation
   * **Omitted** : If not specified, defaults to `inherit` (uses the same model as the main conversation)
 
@@ -365,7 +365,7 @@ Mode| Behavior
 
 Use `bypassPermissions` with caution. It skips permission prompts, allowing the subagent to execute operations without approval. Writes to `.git`, `.claude`, `.vscode`, `.idea`, and `.husky` directories still prompt for confirmation, except for `.claude/commands`, `.claude/agents`, and `.claude/skills`. See [permission modes](/docs/en/permission-modes#skip-all-checks-with-bypasspermissions-mode) for details.
 
-If the parent uses `bypassPermissions`, this takes precedence and cannot be overridden. If the parent uses [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode), the subagent inherits auto mode and any `permissionMode` in its frontmatter is ignored: the classifier evaluates the subagent’s tool calls with the same block and allow rules as the parent session.
+If the parent uses `bypassPermissions` or `acceptEdits`, this takes precedence and cannot be overridden. If the parent uses [auto mode](/docs/en/permission-modes#eliminate-prompts-with-auto-mode), the subagent inherits auto mode and any `permissionMode` in its frontmatter is ignored: the classifier evaluates the subagent’s tool calls with the same block and allow rules as the parent session.
 
 ####
 

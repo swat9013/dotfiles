@@ -46,7 +46,7 @@ The full-featured CLI for working with Claude Code directly in your terminal. Ed
 
      curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
 
-If you see `The token '&&' is not a valid statement separator`, you’re in PowerShell, not CMD. Use the PowerShell command above instead. Your prompt shows `PS C:\` when you’re in PowerShell.**Native Windows setups require[Git for Windows](https://git-scm.com/downloads/win).** Install it first if you don’t have it. WSL setups do not need it.
+If you see `The token '&&' is not a valid statement separator`, you’re in PowerShell, not CMD. If you see `'irm' is not recognized as an internal or external command`, you’re in CMD, not PowerShell. Your prompt shows `PS C:\` when you’re in PowerShell and `C:\` without the `PS` when you’re in CMD.**Native Windows setups require[Git for Windows](https://git-scm.com/downloads/win).** Install it first if you don’t have it. WSL setups do not need it.
 
 Native installations automatically update in the background to keep you on the latest version.
 
@@ -145,7 +145,7 @@ Schedule recurring tasks
 
 Run Claude on a schedule to automate work that repeats: morning PR reviews, overnight CI failure analysis, weekly dependency audits, or syncing docs after PRs merge.
 
-  * [Cloud scheduled tasks](/docs/en/web-scheduled-tasks) run on Anthropic-managed infrastructure, so they keep running even when your computer is off. Create them from the web, the Desktop app, or by running `/schedule` in the CLI.
+  * [Routines](/docs/en/routines) run on Anthropic-managed infrastructure, so they keep running even when your computer is off. They can also trigger on API calls or GitHub events. Create them from the web, the Desktop app, or by running `/schedule` in the CLI.
   * [Desktop scheduled tasks](/docs/en/desktop-scheduled-tasks) run on your machine, with direct access to your local files and tools
   * [`/loop`](/docs/en/scheduled-tasks) repeats a prompt within a CLI session for quick polling
 
@@ -172,7 +172,7 @@ I want to…| Best option
 Continue a local session from my phone or another device| [Remote Control](/docs/en/remote-control)
 Push events from Telegram, Discord, iMessage, or my own webhooks into a session| [Channels](/docs/en/channels)
 Start a task locally, continue on mobile| [Web](/docs/en/claude-code-on-the-web) or [Claude iOS app](https://apps.apple.com/app/claude-by-anthropic/id6473753684)
-Run Claude on a recurring schedule| [Cloud scheduled tasks](/docs/en/web-scheduled-tasks) or [Desktop scheduled tasks](/docs/en/desktop-scheduled-tasks)
+Run Claude on a recurring schedule| [Routines](/docs/en/routines) or [Desktop scheduled tasks](/docs/en/desktop-scheduled-tasks)
 Automate PR reviews and issue triage| [GitHub Actions](/docs/en/github-actions) or [GitLab CI/CD](/docs/en/gitlab-ci-cd)
 Get automatic code review on every PR| [GitHub Code Review](/docs/en/code-review)
 Route bug reports from Slack to pull requests| [Slack](/docs/en/slack)

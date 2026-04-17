@@ -104,7 +104,7 @@ CLAUDE.md の基本方針（基本 sonnet、軽量タスクのみ haiku）に加
 | `model` | - | enum | `sonnet` / `opus` / `haiku` / `inherit` |
 | `permissionMode` | - | enum | 下記6種参照 |
 | `maxTurns` | - | number | 最大ターン数 |
-| `effort` | - | enum | `low` / `medium` / `high` / `max`（`max` は extended thinking 最大活用、主に Opus 系で効果大） |
+| `effort` | - | enum | `low` / `medium` / `high` / `xhigh` / `max`。利用可能レベルはモデル依存（`xhigh` は Opus 4.7 のみ。`max` は主に Opus 系で extended thinking 最大活用） |
 | `color` | - | enum | UI表示色: `red`/`blue`/`green`/`yellow`/`purple`/`orange`/`pink`/`cyan` |
 | `initialPrompt` | - | string | `--agent` 起動時の自動サブミットプロンプト |
 | `skills` | - | array | 起動時コンテキスト注入スキル（明示列挙必須） |
@@ -148,6 +148,10 @@ description: MUST BE USED for all security-related code reviews.
 | `plan` | 読み取り専用（プランモード） | 計画策定エージェント |
 
 `bypassPermissions` / `auto` は信頼できる自動化環境のみ使用。ローカル開発での使用は避ける。
+
+**親セッションの permissionMode が優先されるケース**:
+- 親が `bypassPermissions` または `acceptEdits` の場合、サブエージェント frontmatter の `permissionMode` は**上書きされず無視される**（親が優先）
+- 親が `auto` モードの場合も同様。サブエージェントは `auto` を継承し、`permissionMode` は無視される。親の block/allow ルールがサブエージェントのツール呼び出しにも適用される
 
 > レビュー・出力パターン（高信号フィルタリング基準、出力形式標準化、検証パターン）は `review-patterns.md` に分離。
 

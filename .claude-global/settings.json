@@ -266,10 +266,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.dotfiles/.claude-global/hooks/guard-multiline.sh"
-          },
-          {
-            "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/guard-git.sh",
             "if": "Bash(git:*)"
           },

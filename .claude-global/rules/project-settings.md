@@ -37,7 +37,7 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 | `env` | 環境変数 | `{"KEY": "value"}` |
 | `permissions.defaultMode` | 権限モード | `"default"`, `"allowEdits"` |
 | `enabledPlugins` | プラグイン制御 | `{"name@author": true}` |
-| `effortLevel` | effortレベル永続化 | `"low"`, `"medium"`, `"high"` |
+| `effortLevel` | effortレベル永続化 | `"low"`, `"medium"`, `"high"`, `"xhigh"`（v2.1.111+、`xhigh` は Opus 4.7 のみ） |
 | `attribution` | 帰属表示設定 | `includeCoAuthoredBy` の後継 |
 | `showThinkingSummaries` | thinking summaries表示 | `true`（v2.1.89でデフォルトfalseに変更） |
 | `autoMode` | auto modeカスタマイズ | `environment`/`allow`/`soft_deny` 配列 |
@@ -47,7 +47,19 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 | `autoUpdatesChannel` | アップデートチャネル指定 | `"stable"` または `"latest"` |
 | `plansDirectory` | planファイルの保存先カスタマイズ | ディレクトリパス |
 | `statusLine` | ステータス行設定 | `{"refreshInterval": 30}` で N 秒ごとに再実行（v2.1.97+） |
-| `viewMode` | 起動時のデフォルト表示モード | `"default"` / `"verbose"` / `"focus"`。Ctrl+O のスティッキー選択を上書き |
+| `viewMode` | 起動時のデフォルト表示モード | `"default"` / `"verbose"` / `"focus"`。`/focus` のスティッキー選択を上書き（v2.1.110 で `Ctrl+O` は normal/verbose 切替専用化） |
+| `tui` | TUI レンダラー（v2.1.110+） | `"fullscreen"`（フリッカーフリー）/ `"default"`。`/tui` で切替 |
+| `awaySummaryEnabled` | Session recap 表示（v2.1.108+） | `true` / `false`。`CLAUDE_CODE_ENABLE_AWAY_SUMMARY` と等価 |
+| `minimumVersion` | 自動アップデートのバージョン下限 | `"2.1.100"` 等。`stable` 切替時のダウングレード防止や managed settings での組織最低ライン固定 |
+
+### Global config settings（`~/.claude.json` 保存）
+
+以下のキーは `settings.json` ではなく `~/.claude.json` に保存される。`settings.json` に書くと `$schema` 検証エラーになる。通常は `/config` からの編集で書き込まれる。
+
+| キー | 用途 | 値 |
+|------|------|-----|
+| `autoScrollEnabled` | fullscreen で新規出力を追従（v2.1.110+） | `true` / `false` |
+| `externalEditorContext` | `Ctrl+G` エディタ時に直前レスポンスを `#` コメント挿入（v2.1.110+） | `true` / `false` |
 
 ## hooks設定
 
@@ -122,9 +134,10 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 
 ## 注意事項
 
-- `cleanupPeriodDays: 0` はバリデーションエラー（v2.1.89+）。トランスクリプト永続化無効化は別手段を使う
+- `cleanupPeriodDays: 0` はバリデーションエラー（v2.1.89+）。トランスクリプト永続化を完全無効化するには `CLAUDE_CODE_SKIP_PROMPT_HISTORY` 環境変数を使用。非インタラクティブモード（`-p`）のみ無効化なら `--no-session-persistence` フラグまたは SDK `persistSession: false`
 - `includeCoAuthoredBy` は非推奨 → `attribution` を使用
 - 認識不明なhookイベント名があっても設定ファイル全体は無視されなくなった（v2.1.101+）
+- `$schema` は定期更新されるため、最新 CLI で追加された設定に対する検証警告は設定不正を意味しない（該当キーが実装済みなら有効）
 
 ## sandbox 設定
 
@@ -151,6 +164,15 @@ paths: **/.claude/settings.json, **/.claude/settings.local.json
 | `failIfUnavailable` | サンドボックス利用不可時にエラー |
 | `autoAllowBashIfSandboxed` | サンドボックス有効時にBash自動許可 |
 | `allowUnsandboxedCommands` | サンドボックス非対応コマンドの実行許可 |
+
+### Unix socket 許可のOS依存挙動
+
+| 設定 | macOS | Linux / WSL2 |
+|------|-------|--------------|
+| `network.allowUnixSockets` | 指定したソケットパスを許可 | **無視される**（seccomp フィルタがソケットパスを検査不能） |
+| `network.allowAllUnixSockets` | 全 Unix ソケット接続を許可 | **唯一の有効手段**（`socket(AF_UNIX,...)` をブロックする seccomp フィルタをスキップ） |
+
+Linux / WSL2 で SSH agent などの Unix socket を使うには `allowAllUnixSockets: true` が必要。
 
 ## セキュリティ
 

@@ -1,18 +1,7 @@
 # Skills リファレンス
 
 ## TOC
-- [配置場所と優先度](#配置場所と優先度)
-- [Skills vs Commands](#skills-vs-commands)
-- [skills vs agents vs rules](#skills-vs-agents-vs-rules)
-- [context: fork の agent 値](#context-fork-の-agent-値)
-- [skills フィールド（サブエージェントへのプリロード）](#skills-フィールド)
-- [Skill(name *) 権限制御](#skill-name--権限制御)
-- [フィードバックループパターン](#フィードバックループパターン)
-- [スキル分類](#スキル分類設計時の参考)
-- [On Demand Hooks](#on-demand-hooks)
-- [データ永続化](#データ永続化)
-- [スキル間の依存・計測](#スキル間の依存・計測)
-- [トラブルシューティング](#トラブルシューティング)
+[配置場所と優先度](#配置場所と優先度) / [Skills vs Commands](#skills-vs-commands) / [skills vs agents vs rules](#skills-vs-agents-vs-rules) / [context: fork の agent 値](#context-fork-の-agent-値) / [skills フィールド](#skills-フィールド) / [Skill(name *) 権限制御](#skill-name--権限制御) / [フィードバックループパターン](#フィードバックループパターン) / [スキル分類](#スキル分類設計時の参考) / [On Demand Hooks](#on-demand-hooks) / [データ永続化](#データ永続化) / [スキル間の依存・計測](#スキル間の依存・計測) / [トラブルシューティング](#トラブルシューティング)
 
 ---
 
@@ -113,6 +102,12 @@ skills:
 
 ---
 
+## Skill tool 経由で呼び出せる組み込みコマンド
+
+v2.1.108+ で、`/init` / `/review` / `/security-review` はモデルが Skill tool 経由で発見・呼び出し可能。`/compact` など他の組み込みコマンドはユーザーからの明示的スラッシュ入力のみ。
+
+---
+
 ## Skill(name *) 権限制御
 
 `settings.json` の `permissions` で特定スキルへのアクセスを制御:
@@ -187,7 +182,7 @@ skills:
 - skills description バジェット: コンテキストウィンドウの **1%**（fallback: 8,000文字）。各エントリは **1,536文字**（`description` + `when_to_use` 合算）でトランケート
 - `/context` で除外されたスキルを確認
 - `SLASH_COMMAND_TOOL_CHAR_BUDGET` 環境変数で上限を調整可能
-- **ライブ変更検出**（v2.1.105+）: `~/.claude/skills/` / プロジェクト `.claude/skills/` / `--add-dir` 内の `.claude/skills/` はセッション中の追加・編集・削除が即時反映。例外: セッション開始時に存在しなかったトップレベル skills ディレクトリ（`~/.claude/skills/` や `.claude/skills/` 自体）の新規作成は再起動が必要
+- **ライブ変更検出**（v2.1.105+）: `~/.claude/skills/` / プロジェクト `.claude/skills/` / `--add-dir` 内の `.claude/skills/` はセッション中の追加・編集・削除が即時反映。例外: セッション開始時に存在しなかったトップレベル skills ディレクトリ自体の新規作成は再起動が必要
 
 ### スキルのコンテキストライフサイクル
 

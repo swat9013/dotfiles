@@ -74,12 +74,19 @@ action_type(scope): 説明文
 
 ## コミット実行手順
 
-改行を含むメッセージはHEREDOCが使えない（改行禁止hook）。**Write tool → `git commit -F`** で実行する:
+改行を含むメッセージは HEREDOC で `git commit -m` に直接渡す:
 
-1. `Write(.claude/tmp/commit/YYYYMMDD-HHMMSS.txt)` でメッセージ作成（タイムスタンプは実行時刻）
-2. `git commit -F .claude/tmp/commit/YYYYMMDD-HHMMSS.txt` でコミット
+```bash
+git commit -m "$(cat <<'EOF'
+subject line
 
-> `-m` 複数指定は各 `-m` 間がダブル改行になり action lines が崩れる。`-F` を使うこと。
+action line 1
+action line 2
+EOF
+)"
+```
+
+> `-m` 複数指定は各 `-m` 間がダブル改行になり action lines が崩れる。単一の HEREDOC または `-F` を使うこと。メッセージをファイルに残したい場合は `Write(.claude/tmp/commit/YYYYMMDD-HHMMSS.txt)` → `git commit -F ...` でも可。
 
 ## 例
 

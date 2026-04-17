@@ -61,7 +61,7 @@
     </mxCell>
 
     <!-- Feedback -->
-    <mxCell id="h3" value="Feedback（事後検証）&#xa;&#xa;計算的（ライフサイクル配置）:&#xa;PreToolUse:&#xa; → guard-git/shell/write.sh&#xa; → guard-multiline.sh&#xa;PostToolUse:&#xa; → ruff-check.sh（Python品質）&#xa;PermissionRequest:&#xa; → log-permission-request.sh&#xa;SessionEnd: session-cleanup.sh&#xa;permissions.deny（静的・2層目）&#xa;&#xa;推論的:&#xa;• 独立レビュー / スキル内LLM評価" style="rounded=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="h0">
+    <mxCell id="h3" value="Feedback（事後検証）&#xa;&#xa;計算的（ライフサイクル配置）:&#xa;PreToolUse:&#xa; → guard-git/shell/write.sh&#xa;PostToolUse:&#xa; → ruff-check.sh（Python品質）&#xa;PermissionRequest:&#xa; → log-permission-request.sh&#xa;SessionEnd: session-cleanup.sh&#xa;permissions.deny（静的・2層目）&#xa;&#xa;推論的:&#xa;• 独立レビュー / スキル内LLM評価" style="rounded=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="h0">
       <mxGeometry x="340" y="215" width="240" height="155" as="geometry"/>
     </mxCell>
 
