@@ -110,6 +110,8 @@
       "Task(Explore)",
       "Task(Plan)",
       "Skill",
+      "AskUserQuestion",
+      "WebSearch",
       "mcp__deepwiki-http__*",
       "mcp__serena__*",
       "Glob",
@@ -131,6 +133,7 @@
       "Bash(~/.dotfiles/.claude-global/hooks/stop-open-zed.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/log-permission-request.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/pretooluse-guard-write.sh:*)",
+      "Bash(~/.dotfiles/.claude-global/hooks/guard-inline-python.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/skill-activation.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/session-cleanup.sh:*)",
       "Bash(~/.dotfiles/.claude-global/hooks/posttooluse-ruff-check.sh:*)",
@@ -169,6 +172,13 @@
       "NotebookEdit",
       "NotebookRead",
       "Bash(zsh:*)",
+      "Bash(bash -c:*)",
+      "Bash(sh -c:*)",
+      "Bash(python -c:*)",
+      "Bash(python3 -c:*)",
+      "Bash(perl -e:*)",
+      "Bash(ruby -e:*)",
+      "Bash(node -e:*)",
       "Bash(git add .:*)",
       "Bash(git add -A:*)",
       "Bash(git add --all:*)",
@@ -283,6 +293,10 @@
             "type": "command",
             "command": "~/.dotfiles/.claude-global/hooks/guard-shell.sh",
             "if": "Bash(zsh:*)"
+          },
+          {
+            "type": "command",
+            "command": "~/.dotfiles/.claude-global/hooks/guard-inline-python.sh"
           }
         ]
       },
@@ -397,5 +411,7 @@
   "spinnerTipsEnabled": false,
   "effortLevel": "high",
   "promptSuggestionEnabled": false,
-  "plansDirectory": ".claude/plans"
+  "awaySummaryEnabled": false,
+  "plansDirectory": ".claude/plans",
+  "skipAutoPermissionPrompt": true
 }

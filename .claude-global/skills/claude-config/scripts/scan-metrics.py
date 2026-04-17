@@ -8,9 +8,12 @@
 出力JSON構造:
   tool_counts: ツール別の総出現回数
   total: 全レコード数
+  mode_counts: permission_mode 別の総出現回数（default/acceptEdits/plan/bypassPermissions 等）
   patterns: ツール別の key_info パターン集計（頻度順）
   unmatched: 既存 allow ルールにマッチしないパターン（提案候補）
   allow_ineffective: allow ルールにマッチするが PermissionRequest が発生したパターン（allow 無効）
+  allow_ineffective_modes: allow_ineffective を mode 別に分解した breakdown
+    （tool -> pattern -> mode -> count。acceptEdits 偏在なら mode の副作用仮説を検討）
   suggestions: 具体的な allow ルール追加提案（risk=investigation は allow 無効の調査推奨）
 """
 
@@ -286,18 +289,25 @@ def analyze_sessions(records: list[dict]) -> dict:
 
 def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
     tool_counts: dict[str, int] = defaultdict(int)
+    mode_counts: dict[str, int] = defaultdict(int)
     pattern_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     session_tools: dict[str, set[str]] = defaultdict(set)
     unmatched: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     # allow ルールにマッチするが PermissionRequest が発生 = allow が無効
     allow_ineffective: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    # allow_ineffective を permission_mode 別に分解した breakdown
+    allow_ineffective_modes: dict[str, dict[str, dict[str, int]]] = defaultdict(
+        lambda: defaultdict(lambda: defaultdict(int))
+    )
 
     for entry in entries:
         tool = entry.get("tool", "unknown")
         key_info = entry.get("key_info", "")
         session_id = entry.get("session_id", "unknown")
+        mode = entry.get("permission_mode", "unknown")
 
         tool_counts[tool] += 1
+        mode_counts[mode] += 1
         session_tools[session_id].add(tool)
 
         # パターン抽出
@@ -314,6 +324,7 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
         if matches_allow_rule(tool, key_info, allow_rules):
             # ログに存在する = Claude Code が自動許可しなかった。allow が無効
             allow_ineffective[tool][pattern] += 1
+            allow_ineffective_modes[tool][pattern][mode] += 1
         else:
             unmatched[tool][pattern] += 1
 
@@ -329,6 +340,13 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
     sorted_allow_ineffective = {}
     for tool, patterns in allow_ineffective.items():
         sorted_allow_ineffective[tool] = dict(sorted(patterns.items(), key=lambda x: -x[1]))
+
+    sorted_allow_ineffective_modes: dict[str, dict[str, dict[str, int]]] = {}
+    for tool, patterns in allow_ineffective_modes.items():
+        sorted_allow_ineffective_modes[tool] = {
+            pattern: dict(sorted(modes.items(), key=lambda x: -x[1]))
+            for pattern, modes in patterns.items()
+        }
 
     # 提案生成（2回以上出現 + allow 未マッチのみ）
     suggestions = []
@@ -357,9 +375,11 @@ def analyze(entries: list[dict], allow_rules: list[str]) -> dict:
         "tool_counts": dict(tool_counts),
         "total": len(entries),
         "session_count": len(session_tools),
+        "mode_counts": dict(sorted(mode_counts.items(), key=lambda x: -x[1])),
         "patterns": sorted_patterns,
         "unmatched": sorted_unmatched,
         "allow_ineffective": sorted_allow_ineffective,
+        "allow_ineffective_modes": sorted_allow_ineffective_modes,
         "suggestions": suggestions,
     }
 
@@ -398,8 +418,11 @@ def main() -> None:
             "tool_counts": {},
             "total": 0,
             "session_count": 0,
+            "mode_counts": {},
             "patterns": {},
             "unmatched": {},
+            "allow_ineffective": {},
+            "allow_ineffective_modes": {},
             "suggestions": [],
         }
 

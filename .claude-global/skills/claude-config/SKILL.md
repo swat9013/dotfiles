@@ -74,7 +74,13 @@ Agent 1 は scan-metrics.py の tool 別 PermissionRequest カウントを permi
 
 3エージェントの出力を統合し、証拠なき指摘を除外して優先度（Critical/High/Medium/Low）を割り当てる:
 
-`| # | 優先度 | カテゴリ | 問題 | 改善案 |` の表形式で出力。Agent 2 のメモリ昇華候補も改善提案テーブルに含める。
+`| # | 優先度 | カテゴリ | 問題 | 改善案 |` の表形式で出力。カテゴリは以下の3種を最低限含めること:
+
+- **config改善**: 各 Agent 本文からの指摘（settings/CLAUDE.md/skills の修正）
+- **memory昇華**: Agent 2 のメモリ昇華候補（昇華先・削除・維持）
+- **script拡張提案**: 各 Agent の末尾テーブル（`diagnostic-agent-prompt.md` §スクリプト拡張提案書式）を集約。report-forward 先は harness-tuning（Cat-1: スクリプト出力不足）として明示
+
+script拡張提案は「Agent が自力でインラインコード実行するのを抑止した代償として harness-tuning に引き継ぐ知見」であり、除外してはならない。
 
 ### Step 4: 適用確認
 

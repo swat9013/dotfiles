@@ -90,7 +90,11 @@ allow を追加する前に確認する:
 
 `scan-metrics.py` の `allow_ineffective` キーに出力されるデータ。allow ルールが存在するにもかかわらず PermissionRequest が発生しているパターンを示す。
 
-**前提**: PermissionRequest ログに記録されている = Claude Code が自動許可しなかった。`matches_allow_rule()` の判定と実際の Claude Code 動作が乖離している。
+**前提（hook 発火タイミング）**: PermissionRequest hook は**静的 allow 評価後、allow にヒットしなかった要求のみ**で発火する。`allow > ask > defer > deny` の優先度評価が先行し、allow に一致すれば hook は起動しない（PermissionRequest の目的は「Claude Code が動的判断を要する要求」を拾うイベントであり、静的に自動許可される要求は対象外）。
+
+**帰結**: PermissionRequest ログに記録されている = Claude Code が自動許可しなかった。`matches_allow_rule()` の判定と実際の Claude Code 動作が乖離している。この乖離を `allow_ineffective` として集計する。
+
+**仕様裏取りが必要な場合**: `references/hooks.md` §1 イベント表の `PermissionRequest` 行、および `references/upstream-sources.md` の公式 hook ドキュメント URL を参照する。インラインコードで仮説検証してはならない（`diagnostic-agent-prompt.md` §「コード実行の禁止」参照）。
 
 ### 原因分類
 
@@ -100,6 +104,14 @@ allow を追加する前に確認する:
 | settings scope | グローバル allow がプロジェクトコンテキストで適用されない可能性 | PermissionRequest の `cwd` が特定プロジェクトに偏っているか |
 | サブエージェント | Task/Agent tool 経由で permission 設定が継承されない可能性 | PermissionRequest がサブエージェント起動後のタイミングに集中しているか |
 | パターン仕様変更 | Claude Code バージョンアップで prefix マッチ `cmd:*` の挙動が変わった可能性 | 広範なツール（Glob, Read 等のツール全体 allow 含む）が一様に出現するか |
+| mode固有の権限処理 | `acceptEdits` / `plan` 等の permission_mode で allow 評価経路が分岐している可能性（mode 実装バグの代理検出） | `allow_ineffective_modes` で同一パターンが特定 mode に偏在するか（例: default では allow が効くが acceptEdits では PermissionRequest 発火） |
+
+**mode 偏在の判定基準**（`allow_ineffective_modes[tool][pattern]` を読む際）:
+
+- 偏在なし（mode 比率 ≈ `mode_counts` 全体比率）: 原因は他4分類のいずれか
+- `acceptEdits` に偏在（default の 2倍以上）: acceptEdits mode が Write/Edit 以外の allow 評価を上書きしている可能性 → settings.json の `acceptEdits` 時挙動を `upstream-sources.md` で裏取り
+- `plan` に偏在: plan mode では allow が無効化される仕様。設計通りであり対処不要
+- 単一 mode のみ（他は0）: サンプル数不足。`--since` を広げて再取得
 
 ### Agent 1 の判断フロー
 

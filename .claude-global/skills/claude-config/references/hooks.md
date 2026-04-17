@@ -12,7 +12,7 @@
 | `SessionStart` | 不可 | `session_id`, `cwd` |
 | `UserPromptSubmit` | 可 | `prompt` |
 | `PreToolUse` | 可 | `tool_name`, `tool_input` |
-| `PermissionRequest` | 可 | `tool_name`, `tool_input`, `permission_type` |
+| `PermissionRequest` | 可 | `tool_name`, `tool_input`, `permission_type`, `permission_mode`（発火タイミングは settings.md §7 参照: 静的 allow 評価後・allow にヒットしなかった要求のみ） |
 | `PostToolUse` | 不可（FBのみ） | `tool_name`, `tool_input`, `tool_response` |
 | `PostToolUseFailure` | 不可（FBのみ） | `tool_name`, `tool_input`, `error` |
 | `Stop` | 可 | `stop_hook_active`, `last_assistant_message` |
