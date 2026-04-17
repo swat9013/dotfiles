@@ -19,6 +19,8 @@
 	di = diff
 	dic = diff --cached
 	difit = !npx difit . --include-untracked
+	de = diff --word-diff --ignore-all-space --ignore-blank-lines --color-moved=dimmed_zebra --color-moved-ws=ignore-all-space --diff-algorithm=histogram
+	dec = diff --cached --word-diff --ignore-all-space --ignore-blank-lines --color-moved=dimmed_zebra --color-moved-ws=ignore-all-space --diff-algorithm=histogram
 	dw = diff --word-diff
 	dcw = diff --cached --word-diff
 	diw = diff --word-diff
