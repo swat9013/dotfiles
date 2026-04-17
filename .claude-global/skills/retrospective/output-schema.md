@@ -116,8 +116,16 @@ retrospective の L6レンズ（判断基準混同検出）が消費する診断
 
 ### mixed 判断の例（L6レンズ検出対象）
 
+#### パターンA（reference→value誤写）: `reference_cited` に価値判断語彙が混入
+
 ```jsonl
-{"timestamp":"2026-04-17T14:00:00+09:00","session_id":"2026-04-17-140000-def456","skill":"harness-tuning","phase":null,"judgment_type":"mixed","reference_cited":"#behaviour-harness","value_stated":"より良いユーザー体験を提供すべき","rationale":"behaviour-harnessを参照しつつ、価値語彙（より良い、すべき）が混入しているためmixedと判定","tool_used":"Read","context_size":null}
+{"timestamp":"2026-04-17T14:00:00+09:00","session_id":"2026-04-17-140000-def456","skill":"harness-tuning","phase":null,"judgment_type":"mixed","reference_cited":"より良いユーザー体験を提供すべき #behaviour-harness","value_stated":null,"rationale":"reference_citedフィールドに価値語彙（より良い、すべき）が混入しており、アンカーIDと価値判断が混在しているためパターンAとして検出","tool_used":"Read","context_size":null}
+```
+
+#### パターンB（value→reference誤写）: `value_stated` にアンカーID文字列が混入
+
+```jsonl
+{"timestamp":"2026-04-17T14:30:00+09:00","session_id":"2026-04-17-140000-def456","skill":"harness-tuning","phase":"Phase 2","judgment_type":"mixed","reference_cited":null,"value_stated":"#behaviour-harness の基準を満たすべき","rationale":"value_statedフィールドにアンカーID（#behaviour-harness）が混入しており、価値判断の中にreference文字列が紛れ込んでいるためパターンBとして検出","tool_used":"Edit","context_size":61000}
 ```
 
 ## 採用原則

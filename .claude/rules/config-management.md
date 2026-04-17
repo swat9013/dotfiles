@@ -73,7 +73,7 @@ paths: .claude-global/settings.json, .claude-global/hooks/**, .claude-global/ski
 1. `docs/harness-engineering-domain-model.md` §2（`#maintainability-harness` / `#architecture-fitness-harness` / `#behaviour-harness`）を更新
 2. §2 の Read 指示パターン（目的関数ブロックの構造）を変更する場合は `_shared/independent-review-prompt.md` を更新する（6 スキルが自動追従）
 3. 三項組の**テキスト内容**（最大化価値/達成シグナル/境界条件の文言）を変更した場合 → Read指示側の修正**不要**（正本参照で自動追従）
-4. **セクション番号**が変わった場合（例: §2.1 → §2.5 等）: アンカーはセクション番号変更時も不変のため置換手順不要。アンカー存在確認のみ実施。対象: 11箇所/4ファイル（`_shared/independent-review-prompt.md` 4箇所、`claude-config/SKILL.md` 4箇所、`harness-tuning/SKILL.md` 1箇所、`tuning-guide-extended.md` 2箇所）
+4. **セクション番号**が変わった場合（例: §2.1 → §2.5 等）: アンカーはセクション番号変更時も不変のため置換手順不要。アンカー存在確認のみ実施。対象: 19箇所/5ファイル（`_shared/independent-review-prompt.md` 4箇所、`claude-config/SKILL.md` 7箇所、`harness-tuning/SKILL.md` 1箇所、`tuning-guide-extended.md` 2箇所、`retrospective/output-schema.md` 5箇所）
 5. **ドメインの新設・廃止**は別タスクとして plan → breakdown → implement のフローで対応
 
 ## 3. 迷ったときは
