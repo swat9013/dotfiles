@@ -6,7 +6,7 @@
 - [コンテンツ配置の判断基準](#コンテンツ配置の判断基準)
 - [6段階最適化ワークフロー](#6段階最適化ワークフロー)
 - [/compact vs /clear の使い分け](#compact-vs-clear-の使い分け)
-- [MCP との連携](#mcp-との連携)
+- [Skills / Hooks / MCP の位置づけ](#skills--hooks--mcp-の位置づけ)
 - [トークン節約チェックリスト](#トークン節約チェックリスト)
 
 ---
@@ -118,15 +118,15 @@ Follow Kent Beck's Test-Driven Development methodology (tdd skill) as the prefer
 
 ---
 
-## MCP との連携
+## Skills / Hooks / MCP の位置づけ
 
-### Skills vs MCP
+### 性質分類
 
-| 観点 | Skills | MCP |
-|------|--------|-----|
-| 提供するもの | 知識・手順（How） | ツール・データソース（What） |
-| 方向性 | 指示 → Claude | 外部システム → Claude |
-| 例 | クエリパターンの指導 | データベース接続 |
+| 観点 | Skills（Advisory） | Hooks（Deterministic） | MCP（Data access） |
+|------|------|-------|-----|
+| 提供するもの | 知識・手順（How） | ハーネス実行の制約 | ツール・データソース（What） |
+| 方向性 | 指示 → Claude | 設定 → ハーネス | 外部システム → Claude |
+| 例 | クエリパターンの指導 | 認可ブロック・自動フォーマット・計測 | データベース接続 |
 
 ### 連携パターン
 
